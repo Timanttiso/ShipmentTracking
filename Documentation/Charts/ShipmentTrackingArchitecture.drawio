@@ -1,0 +1,75 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Sivu-1" id="5tJtC4Fu4NNqtIP5nG-C">
+    <mxGraphModel dx="1677" dy="957" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Shy9Nmfke0LrVcMxsyQM-5" edge="1" parent="1" source="Shy9Nmfke0LrVcMxsyQM-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="Shy9Nmfke0LrVcMxsyQM-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Shy9Nmfke0LrVcMxsyQM-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Listener" vertex="1">
+          <mxGeometry height="60" width="120" x="354" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Shy9Nmfke0LrVcMxsyQM-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Database" vertex="1">
+          <mxGeometry height="60" width="120" x="354" y="318" as="geometry" />
+        </mxCell>
+        <mxCell id="Shy9Nmfke0LrVcMxsyQM-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="REST API" vertex="1">
+          <mxGeometry height="60" width="120" x="354" y="555" as="geometry" />
+        </mxCell>
+        <mxCell id="Shy9Nmfke0LrVcMxsyQM-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Frontend" vertex="1">
+          <mxGeometry height="60" width="120" x="354" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="Shy9Nmfke0LrVcMxsyQM-8" edge="1" parent="1" source="Shy9Nmfke0LrVcMxsyQM-3" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="Shy9Nmfke0LrVcMxsyQM-2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="390" y="460" as="sourcePoint" />
+            <mxPoint x="440" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Shy9Nmfke0LrVcMxsyQM-13" parent="1" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Frontend sends&lt;/b&gt;&lt;div&gt;Login credentials: username, password. Registration data: username, password.&lt;/div&gt;&lt;div&gt;New shipment data: shipment name, eta, user identifier.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="110" width="230" x="580" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="Shy9Nmfke0LrVcMxsyQM-20" edge="1" parent="1" source="Shy9Nmfke0LrVcMxsyQM-3" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="Shy9Nmfke0LrVcMxsyQM-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="270" y="585" />
+              <mxPoint x="270" y="850" />
+            </Array>
+            <mxPoint x="450" y="710" as="sourcePoint" />
+            <mxPoint x="310" y="800" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Shy9Nmfke0LrVcMxsyQM-21" edge="1" parent="1" source="Shy9Nmfke0LrVcMxsyQM-4" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="Shy9Nmfke0LrVcMxsyQM-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="560" y="850" />
+              <mxPoint x="560" y="585" />
+            </Array>
+            <mxPoint x="450" y="770" as="sourcePoint" />
+            <mxPoint x="560" y="580" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Shy9Nmfke0LrVcMxsyQM-23" parent="1" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Frontend receives&lt;/b&gt;&lt;div&gt;Shipment data&lt;/div&gt;" vertex="1">
+          <mxGeometry height="110" width="230" x="20" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="Shy9Nmfke0LrVcMxsyQM-24" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="API fetches and updates data in the database." vertex="1">
+          <mxGeometry height="60" width="130" x="450" y="437" as="geometry" />
+        </mxCell>
+        <mxCell id="Shy9Nmfke0LrVcMxsyQM-26" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Listener updates shipment table on every MQTT message." vertex="1">
+          <mxGeometry height="60" width="130" x="440" y="194" as="geometry" />
+        </mxCell>
+        <mxCell id="Shy9Nmfke0LrVcMxsyQM-27" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;" value="Digitraffic MQTT broker" vertex="1">
+          <mxGeometry height="60" width="120" x="46" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Shy9Nmfke0LrVcMxsyQM-28" edge="1" parent="1" source="Shy9Nmfke0LrVcMxsyQM-27" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="Shy9Nmfke0LrVcMxsyQM-1" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="400" y="380" as="sourcePoint" />
+            <mxPoint x="450" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Shy9Nmfke0LrVcMxsyQM-29" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Listener subscribes to digitraffic&#39;s MQTT ship topic to get ship data" vertex="1">
+          <mxGeometry height="60" width="120" x="200" y="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
