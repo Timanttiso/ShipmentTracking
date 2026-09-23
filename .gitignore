@@ -1,0 +1,6 @@
+# enviromental file
+.env
+
+# files created by downloading modeules
+package-lock.json
+node_modules/
