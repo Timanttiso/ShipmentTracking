@@ -6,4 +6,5 @@
 
 # files created by downloading modules
 package-lock.json
+pnpm-lock.yaml
 node_modules/
