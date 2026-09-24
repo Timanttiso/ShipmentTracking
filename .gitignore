@@ -1,6 +1,9 @@
+# IDE
+.vscode/
+
 # enviromental file
 .env
 
-# files created by downloading modeules
+# files created by downloading modules
 package-lock.json
 node_modules/
