@@ -1,0 +1,23 @@
+html, body {
+	overflow-x: hidden;
+}
+
+body {
+    background: #f5f4ef;
+    color: #17202b;
+    font-family: 'Manrope', sans-serif;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+	margin: 0;
+}
+
+.error-message {
+    color: #8B1A1A;
+    font-size: 0.95rem;
+    text-align: center;
+    margin: 0;
+    font-weight: 700;
+    font-style: italic;
+}
