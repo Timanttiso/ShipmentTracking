@@ -9,10 +9,10 @@ const errorHandler = (err, req, res, next) => {
     /*
     // How to use this errorHandler with the ApiError class (in e.g., services)
 
-    import ApiError from '../utils/ApiError'
+    import ApiError from '../utils/ApiError.js'
 
     if (!user.name) {
-        throw new ApiError('Missing name in registerUser()', 400, 'Username is required')
+        throw new ApiError('Missing name in registerUser()', 400, 'Käyttäjänimi vaaditaan')
     }
     */
     
