@@ -17,7 +17,7 @@ export default function RegisterPage() {
         setError('')
 
         if (password !== confirmPassword) {
-            setError('Passwords do not match!')
+            setError('Salasanat eivät täsmää!')
             return
         }
 
@@ -30,7 +30,7 @@ export default function RegisterPage() {
             setPassword('')
             setConfirmPassword('')
         } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : 'Connection error'
+            const message = error instanceof Error ? error.message : 'Yhteysvirhe'
 
             setError(message)
             setSubmitting(false)
@@ -41,17 +41,17 @@ export default function RegisterPage() {
         <main className='login-page'>
             <div className='login-form-wrap'>
                 <div className='login-form-heading'>
-                    <p className='welcome-text welcome-text--dark'>Welcome</p>
-                    <h2>Create your account</h2>
+                    <p className='welcome-text welcome-text--dark'>Tervetuloa</p>
+                    <h2>Luo uusi käyttäjätili</h2>
                 </div>
 
                 <form className='login-form' onSubmit={handleSubmit}>
-                    <label htmlFor='username'>Username</label>
+                    <label htmlFor='username'>Käyttäjänimi</label>
                     <input
                         id='username'
                         name='username'
                         type='text'
-                        placeholder='Enter username'
+                        placeholder='Käyttäjänimesi'
                         autoComplete='username'
                         value={username}
                         required
@@ -59,24 +59,24 @@ export default function RegisterPage() {
                         onChange={(e) => setUsername(e.target.value)}
                     />
 
-                    <label htmlFor='password'>Password</label>
+                    <label htmlFor='password'>Luo salasana</label>
                     <input
                         id='password'
                         name='password'
                         type='password'
-                        placeholder='Create a password'
+                        placeholder='Salasanasi'
                         value={password}
                         required
                         minLength={5}
                         onChange={(e) => setPassword(e.target.value)}
                     />
 
-                    <label htmlFor='confirm-password'>Confirm password</label>
+                    <label htmlFor='confirm-password'>Varmista salasana</label>
                     <input
                         id='confirm-password'
                         name='confirm-password'
                         type='password'
-                        placeholder='Re-enter your password'
+                        placeholder='Toista salasanasi'
                         value={confirmPassword}
                         required
                         minLength={5}
@@ -86,16 +86,16 @@ export default function RegisterPage() {
                     {error && <p className="error-message">{error}</p>}
 
                     <button type='submit' className='login-button' disabled={submitting}>
-                        {submitting ? 'Creating account...' : 'Create account'}
+                        {submitting ? 'Luodaan käyttäjätiliä...' : 'Luo käyttäjätili'}
                         <span aria-hidden='true'>-&gt;</span>
                     </button>
                 </form>
                 <p className='login-form-footer'>
-                    Already have an account? <button
+                    Onko sinulla jo tili? <button
                         type='button'
                         className='login-text-button'
                         onClick={() => navigate('/')}
-                    >Sign in</button>
+                    >Kirjaudu</button>
                 </p>
             </div>
         </main>

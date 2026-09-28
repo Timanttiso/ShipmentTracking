@@ -34,17 +34,17 @@ export default function LoginPage() {
         <main className='login-page'>
             <div className='login-form-wrap'>
                 <div className='login-form-heading'>
-                    <p className='welcome-text welcome-text--dark'>Welcome</p>
-                    <h2>Sign in</h2>
+                    <p className='welcome-text welcome-text--dark'>Tervetuloa</p>
+                    <h2>Kirjaudu sisään</h2>
                 </div>
 
                 <form className='login-form' onSubmit={handleSubmit}>
-                    <label htmlFor='username'>Username</label>
+                    <label htmlFor='username'>Käyttäjänimi</label>
                     <input
                         id='username'
                         name='username'
                         type='text'
-                        placeholder='Enter username'
+                        placeholder='Käyttäjänimesi'
                         autoComplete='username'
                         value={username}
                         required
@@ -52,14 +52,14 @@ export default function LoginPage() {
                     />
 
                     <div className='password-label'>
-                        <label htmlFor='password'>Password</label>
-                        <button type='button' className='login-text-button'>Forgot password?</button>
+                        <label htmlFor='password'>Salasana</label>
+                        <button type='button' className='login-text-button'>Unohditko salasanasi?</button>
                     </div>
                     <input
                         id='password'
                         name='password'
                         type='password'
-                        placeholder='Enter password'
+                        placeholder='Salasanasi'
                         value={password}
                         required
                         onChange={(e) => setPassword(e.target.value)}
@@ -68,16 +68,16 @@ export default function LoginPage() {
                     {error && <p className="error-message">{error}</p>}
 
                     <button type='submit' className='login-button' disabled={submitting}>
-                        {submitting ? 'Signing in...' : 'Sign in'}
+                        {submitting ? 'Kirjaudutaan sisään...' : 'Kirjaudu sisään'}
                         <span aria-hidden='true'>-&gt;</span>
                     </button>
                 </form>
                 <p className='login-form-footer'>
-                    Don't have an account yet? <button
+                    Eikö sinulla ole tiliä? <button
                         type='button'
                         className='login-text-button'
                         onClick={() => navigate('/register')}
-                    >Register</button>
+                    >Rekisteröidy</button>
                 </p>
             </div>
         </main>
