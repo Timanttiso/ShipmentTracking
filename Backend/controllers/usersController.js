@@ -1,16 +1,18 @@
 import express from 'express'
 import UserService from '../services/userService.js';
 import jwt from 'jsonwebtoken'
+import auth from '../utils/auth.js'
+import 'dotenv/config'
 
 const usersRouter = express.Router()
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
-usersRouter.post('/register', async (request, response, next) => {
+usersRouter.post('/register', auth.authenticationNotRequired, async (request, response, next) => {
     try {
         const { username, password, email} = request.body
 
-        if(!username || !password){
-            return response.status(400).json({error: 'Käyttäjänimi ja salasana vaaditaan.'})
+        if(!username || !password || !email){
+            return response.status(400).json({error: 'Käyttäjänimi, sähköposti ja salasana vaaditaan.'})
         }
         if(!passwordRegex.test(password)){
             return response.status(400).json({error: 'Salasanan täytyy täyttää seuraavat vaatimukset: 1 isokirjain, 1 pienikirjain, 1 numero, 1 erikoiskirjain ja vähintään kahdeksan kirjainta pitkä.'})
@@ -26,7 +28,7 @@ usersRouter.post('/register', async (request, response, next) => {
 
 })
 
-usersRouter.post('/login', async (request, response, next) => {
+usersRouter.post('/login', auth.authenticationNotRequired, async (request, response, next) => {
     try{
         const {username, password} = request.body
         const user = await UserService.checkCredentials({ username, password })
@@ -36,9 +38,12 @@ usersRouter.post('/login', async (request, response, next) => {
         }
 
         const token = jwt.sign(
-            {userId: user.id},
+            {userId: user.id, username: user.username, email: user.email},
             process.env.JWT_SECRET,
-            { expiresIn: "60m" }
+            { 
+                algorithm: 'HS256',
+                expiresIn: "60m"
+            }
         )
 
         response.json({ token })
@@ -46,6 +51,20 @@ usersRouter.post('/login', async (request, response, next) => {
     catch(error){
         next(error)
     }
+})
+
+usersRouter.get('/me', auth.authenticationRequired, async (request, response, next) => {
+    try{
+        const user = await UserService.getById(request.user.id)
+        response.json({
+            id: request.user.id,
+            username: user.username,
+            email: user.email
+        })
+    }catch(error){
+        next(error)
+    }
+    
 })
 
 export default usersRouter

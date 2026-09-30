@@ -19,6 +19,13 @@ const User = {
             .select('*')
             .where({ email:email})
             .first()
+    },
+
+    async findById(id, dbConn = db){
+        return dbConn('users')
+            .select('*')
+            .where({ id: id})
+            .first()
     }
 }
 

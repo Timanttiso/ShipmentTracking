@@ -5,10 +5,14 @@ import ApiError from '../utils/ApiError.js'
 const saltRounds = 12
 
 const UserService = {
-    async register({username, password}) {
+    async register({username, password, email}) {
         const existingUsername = await User.findByName(username)
         if(existingUsername){
             throw new ApiError('Username already taken in register()', 409, 'Tämä käyttäjänimi on jo käytössä')
+        }
+        const existingEmail = await User.findByEmail(email)
+        if(existingEmail){
+            throw new ApiError('An account with an existing email found in register()', 409, 'Tämä sähköposti on jo käytössä')
         }
         const password_hash = await bcrypt.hash(password, saltRounds)
 
@@ -29,6 +33,10 @@ const UserService = {
         }
         return user
 
+    },
+
+    async getById(id){
+        return await User.findById(id)
     }
 }
 
