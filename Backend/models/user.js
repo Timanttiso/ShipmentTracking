@@ -12,6 +12,13 @@ const User = {
             .select('*')
             .where({ username:username })
             .first()
+    },
+
+    async findByEmail(email, dbConn = db){
+        return dbConn('users')
+            .select('*')
+            .where({ email:email})
+            .first()
     }
 }
 

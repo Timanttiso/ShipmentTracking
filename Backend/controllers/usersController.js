@@ -1,12 +1,13 @@
 import express from 'express'
 import UserService from '../services/userService.js';
+import jwt from 'jsonwebtoken'
 
 const usersRouter = express.Router()
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
 usersRouter.post('/register', async (request, response, next) => {
     try {
-        const { username, password, email} = request.body;
+        const { username, password, email} = request.body
 
         if(!username || !password){
             return response.status(400).json({error: 'Käyttäjänimi ja salasana vaaditaan.'})
@@ -25,8 +26,26 @@ usersRouter.post('/register', async (request, response, next) => {
 
 })
 
-usersRouter.post('/login', async (request, response) => {
-    response.json("Not implemented yet");
+usersRouter.post('/login', async (request, response, next) => {
+    try{
+        const {username, password} = request.body
+        const user = await UserService.checkCredentials({ username, password })
+
+        if(!user){
+            return response.status(401).json({ error: 'Väärä käyttäjänimi tai salasana'})
+        }
+
+        const token = jwt.sign(
+            {userId: user.id},
+            process.env.JWT_SECRET,
+            { expiresIn: "60m" }
+        )
+
+        response.json({ token })
+    }
+    catch(error){
+        next(error)
+    }
 })
 
-export default usersRouter;
+export default usersRouter
