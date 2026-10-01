@@ -19,6 +19,11 @@ const requestHelper = async <TResponse = unknown>(path: string, options: Request
     const headers = new Headers(options.headers)
     headers.set('Content-Type', 'application/json')
 
+    const token = localStorage.getItem('shipmentTrackingAuthToken')
+    if (token) {
+        headers.set('Authorization', `Bearer ${token}`)
+    }
+
     const res = await fetch(path, {
         ...options,
         headers,
@@ -37,16 +42,26 @@ const requestHelper = async <TResponse = unknown>(path: string, options: Request
     return (await res.json()) as TResponse
 }
 
-export const fetchLogin = async <TResponse = unknown>(reqBody: Record<string, unknown>): Promise<TResponse> => {
-    return requestHelper<TResponse>('/auth/login', {
+export const fetchLogin = <TResponse = unknown>(reqBody: Record<string, unknown>): Promise<TResponse> => {
+    return requestHelper<TResponse>('/api/auth/login', {
         method: 'POST',
         body: JSON.stringify(reqBody),
     })
 }
 
-export const fetchRegister = async <TResponse = unknown>(reqBody: Record<string, unknown>): Promise<TResponse> => {
-    return requestHelper<TResponse>('/auth/register', {
+export const fetchRegister = <TResponse = unknown>(reqBody: Record<string, unknown>): Promise<TResponse> => {
+    return requestHelper<TResponse>('/api/auth/register', {
         method: 'POST',
         body: JSON.stringify(reqBody),
     })
+}
+
+export interface AuthUser {
+    id: number
+    username: string
+    email: string
+}
+
+export const checkAuth = (): Promise<AuthUser> => {
+    return requestHelper<AuthUser>('/api/auth/me')
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { fetchLogin } from '../services/auth'
+import { useAuth } from '../contexts/AuthContext'
 import './LoginPage.css'
 
 export default function LoginPage() {
@@ -10,6 +10,7 @@ export default function LoginPage() {
     const [submitting, setSubmitting] = useState(false)
 
     const navigate = useNavigate()
+    const { login } = useAuth()
 
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -18,14 +19,14 @@ export default function LoginPage() {
         setSubmitting(true)
 
         try {
-            await fetchLogin({ username, password })
-            //navigate('/dashboard')
+            await login({ username, password })
             setUsername('')
             setPassword('')
+            navigate('/dashboard')
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : 'Connection error'
-
             setError(message)
+        } finally {
             setSubmitting(false)
         }
     }
@@ -42,6 +43,7 @@ export default function LoginPage() {
                     <label htmlFor='username'>Käyttäjänimi</label>
                     <input
                         id='username'
+                        className='login-input'
                         name='username'
                         type='text'
                         placeholder='Käyttäjänimesi'
@@ -51,26 +53,27 @@ export default function LoginPage() {
                         onChange={(e) => setUsername(e.target.value)}
                     />
 
-                    <div className='password-label'>
+                    <div className='password-field'>
                         <label htmlFor='password'>Salasana</label>
-                        <button type='button' className='login-text-button'>Unohditko salasanasi?</button>
+                        <input
+                            id='password'
+                            className='login-input'
+                            name='password'
+                            type='password'
+                            placeholder='Salasanasi'
+                            value={password}
+                            required
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <button type='submit' className='login-button' disabled={submitting}>
+                            {submitting ? 'Kirjaudutaan...' : 'Kirjaudu sisään'}
+                            <span aria-hidden='true'>-&gt;</span>
+                        </button>
+                        <button type='button' className='login-text-button forgot-password-button'>
+                            Unohditko salasanasi?
+                        </button>
+                        {error && <p className="error-message">{error}</p>}
                     </div>
-                    <input
-                        id='password'
-                        name='password'
-                        type='password'
-                        placeholder='Salasanasi'
-                        value={password}
-                        required
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-
-                    {error && <p className="error-message">{error}</p>}
-
-                    <button type='submit' className='login-button' disabled={submitting}>
-                        {submitting ? 'Kirjaudutaan sisään...' : 'Kirjaudu sisään'}
-                        <span aria-hidden='true'>-&gt;</span>
-                    </button>
                 </form>
                 <p className='login-form-footer'>
                     Eikö sinulla ole tiliä? <button

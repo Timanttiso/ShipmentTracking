@@ -28,7 +28,7 @@
 
 .welcome-text--dark {
     margin-bottom: 13px;
-    color: #a57a23;
+    color: #755719;
 }
 
 .login-form-heading h2 {
@@ -48,22 +48,49 @@
 }
 
 .login-form label,
-.password-label {
+.password-field {
     color: #394755;
     font-size: 12px;
     font-weight: 600;
 }
 
-.password-label {
+.password-field {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     align-items: center;
+    row-gap: 10px;
     margin-top: 13px;
 }
 
-.login-form input[type='text'],
-.login-form input[type='password'] {
+.password-field > label {
+    order: 1;
+    flex: 1 1 auto;
+}
+
+.password-field > .forgot-password-button {
+    order: 2;
+}
+
+.password-field > input[type='password'] {
+    order: 3;
+    flex: 0 0 100%;
+}
+
+.password-field > .error-message {
+    order: 4;
+    flex: 0 0 100%;
+}
+
+.password-field > .login-button {
+    order: 5;
+    flex: 0 0 100%;
+    box-sizing: border-box;
+}
+
+.login-input {
+    box-sizing: border-box;
     height: 50px;
+    width: 100%;
     padding: 0 15px;
     border: 1px solid var(--line);
     border-radius: 2px;
@@ -75,8 +102,7 @@
     transition: border-color .2s, box-shadow .2s;
 }
 
-.login-form input[type='text']:focus,
-.login-form input[type='password']:focus {
+.login-input:focus {
     border-color: var(--navy);
     box-shadow: 0 0 0 3px rgba(16, 42, 67, .09);
 }
