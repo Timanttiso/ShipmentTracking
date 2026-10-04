@@ -34,7 +34,6 @@
 .login-form-heading h2 {
     margin: 0 0 11px;
     color: var(--ink);
-    font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
     font-size: clamp(25px, 2.5vw, 32px);
     letter-spacing: -1px;
     line-height: 1.15;

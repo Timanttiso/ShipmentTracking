@@ -1,0 +1,113 @@
+.shipment-sort {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #4e5963;
+    position: relative;
+}
+
+.shipment-sort__label {
+    color: #6a747d;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.shipment-sort__dropdown {
+    position: relative;
+}
+
+.shipment-sort__trigger {
+    display: inline-flex;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-width: 132px;
+    min-height: 36px;
+    padding: 0 10px;
+    border: 1px solid #dedfdc;
+    border-radius: 4px;
+    background: #fff;
+    color: var(--dash-navy);
+    cursor: pointer;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: left;
+}
+
+.shipment-sort__trigger:focus-visible,
+.shipment-sort__option:focus-visible {
+    outline: 2px solid var(--dash-accent);
+    outline-offset: 2px;
+}
+
+.shipment-sort__chevron {
+    width: 6px;
+    height: 6px;
+    flex: 0 0 auto;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+}
+
+.shipment-sort__menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    z-index: 5;
+    width: max-content;
+    min-width: 122px;
+    max-width: calc(100vw - 34px);
+    padding: 4px;
+    border: 1px solid #dedfdc;
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 0 5px 16px rgba(17, 32, 43, .14);
+}
+
+.shipment-sort__option {
+    display: block;
+    width: 100%;
+    padding: 8px 9px;
+    border: 0;
+    background: transparent;
+    color: var(--dash-navy);
+    cursor: pointer;
+    font: inherit;
+    font-size: 12px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.shipment-sort__option:hover,
+.shipment-sort__option--selected {
+    background: #f5ebda;
+}
+
+.shipment-sort-direction {
+    display: inline-grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 1px solid #dedfdc;
+    border-radius: 4px;
+    background: #fff;
+    color: var(--dash-navy);
+    cursor: pointer;
+    font: inherit;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.shipment-sort-direction:hover {
+    background: #f5ebda;
+}
+
+.shipment-sort-direction:focus-visible {
+    outline: 2px solid var(--dash-accent);
+    outline-offset: 2px;
+}

@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { checkAuth, fetchLogin, type AuthUser } from '../services/auth'
 
 interface AuthContextValue {
@@ -20,13 +21,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<AuthUser | null>(null)
     const [loading, setLoading] = useState(true)
 
+    const navigate = useNavigate()
+
     useEffect(() => {
         let cancelled = false
 
         const loadUser = async () => {
             try {
                 const token = localStorage.getItem(tokenKey)
-                if (!token) return
+                if (!token) {
+                    navigate('/')
+                    return
+                }
 
                 const currentUser = await checkAuth()
                 if (!cancelled) setUser(currentUser)
