@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import pg from 'pg'
 import { fileURLToPath } from 'url'
-import logger from '../utils/logger'
+import logger from '../utils/logger.js'
 import crypto from 'crypto'
 
 const { Client } = pg
