@@ -67,4 +67,24 @@ usersRouter.get('/me', auth.authenticationRequired, async (request, response, ne
     
 })
 
+usersRouter.patch('/settings', auth.authenticationRequired, async (request, response, next) => {
+    try{
+        const { username, email, default_destination_id } = request.body
+
+        if(!username){
+            return response.status(400).json({ error: "Käyttäjänimi ei saa olla tyhjä" })
+        }
+        else if(!email){
+            return response.status(400).json({ error: "Sähköposti ei saa olla tyhjä" })
+        }
+
+        const updatedUser = await UserService.UpdateUserSettings(request.user.id, { username, email, default_destination_id })
+
+        response.status(200).json(updatedUser)
+    }
+    catch(error){
+        next(error)
+    }
+})
+
 export default usersRouter

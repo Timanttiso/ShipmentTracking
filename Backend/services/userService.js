@@ -1,6 +1,7 @@
 import User from '../models/user.js'
 import bcrypt from 'bcrypt'
 import ApiError from '../utils/ApiError.js'
+import Destination from '../models/destination.js'
 
 const saltRounds = 12
 
@@ -37,6 +38,26 @@ const UserService = {
 
     async getById(id){
         return await User.findById(id)
+    },
+
+    async UpdateUserSettings(id, { username, email, default_destination_id }){
+        const existingUsername = await User.findByName(username)
+        if(existingUsername){
+            throw new ApiError('Username already taken in UpdateUserSettings()', 409, 'Tämä käyttäjänimi on jo käytössä')
+        }
+        const existingEmail = await User.findByEmail(email)
+        if(existingEmail){
+            throw new ApiError('An account with an existing email found in UpdateUserSettings()', 409, 'Tämä sähköposti on jo käytössä')
+        }
+
+        if(default_destination_id){
+            const existingDestination = await Destination.getById(default_destination_id, id)
+            if(!existingDestination){
+                throw new ApiError('Destination not found in UpdateUserSettings()', 404, 'Päämäärää ei löydetty')
+            }
+        }
+
+        return await User.updateUserSettings(id, { username, email, default_destination_id})
     }
 }
 

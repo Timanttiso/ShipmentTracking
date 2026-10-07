@@ -26,6 +26,13 @@ const User = {
             .select('*')
             .where({ id: id})
             .first()
+    },
+
+    async updateUserSettings(id, { username, email, default_destination_id }, dbConn = db){
+        return dbConn('users')
+            .where({ id })
+            .update({ username: username, email: email, default_destination_id, default_destination_id})
+            .returning('*')
     }
 }
 
