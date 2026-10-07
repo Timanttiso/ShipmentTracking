@@ -21,6 +21,18 @@ const Shipment = {
             .select('*')
             .where({id, user_id})
             .first()
+    },
+    async updateShipmentInformation(id, user_id, {shipment_name, ship_mmsi, eta, destination_id}, dbConn = db){
+        return dbConn('shipments')
+            .where({ id, user_id })
+            .update({ shipment_name: shipment_name, ship_mmsi: ship_mmsi, eta: eta, destination_id: destination_id})
+            .returning('*')
+    },
+    async updateShipmentStatus(id, user_id, { status }, dbConn = db){
+        return dbConn('shipments')
+            .where({ id, user_id })
+            .update({ status: status})
+            .returning('*')
     }
 }
 
