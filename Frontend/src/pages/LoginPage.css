@@ -66,10 +66,6 @@
     flex: 1 1 auto;
 }
 
-.password-field > .forgot-password-button {
-    order: 2;
-}
-
 .password-field > input[type='password'] {
     order: 3;
     flex: 0 0 100%;

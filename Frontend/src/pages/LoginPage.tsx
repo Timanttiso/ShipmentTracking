@@ -69,9 +69,6 @@ export default function LoginPage() {
                             {submitting ? 'Kirjaudutaan...' : 'Kirjaudu sisään'}
                             <span aria-hidden='true'>-&gt;</span>
                         </button>
-                        <button type='button' className='login-text-button forgot-password-button'>
-                            Unohditko salasanasi?
-                        </button>
                         {error && <p className="error-message">{error}</p>}
                     </div>
                 </form>
