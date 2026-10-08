@@ -57,6 +57,16 @@ const ShipmentService = {
         }
 
         return Shipment.updateShipmentStatus(id, user_id, { status })
+    },
+
+    async RemoveShipment(id, user_id){
+        const shipment = await Shipment.getById(id, user_id)
+
+        if(!shipment){
+            throw new ApiError('Shipment not found in RemoveShipment() for user', 404, 'Lähetystä ei löydetty')
+        }
+
+        return await Shipment.removeShipment(id)
     }
 }
 

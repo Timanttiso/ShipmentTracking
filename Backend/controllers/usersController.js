@@ -23,7 +23,7 @@ usersRouter.get('/me', auth.authenticationRequired, async (request, response, ne
 })
 //#endregion
 
-//#region POST
+//#region POST endpoints
 usersRouter.post('/register', auth.authenticationNotRequired, async (request, response, next) => {
     try {
         const { username, password, email} = request.body
@@ -112,6 +112,21 @@ usersRouter.patch('/settings/change-password', auth.authenticationRequired, asyn
         next(error)
     }
 })
+//#endregion
+
+//#region DELETE endpoints
+
+usersRouter.delete('/settings/delete-account', auth.authenticationRequired, async (request, response, next) => {
+    try{
+        await UserService.DeleteUser(request.user.id)
+
+        response.status(200).json()
+    }
+    catch(error){
+        next(error)
+    }
+})
+
 //#endregion
 
 export default usersRouter

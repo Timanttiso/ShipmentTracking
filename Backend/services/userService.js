@@ -73,6 +73,16 @@ const UserService = {
         const password_hash = await bcrypt.hash(new_password, saltRounds)
 
         return await User.UpdatePassword(id, password_hash)
+    },
+
+    async DeleteUser(id){
+        const user = await User.findById(id)
+
+        if(!user){
+            throw new ApiError('User not found', 404, 'Käyttäjää ei löydetty')
+        }
+
+        return await User.RemoveUser(id)
     }
 }
 

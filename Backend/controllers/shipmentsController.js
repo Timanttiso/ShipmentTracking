@@ -112,4 +112,21 @@ shipmentsRouter.patch('/shipment/status/:id', auth.authenticationRequired, async
 })
 //#endregion
 
+//#region DELETE endpoints
+
+shipmentsRouter.delete('/shipment/:id', auth.authenticationRequired, async(request, response, next) => {
+    try{
+        const { id } = request.params
+
+        await ShipmentService.RemoveShipment(id, request.user.id)
+
+        response.status(200).json()
+    }
+    catch(error){
+        next(error)
+    }
+})
+
+//#endregion
+
 export default shipmentsRouter;

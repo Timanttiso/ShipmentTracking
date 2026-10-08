@@ -33,6 +33,11 @@ const Shipment = {
             .where({ id, user_id })
             .update({ status: status})
             .returning('*')
+    },
+    async removeShipment(id, dbConn = db){
+        return dbConn('shipments')
+            .where({ id })
+            .delete()
     }
 }
 

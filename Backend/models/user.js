@@ -40,6 +40,12 @@ const User = {
             .where({ id })
             .update({password_hash: password_hash})
             .returning('*')
+    },
+
+    async RemoveUser(id, dbConn = db){
+        return dbConn('users')
+            .where({ id })
+            .delete()
     }
 }
 
