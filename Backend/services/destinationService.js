@@ -14,6 +14,26 @@ const DestinationService = {
 
     async GetAllForUser(user_id){
         return await Destination.getAllForUser(user_id)
+    },
+
+    async GetById(id, user_id){
+        const destination = await Destination.getById(id, user_id)
+
+        if(!destination){
+            throw new ApiError('Destination not found in GetById()', 404, 'Sijaintia ei löytynyt')
+        }
+
+        return destination
+    },
+
+    async UpdateDestinationInfo(id, user_id, {destination_name, lon, lat}){
+        const destination = await Destination.getById(id, user_id)
+
+        if(!destination){
+            throw new ApiError('Destination not found in UpdateDestinationInfo()', 404, 'Sijaintia ei löytynyt')
+        }
+
+        return await Destination.updateDestination(id, {destination_name, lon, lat})
     }
 }
 

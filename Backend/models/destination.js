@@ -22,6 +22,12 @@ const Destination = {
             .select('*')
             .where({user_id, destination_name})
             .first()
+    },
+    async updateDestination(id, {destination_name, lon, lat}, dbConn = db){
+        return dbConn('destinations')
+            .where({ id })
+            .update({destination_name:destination_name, lon:lon, lat:lat})
+            .returning('*')
     }
 }
 
