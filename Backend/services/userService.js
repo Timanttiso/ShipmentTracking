@@ -25,12 +25,12 @@ const UserService = {
         if(!user){
             user = await User.findByEmail(username);
             if(!user){
-                throw new ApiError('Wrong credentials in checkCredentials()', 404, 'Väärä käyttäjänimi tai salasana')
+                throw new ApiError('Wrong credentials in checkCredentials()', 401, 'Väärä käyttäjänimi tai salasana')
             }
         }
         
         if(!await bcrypt.compare(password, user.password_hash)){
-            throw new ApiError('Wrong credentials in checkCredentials()', 404, 'Väärä käyttäjänimi tai salasana')
+            throw new ApiError('Wrong credentials in checkCredentials()', 401, 'Väärä käyttäjänimi tai salasana')
         }
         return user
 
@@ -58,6 +58,21 @@ const UserService = {
         }
 
         return await User.updateUserSettings(id, { username, email, default_destination_id})
+    },
+
+    async ChangePassword(id, { old_password, new_password }){
+        const user = await User.findById(id)
+
+        if(!user){
+            throw new ApiError('User not found', 404, 'Käyttäjää ei löydetty')
+        }
+
+        if(!await bcrypt.compare(old_password, user.password_hash)){
+            throw new ApiError('Old password is wrong in ChangePassword()', 401, 'Väärä salasana')
+        }
+        const password_hash = await bcrypt.hash(new_password, saltRounds)
+
+        return await User.UpdatePassword(id, password_hash)
     }
 }
 

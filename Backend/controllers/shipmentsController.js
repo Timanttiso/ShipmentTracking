@@ -4,6 +4,7 @@ import auth from '../utils/auth.js'
 
 const shipmentsRouter = express.Router()
 
+//#region GET endpoints
 shipmentsRouter.get('/', auth.authenticationRequired, async (request, response, next) => {
     try{
         const shipments = await ShipmentService.GetAllShipmentsForUser(request.user.id)
@@ -20,7 +21,7 @@ shipmentsRouter.get('/status/:status', auth.authenticationRequired, async(reques
         const { status } = request.params
 
         if(status != 1 && status != 2 && status != 3){
-            return response.status(400).json({ error: 'Bad status'})
+            return response.status(400).json({ error: 'Väärä tila'})
         } 
         const shipments = await ShipmentService.GetAllShipmentsForUserByStatus(request.user.id, status)
 
@@ -43,7 +44,9 @@ shipmentsRouter.get('/shipment/:id', auth.authenticationRequired, async(request,
         next(error)
     }
 })
+//#endregion
 
+//#region POST endpoints
 shipmentsRouter.post('/add-shipment',auth.authenticationRequired, async (request, response, next) => {
     try{
         const { shipment_name, ship_mmsi, eta } = request.body
@@ -63,7 +66,9 @@ shipmentsRouter.post('/add-shipment',auth.authenticationRequired, async (request
         next(error)
     }
 })
+//#endregion
 
+//#region PATCH endpoints
 shipmentsRouter.patch('/shipment/:id', auth.authenticationRequired, async(request, response, next) => {
     try{
         const { id } = request.params
@@ -105,5 +110,6 @@ shipmentsRouter.patch('/shipment/status/:id', auth.authenticationRequired, async
         next(error)
     }
 })
+//#endregion
 
 export default shipmentsRouter;

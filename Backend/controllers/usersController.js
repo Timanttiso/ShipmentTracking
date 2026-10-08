@@ -7,6 +7,23 @@ import 'dotenv/config'
 const usersRouter = express.Router()
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
+//#region GET endpoints
+usersRouter.get('/me', auth.authenticationRequired, async (request, response, next) => {
+    try{
+        const user = await UserService.getById(request.user.id)
+        response.json({
+            id: request.user.id,
+            username: user.username,
+            email: user.email
+        })
+    }catch(error){
+        next(error)
+    }
+    
+})
+//#endregion
+
+//#region POST
 usersRouter.post('/register', auth.authenticationNotRequired, async (request, response, next) => {
     try {
         const { username, password, email} = request.body
@@ -52,21 +69,9 @@ usersRouter.post('/login', auth.authenticationNotRequired, async (request, respo
         next(error)
     }
 })
+//#endregion
 
-usersRouter.get('/me', auth.authenticationRequired, async (request, response, next) => {
-    try{
-        const user = await UserService.getById(request.user.id)
-        response.json({
-            id: request.user.id,
-            username: user.username,
-            email: user.email
-        })
-    }catch(error){
-        next(error)
-    }
-    
-})
-
+//#region PATCH endpoints
 usersRouter.patch('/settings', auth.authenticationRequired, async (request, response, next) => {
     try{
         const { username, email, default_destination_id } = request.body
@@ -86,5 +91,27 @@ usersRouter.patch('/settings', auth.authenticationRequired, async (request, resp
         next(error)
     }
 })
+
+usersRouter.patch('/settings/change-password', auth.authenticationRequired, async (request, response, next) => {
+    try{
+        const { old_password, new_password } = request.body
+        
+        if(old_password == new_password){
+            return response.status(400).json({error: 'Syötä eri salasana vaihtaaksesi salasanan'})
+        }
+
+        if(!passwordRegex.test(new_password)){
+            return response.status(400).json({error: 'Salasanan täytyy täyttää seuraavat vaatimukset: 1 isokirjain, 1 pienikirjain, 1 numero, 1 erikoiskirjain ja vähintään kahdeksan kirjainta pitkä.'})
+        }
+        
+        await UserService.ChangePassword(request.user.id, { old_password, new_password})
+
+        response.status(200).json()
+    }
+    catch(error){
+        next(error)
+    }
+})
+//#endregion
 
 export default usersRouter

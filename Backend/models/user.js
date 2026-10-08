@@ -33,6 +33,13 @@ const User = {
             .where({ id })
             .update({ username: username, email: email, default_destination_id, default_destination_id})
             .returning('*')
+    },
+
+    async UpdatePassword(id, password_hash, dbConn = db){
+        return dbConn('users')
+            .where({ id })
+            .update({password_hash: password_hash})
+            .returning('*')
     }
 }
 

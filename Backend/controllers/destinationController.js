@@ -4,6 +4,7 @@ import auth from '../utils/auth.js'
 
 const DestinationRouter = express.Router()
 
+//#region GET endpoints
 DestinationRouter.get('/', auth.authenticationRequired, async (request, response, next) => {
     try{
         const destinations = await DestinationService.GetAllForUser(request.user.id)
@@ -14,7 +15,9 @@ DestinationRouter.get('/', auth.authenticationRequired, async (request, response
         next(error)
     }
 })
+//#endregion
 
+//#region POST endpoints
 DestinationRouter.post('/add-destination', auth.authenticationRequired, async (request, response, next) => {
     try{
         const { destination_name, lon, lat } = request.body
@@ -27,5 +30,6 @@ DestinationRouter.post('/add-destination', auth.authenticationRequired, async (r
         next(error)
     }
 })
+//#endregion
 
 export default DestinationRouter
