@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { checkAuth, fetchLogin, type AuthUser } from '../services/auth'
+import { ApiError, authExpiredEvent } from '../services/serviceHelper'
 
 interface AuthContextValue {
     user: AuthUser | null
@@ -30,14 +31,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             try {
                 const token = localStorage.getItem(tokenKey)
                 if (!token) {
-                    navigate('/')
                     return
                 }
 
                 const currentUser = await checkAuth()
                 if (!cancelled) setUser(currentUser)
-            } catch {
-                if (!cancelled) setUser(null)
+            } catch (error: unknown) {
+                if (!cancelled) {
+                    if (error instanceof ApiError && error.status === 401) {
+                        localStorage.removeItem(tokenKey)
+                    }
+                    setUser(null)
+                }
             } finally {
                 if (!cancelled) setLoading(false)
             }
@@ -49,6 +54,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             cancelled = true
         }
     }, [])
+
+    useEffect(() => {
+        const handleAuthExpired = () => {
+            localStorage.removeItem(tokenKey)
+            setUser(null)
+            navigate('/', { replace: true })
+        }
+
+        window.addEventListener(authExpiredEvent, handleAuthExpired)
+        return () => window.removeEventListener(authExpiredEvent, handleAuthExpired)
+    }, [navigate])
 
     const login = async (credentials: { username: string; password: string }) => {
         const { token } = await fetchLogin<LoginResponse>(credentials)

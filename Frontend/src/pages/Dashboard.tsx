@@ -198,7 +198,7 @@ export default function Dashboard() {
                                         <h2>{shipment.shipment_name}</h2>
                                         <div className='shipment-updated-group'>
                                             <span className='mobile-field-label'>Viimeksi päivitetty</span>
-                                            <span className='shipment-updated'>{formatDateTime(shipment.updated_at, 'Ei päivitystietoa')}</span>
+                                            <span className='shipment-updated'>{formatDateTime(shipment.updated_at || shipment.created_at, 'Ei päivitystietoa')}</span>
                                         </div>
                                     </div>
                                     <div className='shipment-eta'>
