@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactElement } from 'react'
-import './SortDropdown.css'
+import './styles/SortDropdown.css'
 
 type SortDropdownOption<Value extends string> = {
     value: Value
@@ -63,20 +63,20 @@ export default function SortDropdown<Value extends string>({
                     aria-expanded={isOpen}
                     aria-haspopup='menu'
                     aria-label={`Järjestä: ${selectedOption?.label ?? value}`}
-                    className='shipment-sort__trigger'
+                    className='dropdown__trigger shipment-sort__trigger'
                     onClick={() => setIsOpen((open) => !open)}
                     ref={triggerRef}
                     type='button'
                 >
                     {selectedOption?.label ?? value}
-                    <span className='shipment-sort__chevron' aria-hidden='true' />
+                    <span className='dropdown__chevron' aria-hidden='true' />
                 </button>
                 {isOpen && (
-                    <div className='shipment-sort__menu' role='menu'>
+                    <div className='dropdown__menu  shipment-sort__menu' role='menu'>
                         {options.map((option) => (
                             <button
                                 aria-checked={value === option.value}
-                                className={`shipment-sort__option${value === option.value ? ' shipment-sort__option--selected' : ''}`}
+                                className={`dropdown__option shipment-sort__option${value === option.value ? ' dropdown__option--selected' : ''}`}
                                 key={option.value}
                                 onClick={() => selectOption(option.value)}
                                 role='menuitemradio'

@@ -6,6 +6,8 @@ import AddShipmentPopup from '../components/AddShipmentPopup'
 import ShipmentInfoPopup from '../components/ShipmentInfoPopup'
 import SortDropdown, { type SortDirection } from '../components/SortDropdown'
 import { fetchShipments } from '../services/api'
+import '../components/styles/Dropdown.css'
+import '../components/styles/Popup.css'
 import './Dashboard.css'
 
 const filters = ['Kaikki', 'Matkalla', 'Toimitettu', 'Viivästynyt'] as const

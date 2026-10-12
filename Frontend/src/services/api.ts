@@ -30,15 +30,15 @@ type DestinationRequest = {
     lat: number
 }
 
-export const addDestination = <TResponse = unknown>(destination: DestinationRequest): Promise<TResponse> => {
-    return requestHelper<TResponse>('/api/destinations/add-destination', true, {
+export const addDestination = (destination: DestinationRequest): Promise<[Destination]> => {
+    return requestHelper<[Destination]>('/api/destinations/add-destination', true, {
         method: 'POST',
         body: JSON.stringify(destination),
     })
 }
 
-export const updateDestination = <TResponse = unknown>(id: number, destination: DestinationRequest): Promise<TResponse> => {
-    return requestHelper<TResponse>(`/api/destinations/destination/${id}`, true, {
+export const updateDestination = (id: number, destination: DestinationRequest): Promise<[Destination]> => {
+    return requestHelper<[Destination]>(`/api/destinations/destination/${id}`, true, {
         method: 'PATCH',
         body: JSON.stringify(destination),
     })

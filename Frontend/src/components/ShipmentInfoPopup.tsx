@@ -1,6 +1,6 @@
 import { useEffect, type JSX, type Dispatch, type SetStateAction } from 'react'
 import { shipmentStatusLabels, type Shipment } from '../types/shipment'
-import './ShipmentInfoPopup.css'
+import './styles/ShipmentInfoPopup.css'
 
 type shipmentInfoPopupProps = {
     setActiveMap: Dispatch<SetStateAction<Shipment | null>>
@@ -31,19 +31,19 @@ export default function ShipmentInfoPopup({ setActiveMap, activeMap, formatDateT
     
     return (
         <div
-            className='map-dialog-backdrop'
+            className='popup-backdrop popup-backdrop--map'
             onClick={(e) => {
                 if (e.target === e.currentTarget) setActiveMap(null)
             }}
             role='presentation'
         >
-            <section className='map-dialog' role='dialog' aria-modal='true' aria-labelledby='map-dialog-title'>
-                <header className='map-dialog__header'>
+            <section className='popup-dialog map-dialog' role='dialog' aria-modal='true' aria-labelledby='map-dialog-title'>
+                <header className='popup-dialog__header'>
                     <div>
                         <h2 id='map-dialog-title'>{activeMap.shipment_name}</h2>
                     </div>
                     <button
-                        className='map-dialog__close'
+                        className='popup-dialog__close'
                         onClick={() => setActiveMap(null)}
                         type='button'
                         aria-label='Sulje kartta'

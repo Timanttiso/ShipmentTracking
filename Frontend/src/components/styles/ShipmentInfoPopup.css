@@ -1,0 +1,73 @@
+.map-dialog {
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    width: min(960px, 100%);
+    height: min(760px, 88vh);
+    padding: 17px;
+}
+
+.map-dialog__details {
+    display: flex;
+    gap: 13px 20px;
+    margin: 0;
+    padding: 0 2px 16px;
+}
+
+.map-dialog__details > div {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.map-dialog__details dt {
+    color: #8c918e;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .7px;
+    text-transform: uppercase;
+}
+
+.map-dialog__details dd {
+    margin: 4px 0 0;
+    color: #33424c;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+.map-dialog > iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    border: 0;
+    background: #e4e8df;
+}
+
+@media (max-height: 400px) {
+    .map-dialog {
+        height: 100vh;
+    }
+}
+
+@media (max-height: 500px) {
+    .map-dialog__details {
+        padding-bottom: 5px;
+    }
+}
+
+@media (max-width: 640px) {
+    .map-dialog {
+        height: 90vh;
+        padding: 11px;
+    }
+
+    .map-dialog__details {
+        flex-wrap: wrap;
+        gap: 10px 12px;
+        padding-bottom: 12px;
+    }
+
+    .map-dialog__details > div {
+        flex-basis: calc(50% - 6px);
+    }
+}
