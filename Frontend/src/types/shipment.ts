@@ -17,4 +17,5 @@ export type Shipment = {
     user_id: number
     created_at: string | null
     updated_at: string | null
+    destination_id: number | null
 }

@@ -7,19 +7,23 @@ export interface AuthUser {
     default_destination_id: number
 }
 
+interface LoginResponse {
+    token: string
+}
+
 export const checkAuth = (): Promise<AuthUser> => {
     return requestHelper<AuthUser>('/api/auth/me', false)
 }
 
-export const fetchLogin = <TResponse = unknown>(reqBody: Record<string, unknown>): Promise<TResponse> => {
-    return requestHelper<TResponse>('/api/auth/login', false, {
+export const fetchLogin = (reqBody: Record<string, unknown>): Promise<LoginResponse> => {
+    return requestHelper<LoginResponse>('/api/auth/login', false, {
         method: 'POST',
         body: JSON.stringify(reqBody),
     })
 }
 
-export const fetchRegister = <TResponse = unknown>(reqBody: Record<string, unknown>): Promise<TResponse> => {
-    return requestHelper<TResponse>('/api/auth/register', false, {
+export const fetchRegister = (reqBody: Record<string, unknown>): Promise<UserResponse> => {
+    return requestHelper<UserResponse>('/api/auth/register', false, {
         method: 'POST',
         body: JSON.stringify(reqBody),
     })
@@ -31,23 +35,23 @@ type SettingsRequest = {
     default_destination_id?: number
 }
 
-type SettingsResponse = [{
+type UserResponse = [{
     id: number,
     username: string,
     password_hash: string,
     email: string
-    default_destination_id: number
+    default_destination_id: number | null
 }]
 
-export const updateSettings = (reqBody: SettingsRequest): Promise<SettingsResponse> => {
-    return requestHelper<SettingsResponse>('/api/auth/settings', true, {
+export const updateSettings = (reqBody: SettingsRequest): Promise<UserResponse> => {
+    return requestHelper<UserResponse>('/api/auth/settings', true, {
         method: 'PATCH',
         body: JSON.stringify(reqBody),
     })
 }
 
-export const changePassword = <TResponse = unknown>(old_password: string, new_password: string): Promise<TResponse> => {
-    return requestHelper<TResponse>('/api/auth/settings/change-password', true, {
+export const changePassword = (old_password: string, new_password: string): Promise<void> => {
+    return requestHelper<void>('/api/auth/settings/change-password', true, {
         method: 'PATCH',
         body: JSON.stringify({ old_password, new_password }),
     })

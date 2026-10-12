@@ -2,10 +2,6 @@ import requestHelper from "./serviceHelper"
 import type { Shipment } from "../types/shipment"
 import type { Destination } from "../types/destination"
 
-export const fetchShipments = (): Promise<Shipment[]> => {
-    return requestHelper<Shipment[]>('/api/shipments', true)
-}
-
 type AddShipmentRequest = {
     shipment_name: string
     ship_mmsi: string
@@ -13,21 +9,25 @@ type AddShipmentRequest = {
     destination_id: number | null
 }
 
-export const addShipment = <TResponse = unknown>(shipment: AddShipmentRequest): Promise<TResponse> => {
-    return requestHelper<TResponse>('/api/shipments/add-shipment', true, {
+export const fetchShipments = (): Promise<Shipment[]> => {
+    return requestHelper<Shipment[]>('/api/shipments', true)
+}
+
+export const addShipment = (shipment: AddShipmentRequest): Promise<[Shipment]> => {
+    return requestHelper<[Shipment]>('/api/shipments/add-shipment', true, {
         method: 'POST',
         body: JSON.stringify(shipment),
     })
-}
-
-export const fetchDestinations = (): Promise<Destination[]> => {
-    return requestHelper<Destination[]>('/api/destinations', true)
 }
 
 type DestinationRequest = {
     destination_name: string,
     lon: number,
     lat: number
+}
+
+export const fetchDestinations = (): Promise<Destination[]> => {
+    return requestHelper<Destination[]>('/api/destinations', true)
 }
 
 export const addDestination = (destination: DestinationRequest): Promise<[Destination]> => {

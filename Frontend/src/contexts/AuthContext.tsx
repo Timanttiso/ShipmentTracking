@@ -11,10 +11,6 @@ interface AuthContextValue {
     logout: () => void
 }
 
-interface LoginResponse {
-    token: string
-}
-
 const tokenKey = 'shipmentTrackingAuthToken'
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
@@ -67,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, [navigate])
 
     const login = async (credentials: { username: string; password: string }) => {
-        const { token } = await fetchLogin<LoginResponse>(credentials)
+        const { token } = await fetchLogin(credentials)
         localStorage.setItem(tokenKey, token)
 
         try {
