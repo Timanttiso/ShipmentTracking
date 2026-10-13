@@ -41,14 +41,28 @@ const UserService = {
     },
 
     async UpdateUserSettings(id, { username, email, default_destination_id }){
-        const existingUsername = await User.findByName(username)
-        if(existingUsername){
-            throw new ApiError('Username already taken in UpdateUserSettings()', 409, 'Tämä käyttäjänimi on jo käytössä')
+        const currentUser = await User.findById(id)
+
+        if(username){
+            const existingUsername = await User.findByName(username)
+            if(existingUsername && existingUsername.username != currentUser.username){
+                throw new ApiError('Username already taken in UpdateUserSettings()', 409, 'Tämä käyttäjänimi on jo käytössä')
+            }
         }
-        const existingEmail = await User.findByEmail(email)
-        if(existingEmail){
-            throw new ApiError('An account with an existing email found in UpdateUserSettings()', 409, 'Tämä sähköposti on jo käytössä')
+        else{
+            username = currentUser.username
         }
+
+        if(email){
+            const existingEmail = await User.findByEmail(email)
+            if(existingEmail && existingEmail.email != currentUser.email){
+                throw new ApiError('An account with an existing email found in UpdateUserSettings()', 409, 'Tämä sähköposti on jo käytössä')
+            }
+        }
+        else{
+            email = currentUser.email
+        }
+        
 
         if(default_destination_id){
             const existingDestination = await Destination.getById(default_destination_id, id)

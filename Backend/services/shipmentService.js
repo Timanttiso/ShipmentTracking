@@ -3,7 +3,12 @@ import Destination from "../models/destination.js"
 import ApiError from '../utils/ApiError.js'
 
 const ShipmentService = {
-    async AddShipment({shipment_name, ship_mmsi, eta}, user_id){
+    async AddShipment({shipment_name, ship_mmsi, eta, destination_id}, user_id){
+        const existingDestination = await Destination.getById(destination_id, user_id)
+        if(!existingDestination){
+            throw new ApiError('Destination not found in AddShipment() for user', 404, 'Päämäärää ei löydetty')
+        }
+
         return await Shipment.add({
             shipment_name,
             ship_mmsi,
@@ -11,7 +16,8 @@ const ShipmentService = {
             status: 1,
             lon: 0,
             lat: 0,
-            user_id
+            user_id,
+            destination_id
         })
     },
     async GetAllShipmentsForUser(user_id){

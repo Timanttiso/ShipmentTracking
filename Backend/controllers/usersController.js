@@ -1,5 +1,6 @@
 import express from 'express'
 import UserService from '../services/userService.js';
+import DestinationService from '../services/destinationService.js';
 import jwt from 'jsonwebtoken'
 import auth from '../utils/auth.js'
 import 'dotenv/config'
@@ -11,10 +12,13 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 usersRouter.get('/me', auth.authenticationRequired, async (request, response, next) => {
     try{
         const user = await UserService.getById(request.user.id)
+        const default_destination = await DestinationService.GetById(user.default_destination_id, request.user.id)
         response.json({
             id: request.user.id,
             username: user.username,
-            email: user.email
+            email: user.email,
+            default_destination_id: user.default_destination_id,
+            default_destination_name: default_destination.destination_name
         })
     }catch(error){
         next(error)
@@ -75,14 +79,7 @@ usersRouter.post('/login', auth.authenticationNotRequired, async (request, respo
 usersRouter.patch('/settings', auth.authenticationRequired, async (request, response, next) => {
     try{
         const { username, email, default_destination_id } = request.body
-
-        if(!username){
-            return response.status(400).json({ error: "Käyttäjänimi ei saa olla tyhjä" })
-        }
-        else if(!email){
-            return response.status(400).json({ error: "Sähköposti ei saa olla tyhjä" })
-        }
-
+        
         const updatedUser = await UserService.UpdateUserSettings(request.user.id, { username, email, default_destination_id })
 
         response.status(200).json(updatedUser)

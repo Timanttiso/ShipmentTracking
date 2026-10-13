@@ -49,7 +49,7 @@ shipmentsRouter.get('/shipment/:id', auth.authenticationRequired, async(request,
 //#region POST endpoints
 shipmentsRouter.post('/add-shipment',auth.authenticationRequired, async (request, response, next) => {
     try{
-        const { shipment_name, ship_mmsi, eta } = request.body
+        const { shipment_name, ship_mmsi, eta, destination_id } = request.body
         
         const etaDate = new Date(eta);
         const startOfToday = new Date();
@@ -59,7 +59,7 @@ shipmentsRouter.post('/add-shipment',auth.authenticationRequired, async (request
             return response.status(400).json({ error: 'Odotettu saapumisaika ei voi olla menneisyydessä' });
         }
 
-        const newShipment = await ShipmentService.AddShipment({ shipment_name, ship_mmsi, eta}, request.user.id)
+        const newShipment = await ShipmentService.AddShipment({ shipment_name, ship_mmsi, eta, destination_id}, request.user.id)
 
         response.status(201).json(newShipment)
     }catch(error){

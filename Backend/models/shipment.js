@@ -1,9 +1,9 @@
 import db from '../db/db.js'
 
 const Shipment = {
-    async add({ shipment_name, ship_mmsi, eta, status, lon, lat, user_id }, dbConn = db){
+    async add({ shipment_name, ship_mmsi, eta, status, lon, lat, user_id, destination_id }, dbConn = db){
         return dbConn('shipments')
-            .insert({ shipment_name, ship_mmsi, eta, status, lon, lat, user_id, created_at: dbConn.fn.now() })
+            .insert({ shipment_name, ship_mmsi, eta, status, lon, lat, user_id, created_at: dbConn.fn.now(), destination_id: destination_id })
             .returning('*')
     },
     async getAllForUser(user_id, dbConn = db){
