@@ -12,14 +12,24 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 usersRouter.get('/me', auth.authenticationRequired, async (request, response, next) => {
     try{
         const user = await UserService.getById(request.user.id)
-        const default_destination = await DestinationService.GetById(user.default_destination_id, request.user.id)
-        response.json({
+        const default_destination = await DestinationService.GetDefault(user.default_destination_id, request.user.id)
+        if(default_destination){
+            response.json({
             id: request.user.id,
             username: user.username,
             email: user.email,
             default_destination_id: user.default_destination_id,
             default_destination_name: default_destination.destination_name
-        })
+            })
+        }
+        else{
+            response.json({
+            id: request.user.id,
+            username: user.username,
+            email: user.email,
+            })
+        }
+        
     }catch(error){
         next(error)
     }

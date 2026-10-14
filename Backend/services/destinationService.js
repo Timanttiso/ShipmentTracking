@@ -26,6 +26,10 @@ const DestinationService = {
         return destination
     },
 
+    async GetDefault(id, user_id){
+        return await Destination.getById(id, user_id)
+    },
+
     async UpdateDestinationInfo(id, user_id, {destination_name, lon, lat}){
         const destination = await Destination.getById(id, user_id)
 
