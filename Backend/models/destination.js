@@ -28,6 +28,11 @@ const Destination = {
             .where({ id })
             .update({destination_name:destination_name, lon:lon, lat:lat})
             .returning('*')
+    },
+    async deleteDestination(id, dbConn = db){
+        return dbConn('destinations')
+            .where({ id })
+            .delete()
     }
 }
 

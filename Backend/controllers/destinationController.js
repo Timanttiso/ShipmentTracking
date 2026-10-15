@@ -62,4 +62,20 @@ DestinationRouter.patch('/destination/:id', auth.authenticationRequired, async (
 
 //#endregion
 
+//#region DELETE endpoints
+DestinationRouter.delete('/destination/:id', auth.authenticationRequired, async (request, response, next) => {
+    try{
+        const { id } = request.params
+
+        await DestinationService.DeleteDestination(id, request.user.id)
+
+        response.status(204).end()
+    }
+    catch(error){
+        next(error)
+    }
+})
+
+
+//#endregion
 export default DestinationRouter

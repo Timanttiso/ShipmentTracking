@@ -80,6 +80,7 @@ The frontend is made using typescript.
 * cross-env
 * bcrypt
 * nodemon
+* cookie-parser
 
 ---
 ### Available API endpoints
@@ -89,7 +90,11 @@ The frontend is made using typescript.
 |GET     |  /api/auth/me                        |Retrieves current users info                                    |
 |POST    |  /api/auth/register                  |Registers a new user                                            |
 |POST    |  /api/auth/login                     |Logs in a user                                                  |
+|POST    |  /api/auth/refresh                   |Refreshes the user's access token with a refresh token          |
+|POST    |  /api/auth/logout                    |Removes the user's refresh token, used when logging out         |
 |PATCH   |  /api/auth/settings                  |Updates the user's information and settings                     |
+|PATCH   |  /api/auth/settings/change-password  |Allows the user to change their password                        |
+|DELETE  |  /api/auth/settings/delete-account   |Deletes the account of the current user                         |
 ||||
 |GET     |  /api/shipments/                     |Retrieves all shipments for the current user                    |
 |GET     |  /api/shipments/status/:status       |Retrieves all shipments for the current user by status          |
@@ -97,9 +102,12 @@ The frontend is made using typescript.
 |POST    |  /api/shipments/add-shipment         |Adds a shipment for the current user                            |
 |PATCH   |  /api/shipments/shipment/:id         |Updates a specific shipment's info                              |
 |PATCH   |  /api/shipments/shipment/status/:id  |Updates a specific shipment's status                            |
+|DELETE  |  /api/shipments/shipment/:id         |Deletes a specific shipment                                     |
 ||||
 |GET     |  /api/destinations/                  |Retrieves all destinations for the current user                 |
-|GET     |  /api/destinations/add-destination   |Adds a destination for the current user                         |
+|GET     |  /api/destinations/destination/:id   |Retrieves a specific destination                                |
+|POST    |  /api/destinations/add-destination   |Adds a destination for the current user                         |
+|PATCH   |  /api/destinations/destination/:id   |Updates a destination                                           |
 
 
 ---

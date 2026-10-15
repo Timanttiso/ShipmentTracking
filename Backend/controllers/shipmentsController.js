@@ -120,7 +120,7 @@ shipmentsRouter.delete('/shipment/:id', auth.authenticationRequired, async(reque
 
         await ShipmentService.RemoveShipment(id, request.user.id)
 
-        response.status(200).json()
+        response.status(204).json()
     }
     catch(error){
         next(error)

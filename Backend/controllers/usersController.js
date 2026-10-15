@@ -1,8 +1,9 @@
 import express from 'express'
 import UserService from '../services/userService.js';
 import DestinationService from '../services/destinationService.js';
-import jwt from 'jsonwebtoken'
+import RefreshTokenService from '../services/refreshTokenService.js';
 import auth from '../utils/auth.js'
+import { generateAccessToken, hashToken, createRefreshToken, refreshCookieOptions } from '../utils/tokens.js';
 import 'dotenv/config'
 
 const usersRouter = express.Router()
@@ -54,7 +55,7 @@ usersRouter.post('/register', auth.authenticationNotRequired, async (request, re
         response.status(201).json(newUser)
     }
     catch(error){
-        next(error);
+        next(error)
     }
 
 })
@@ -68,16 +69,73 @@ usersRouter.post('/login', auth.authenticationNotRequired, async (request, respo
             return response.status(401).json({ error: 'Väärä käyttäjänimi tai salasana'})
         }
 
-        const token = jwt.sign(
-            {userId: user.id, username: user.username, email: user.email},
-            process.env.JWT_SECRET,
-            { 
-                algorithm: 'HS256',
-                expiresIn: "60m"
-            }
-        )
+        const accessToken = await generateAccessToken(user)
+        const refreshToken = createRefreshToken()
 
-        response.status(200).json({ token })
+        await RefreshTokenService.create({
+            token_hash: await hashToken(refreshToken.token),
+            expires_at: refreshToken.expires_at,
+            user_id: user.id
+        })
+
+        response.cookie('refreshToken', refreshToken.token, refreshCookieOptions)
+        response.status(200).json({ token: accessToken })
+    }
+    catch(error){
+        next(error)
+    }
+})
+
+usersRouter.post('/refresh', async (request, response, next) => {
+    try{
+        const refreshToken = request.cookies.refreshToken
+        if(!refreshToken){
+            return response.status(401).json({ error: 'Puuttuva refresh token'})
+        }
+
+        const tokenHash = await hashToken(refreshToken)
+        const storedToken = await RefreshTokenService.findByHash(tokenHash)
+
+        if(!storedToken || storedToken.expires_at < new Date()){
+            if (storedToken){
+                await RefreshTokenService.deleteByHash(tokenHash)
+            }
+            response.clearCookie('refreshToken', { path: refreshCookieOptions.path })
+            return response.status(401).json({error: 'Virheellinen refresh token'})
+        }
+
+        const user = await UserService.getById(storedToken.user_id)
+        if(!user){
+            await RefreshTokenService.deleteByHash(tokenHash)
+            response.clearCookie('refreshToken', { path: refreshCookieOptions.path })
+            return response.status(401).json({error: 'Käyttäjää ei löytynyt'})
+        }
+
+        await RefreshTokenService.deleteByHash(tokenHash)
+        const newRefreshToken = createRefreshToken()
+        const newAccessToken = await generateAccessToken(user)
+        await RefreshTokenService.create({
+            token_hash: await hashToken(newRefreshToken.token),
+            expires_at: newRefreshToken.expires_at,
+            user_id: user.id
+        })
+
+        response.cookie('refreshToken', newRefreshToken.token, refreshCookieOptions)
+        response.status(200).json({ token: newAccessToken })
+    }
+    catch(error){
+        next(error)
+    }
+})
+
+usersRouter.post('/logout', async(request, response, next) => {
+    try{
+        const refreshToken = request.cookies?.refreshToken
+        if(refreshToken){
+            await RefreshTokenService.deleteByHash(await hashToken(refreshToken))
+        }
+        response.clearCookie('refreshToken', { path: refreshCookieOptions.path })
+        response.status(200).end()
     }
     catch(error){
         next(error)
@@ -126,6 +184,7 @@ usersRouter.patch('/settings/change-password', auth.authenticationRequired, asyn
 usersRouter.delete('/settings/delete-account', auth.authenticationRequired, async (request, response, next) => {
     try{
         await UserService.DeleteUser(request.user.id)
+        response.clearCookie('refreshToken', { path: refreshCookieOptions.path })
 
         response.status(204).json()
     }
