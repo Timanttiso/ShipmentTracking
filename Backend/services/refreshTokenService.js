@@ -12,13 +12,18 @@ const RefreshTokenService = {
     },
 
     async findByHash(token_hash){
-        const refreshToken = await RefreshToken.findByHash(token_hash)
+        try{
+            const refreshToken = await RefreshToken.findByHash(token_hash)
 
-        if(!refreshToken){
-            throw new ApiError('Refresh token not found in findByHash()', 404, 'Refresh tokenia ei löydetty tietokannasta')
+            if(!refreshToken){
+                throw new ApiError('Refresh token not found in findByHash()', 404, 'Refresh tokenia ei löydetty tietokannasta')
+            }
+
+            return refreshToken
         }
-
-        return refreshToken
+        catch{
+            throw new ApiError('Failed to get a refresh token by hash in findByHash()', 500, 'Refresh tokenin haku epäonnistui')
+        }
     },
 
     async deleteByHash(token_hash){
@@ -35,6 +40,15 @@ const RefreshTokenService = {
         }
         catch{
             throw new ApiError('Failed to delete a refresh token in deleteByHash()', 500, 'Refresh tokenin poisto epäonnistui')
+        }
+    },
+
+    async deleteExpired(){
+        try{
+            return await RefreshToken.deleteExpired()
+        }
+        catch{
+            throw new ApiError('Failed to delete expired refresh tokens in deleteExpired()', 500, 'Refresh tokenien poisto epäonnistui')
         }
     }
 }

@@ -20,6 +20,7 @@ const RefreshToken = {
             .delete()
     },
 
+    // This one is currently not in use.
     async deleteAllForUser(user_id, dbConn = db){
         return dbConn('refresh_tokens')
             .where({user_id})
@@ -27,7 +28,7 @@ const RefreshToken = {
     },
 
     async deleteExpired(dbConn = db){
-        return dbConn('refresh_tokens')
+        return await dbConn('refresh_tokens')
             .where('expires_at', '<', db.fn.now())
             .delete()
     }
