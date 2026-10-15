@@ -113,7 +113,7 @@ usersRouter.patch('/settings/change-password', auth.authenticationRequired, asyn
         
         await UserService.ChangePassword(request.user.id, { old_password, new_password})
 
-        response.status(200).json()
+        response.status(204).json()
     }
     catch(error){
         next(error)
@@ -127,7 +127,7 @@ usersRouter.delete('/settings/delete-account', auth.authenticationRequired, asyn
     try{
         await UserService.DeleteUser(request.user.id)
 
-        response.status(200).json()
+        response.status(204).json()
     }
     catch(error){
         next(error)

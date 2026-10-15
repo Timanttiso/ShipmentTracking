@@ -82,7 +82,7 @@ const UserService = {
         }
 
         if(!await bcrypt.compare(old_password, user.password_hash)){
-            throw new ApiError('Old password is wrong in ChangePassword()', 401, 'Väärä salasana')
+            throw new ApiError('Old password is wrong in ChangePassword()', 400, 'Väärä salasana')
         }
         const password_hash = await bcrypt.hash(new_password, saltRounds)
 
