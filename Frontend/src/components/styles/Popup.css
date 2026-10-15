@@ -1,7 +1,7 @@
 .popup-backdrop {
     position: fixed;
     inset: 0;
-    z-index: 30;
+    z-index: 300;
     display: grid;
     place-items: center;
     overflow-y: auto;
@@ -14,8 +14,12 @@
     box-sizing: border-box;
     background: #fbfaf7;
     box-shadow: 0 18px 70px rgba(8, 20, 29, .28);
-    width: min(620px, 100%);
+    width: min(960px, 100%);
     padding: 28px;
+}
+
+.add-shipment-dialog {
+    width: min(620px, 100%);
 }
 
 .popup-dialog__eyebrow {
@@ -115,7 +119,6 @@
 .popup-form__actions button {
     min-height: 42px;
     padding: 10px 16px;
-    border: 1px solid transparent;
     border-radius: 2px;
     cursor: pointer;
     font: inherit;
@@ -129,12 +132,13 @@
 }
 
 .popup-form__cancel {
-    border-color: #d8dcd8;
+    border: 1px solid #b7bbb7;
     background: #fff;
     color: #56636c;
 }
 
 .popup-form__submit {
+    border: 1px solid transparent;
     background: var(--dash-navy, #172b3a);
     color: #fff;
 }

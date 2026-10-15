@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
 import { shipmentStatusLabels, type Shipment } from '../types/shipment'
 import AddShipmentPopup from '../components/AddShipmentPopup'
 import ShipmentInfoPopup from '../components/ShipmentInfoPopup'
@@ -8,7 +6,7 @@ import SortDropdown, { type SortDirection } from '../components/SortDropdown'
 import { fetchShipments } from '../services/api'
 import '../components/styles/Dropdown.css'
 import '../components/styles/Popup.css'
-import './Dashboard.css'
+import './styles/Dashboard.css'
 
 const filters = ['Kaikki', 'Matkalla', 'Toimitettu', 'Viivästynyt'] as const
 const sortOptions = [
@@ -39,8 +37,6 @@ export default function Dashboard() {
     const [activeMap, setActiveMap] = useState<Shipment | null>(null)
     const [isAddPopupOpen, setIsAddPopupOpen] = useState(false)
     const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
-    const navigate = useNavigate()
-    const { logout } = useAuth()
 
     const visibleShipments = shipments.filter((shipment) => {
         const matchesSearch = `${shipment.shipment_name} ${shipment.ship_mmsi}`
@@ -87,11 +83,6 @@ export default function Dashboard() {
         PopulateShipmentList()
     }
 
-    const handleLogout = () => {
-        logout()
-        navigate('/')
-    }
-
     useEffect(() => {
         PopulateShipmentList()
     }, [])
@@ -102,14 +93,6 @@ export default function Dashboard() {
                 <section className='dashboard-heading' aria-labelledby='page-title'>
                     <h1 id='page-title'>Lähetykset</h1>
                     <button className='add-shipment-button' onClick={() => setIsAddPopupOpen(true)}>Lisää Lähetys</button>
-                    <button className='logout-button' onClick={handleLogout} type='button'>
-                        <svg aria-hidden='true' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1.8' strokeLinecap='round' strokeLinejoin='round'>
-                            <path d='M13 4h7v16h-7' />
-                            <path d='M3 12h11' />
-                            <path d='m10 8 4 4-4 4' />
-                        </svg>
-                        <span>Kirjaudu ulos</span>
-                    </button>
                 </section>
 
                 <section className='shipment-section' aria-label='Lähetyslista'>

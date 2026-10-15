@@ -5,6 +5,7 @@ export interface AuthUser {
     username: string
     email: string
     default_destination_id: number
+    default_destination_name: string
 }
 
 interface LoginResponse {

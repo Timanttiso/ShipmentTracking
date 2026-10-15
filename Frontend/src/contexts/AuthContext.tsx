@@ -5,6 +5,7 @@ import { ApiError, authExpiredEvent } from '../services/serviceHelper'
 
 interface AuthContextValue {
     user: AuthUser | null
+    refreshUser: () => Promise<void>
     isAuthenticated: boolean
     loading: boolean
     login: (credentials: { username: string; password: string }) => Promise<void>
@@ -62,13 +63,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return () => window.removeEventListener(authExpiredEvent, handleAuthExpired)
     }, [navigate])
 
+    const refreshUser = async () => {
+        const currentUser = await checkAuth()
+        setUser(currentUser)
+    }
+
     const login = async (credentials: { username: string; password: string }) => {
         const { token } = await fetchLogin(credentials)
         localStorage.setItem(tokenKey, token)
 
         try {
-            const currentUser = await checkAuth()
-            setUser(currentUser)
+            await refreshUser()
         } catch (error) {
             localStorage.removeItem(tokenKey)
             setUser(null)
@@ -82,7 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated: user !== null, loading, login, logout }}>
+        <AuthContext.Provider value={{ user, refreshUser, isAuthenticated: user !== null, loading, login, logout }}>
             {children}
         </AuthContext.Provider>
     )

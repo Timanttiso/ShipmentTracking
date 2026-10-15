@@ -38,6 +38,11 @@
     color: var(--dash-navy, #172b3a);
 }
 
+.destination-manager-inputs {
+    display: flex;
+    gap: 14px;
+}
+
 .destination-manager__select {
     width: 100%;
     min-height: 42px;
@@ -50,7 +55,6 @@
     cursor: pointer;
     font: inherit;
     font-size: 14px;
-    margin-bottom: 20px;
 }
 
 .destination-manager__select:hover {

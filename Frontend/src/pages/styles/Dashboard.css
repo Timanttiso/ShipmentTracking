@@ -22,7 +22,7 @@
     width: min(100%, 1530px);
     box-sizing: border-box;
     margin: 0 auto;
-    padding: 49px clamp(24px, 4.4vw, 68px) 45px;
+    padding: 29px clamp(24px, 4.4vw, 68px) 45px;
 }
 
 .dashboard-heading {

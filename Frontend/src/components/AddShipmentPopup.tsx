@@ -1,25 +1,23 @@
 import { useEffect, useState, type JSX } from 'react'
-import { addShipment, fetchDestinations } from '../services/api'
+import { addShipment } from '../services/api'
 import DestinationDropdown from './DestinationDropdown'
 import DestinationManagerPopup from './DestinationManagerPopup'
-import type { Destination } from '../types/destination'
-import { useAuth } from '../contexts/AuthContext'
+import { useDestinations } from '../contexts/DestinationContext'
 
 type AddShipmentPopupProps = {
     onClose: () => void
 }
 
 export default function AddShipmentPopup({ onClose }: AddShipmentPopupProps): JSX.Element {
+    const { destinations, defaultDestination, destinationFetchError } = useDestinations()
+
     const [shipmentName, setShipmentName] = useState('')
     const [shipMmsi, setShipMmsi] = useState('')
-    const [destinations, setDestinations] = useState<Destination[]>([])
-    const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null)
+    const [selectedDestination, setSelectedDestination] = useState(defaultDestination)
     const [eta, setEta] = useState('')
     const [submitting, setSubmitting] = useState(false)
-    const [error, setError] = useState('')
+    const [error, setError] = useState(destinationFetchError)
     const [isDestinationManagerOpen, setIsDestinationManagerOpen] = useState(false)
-
-    const { user } = useAuth()
 
     useEffect(() => {
         const previousDocumentOverflow = document.documentElement.style.overflow
@@ -37,11 +35,18 @@ export default function AddShipmentPopup({ onClose }: AddShipmentPopupProps): JS
     }, [onClose])
 
     useEffect(() => {
-        populateDestinations()
-    }, [])
+        if (!defaultDestination) return
+        setSelectedDestination(defaultDestination)
+    }, [defaultDestination])
 
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
+
+        if (!selectedDestination) {
+            setError('Valitse määränpää!')
+            return
+        }
+
         setError('')
         setSubmitting(true)
 
@@ -49,7 +54,7 @@ export default function AddShipmentPopup({ onClose }: AddShipmentPopupProps): JS
             shipment_name: shipmentName.trim(),
             ship_mmsi: shipMmsi.trim(),
             eta: eta ? new Date(eta).toISOString() : null,
-            destination_id: selectedDestination?.id ?? null
+            destination_id: selectedDestination.id
         }
 
         try {
@@ -68,31 +73,10 @@ export default function AddShipmentPopup({ onClose }: AddShipmentPopupProps): JS
         }
     }
 
-    const populateDestinations = async () => {
-        try {
-            let destinationData = await fetchDestinations()
-            destinationData = destinationData.sort((a, b) => {
-                return a.destination_name.localeCompare(b.destination_name, 'fi')
-            })
-
-            setDestinations(destinationData)
-
-            if (user?.default_destination_id) {
-                const defaultDestination = destinationData.find(d => d.id === user?.default_destination_id) ?? null
-                setSelectedDestination(defaultDestination)
-            }
-        } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : 'Yhteysvirhe'
-            setError(message)
-        }
-    }
-
     if (isDestinationManagerOpen) {
         return (
             <DestinationManagerPopup
                 onClose={() => setIsDestinationManagerOpen(false)}
-                onNewDestination={() => populateDestinations()}
-                destinations={destinations}
                 selectedDestination={selectedDestination}
                 setSelectedDestination={setSelectedDestination}
                 initialCoordinates={
@@ -166,7 +150,7 @@ export default function AddShipmentPopup({ onClose }: AddShipmentPopupProps): JS
                             <span>Määränpää</span>
                             <DestinationDropdown
                                 options={destinations}
-                                selectedOption={selectedDestination}
+                                selectedOption={selectedDestination ? selectedDestination : defaultDestination}
                                 onChange={(value) => setSelectedDestination(value)}
                                 onOpenManager={() => setIsDestinationManagerOpen(true)}
                             />

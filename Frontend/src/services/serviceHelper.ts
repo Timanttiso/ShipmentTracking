@@ -50,7 +50,11 @@ const requestHelper = async <TResponse = unknown>(path: string, authRequired: bo
         throw new ApiError(res.status, msg)
     }
 
-    return (await res.json()) as TResponse
+    if (res.statusText === 'No Content' || res.status === 204 || res.status === 205) {
+        return res as TResponse
+    }
+
+    return (await res.json() as TResponse)
 }
 
 export default requestHelper
