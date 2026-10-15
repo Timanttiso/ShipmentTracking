@@ -46,40 +46,10 @@
     gap: 10px;
 }
 
-.login-form label,
-.password-field {
+.login-form label {
     color: #394755;
     font-size: 12px;
     font-weight: 600;
-}
-
-.password-field {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    row-gap: 10px;
-    margin-top: 13px;
-}
-
-.password-field > label {
-    order: 1;
-    flex: 1 1 auto;
-}
-
-.password-field > input[type='password'] {
-    order: 3;
-    flex: 0 0 100%;
-}
-
-.password-field > .error-message {
-    order: 4;
-    flex: 0 0 100%;
-}
-
-.password-field > .login-button {
-    order: 5;
-    flex: 0 0 100%;
-    box-sizing: border-box;
 }
 
 .login-input {
@@ -98,6 +68,23 @@
 }
 
 .login-input:focus {
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px rgba(16, 42, 67, .09);
+}
+
+.login-password-input {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+}
+
+.login-password-input .login-input {
+    min-width: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.login-password-input:focus-within .login-input {
     border-color: var(--navy);
     box-shadow: 0 0 0 3px rgba(16, 42, 67, .09);
 }

@@ -126,7 +126,6 @@
     transition: border-color .18s ease, box-shadow .18s ease;
 }
 
-.profile-password-visiblity-toggle:focus,
 .profile-input:focus {
     border: 1px solid var(--profile-navy);
     box-shadow: 0 0 0 3px rgba(16, 42, 67, .09);
@@ -134,6 +133,10 @@
 
 .profile-input::placeholder {
     color: #aeb6bc;
+}
+
+.profile-password {
+    margin-bottom: 22px;
 }
 
 .profile-password-input {
@@ -148,22 +151,7 @@
     border-bottom-right-radius: 0;
 }
 
-.profile-password-visiblity-toggle {
-    flex: 0 0 auto;
-    padding: 0 12px;
-    border: 1px solid #dce1e5;
-    border-left: 0;
-    border-radius: 0 3px 3px 0;
-    background: #fff;
-    color: var(--profile-navy);
-    cursor: pointer;
-    font: inherit;
-    font-size: 12px;
-    font-weight: 700;
-}
-
-.profile-toggle-button,
-.profile-delete-button {
+.profile-toggle-button {
     min-height: 30px;
     display: inline-flex;
     align-items: center;
@@ -215,20 +203,7 @@
     background: #f8f7f4;
 }
 
-.profile-delete-button {
-    margin-top: 22px;
-    border-color: #d9aaa1;
-    background: #fff;
-    color: #8b4035;
-}
-
-.profile-delete-button:hover {
-    border-color: #b96d60;
-    background: #f8ece9;
-}
-
-.profile-toggle-button:focus-visible,
-.profile-delete-button:focus-visible {
+.profile-toggle-button:focus-visible {
     outline: 3px solid rgba(213, 154, 55, .55);
     outline-offset: 3px;
 }

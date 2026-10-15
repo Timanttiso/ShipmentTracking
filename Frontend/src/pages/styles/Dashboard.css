@@ -13,7 +13,7 @@
     --dash-neutral-soft: #edf1f5;
     font-size: 12px;
     line-height: 1.5;
-    min-height: 100vh;
+    min-height: 90vh;
     background: #f5f4ef;
     color: var(--dash-ink);
 }

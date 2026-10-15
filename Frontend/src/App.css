@@ -17,3 +17,50 @@ body {
     font-weight: 700;
     font-style: italic;
 }
+
+.delete-button {
+    min-height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 17px;
+    border: 1px solid #d9aaa1;
+    border-radius: 3px;
+    background: #fff;
+    color: #8b4035;
+    cursor: pointer;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    transition: background-color .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease;
+}
+
+.delete-button:hover {
+    border-color: #b96d60;
+    background: #f8ece9;
+}
+
+.delete-button:focus-visible {
+    outline: 3px solid rgba(213, 154, 55, .55);
+    outline-offset: 3px;
+}
+
+.password-visibility-toggle {
+    flex: 0 0 auto;
+    padding: 0 12px;
+    border: 1px solid #dce1e5;
+    border-left: 0;
+    border-radius: 0 3px 3px 0;
+    background: #fff;
+    color: var(--profile-navy, #102a43);
+    cursor: pointer;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.password-visibility-toggle:focus-visible {
+    outline: 1px solid var(--profile-navy), #102a43;
+    box-shadow: 0 0 0 3px rgba(16, 42, 67, .09);
+}

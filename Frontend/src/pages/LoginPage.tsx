@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import Icon from '../constants/Icons'
 import './styles/LoginPage.css'
 
 export default function LoginPage() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [visiblePasswordField, setVisiblePasswordField] = useState(false)
     const [error, setError] = useState('')
     const [submitting, setSubmitting] = useState(false)
 
@@ -53,24 +55,32 @@ export default function LoginPage() {
                         onChange={(e) => setUsername(e.target.value)}
                     />
 
-                    <div className='password-field'>
-                        <label htmlFor='password'>Salasana</label>
+                    <label htmlFor='password'>Salasana</label>
+                    <span className='login-password-input'>
                         <input
                             id='password'
                             className='login-input'
                             name='password'
-                            type='password'
+                            type={visiblePasswordField ? 'text' : 'password'}
                             placeholder='Salasanasi'
                             value={password}
                             required
                             onChange={(e) => setPassword(e.target.value)}
                         />
-                        <button type='submit' className='login-button' disabled={submitting}>
-                            {submitting ? 'Kirjaudutaan...' : 'Kirjaudu sisään'}
-                            <span aria-hidden='true'>-&gt;</span>
+                        <button
+                            className='password-visibility-toggle'
+                            type='button'
+                            aria-label={visiblePasswordField ? 'Piilota salasana' : 'Näytä salasana'}
+                            onClick={() => setVisiblePasswordField((visible) => !visible)}
+                        >
+                            <Icon icon={visiblePasswordField ? 'visibilityOff' : 'visibility'} size={20} color='#6b7782' />
                         </button>
-                        {error && <p className="error-message">{error}</p>}
-                    </div>
+                    </span>
+                    <button type='submit' className='login-button' disabled={submitting}>
+                        {submitting ? 'Kirjaudutaan...' : 'Kirjaudu sisään'}
+                        <span aria-hidden='true'>-&gt;</span>
+                    </button>
+                    {error && <p className="error-message">{error}</p>}
                 </form>
                 <p className='login-form-footer'>
                     Eikö sinulla ole tiliä? <button
