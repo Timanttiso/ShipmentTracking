@@ -2,7 +2,7 @@ export type ShipmentStatus = 1 | 2 | 3
 
 export const shipmentStatusLabels: Record<ShipmentStatus, string> = {
     1: 'Matkalla',
-    2: 'Toimitettu',
+    2: 'Saapunut',
     3: 'Viivästynyt',
 }
 

@@ -183,15 +183,8 @@ export default function ProfilePage() {
                                 aria-controls='profile-password-form'
                                 onClick={() => setIsPasswordSectionOpen((open) => !open)}
                             >
-                                <svg
-                                    className='profile-toggle-button__chevron'
-                                    aria-hidden='true'
-                                    viewBox='0 0 20 20'
-                                    fill='none'
-                                >
-                                    <path d='m5 7.5 5 5 5-5' />
-                                </svg>
                                 Vaihda salasana
+                                <Icon icon='chevron' color='none' viewbox='0 0 20 20' className='button-chevron'/>
                             </button>
 
                             <form

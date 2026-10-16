@@ -5,13 +5,14 @@ import AddShipmentPopup from '../components/AddShipmentPopup'
 import ShipmentInfoPopup from '../components/ShipmentInfoPopup'
 import SortDropdown, { type SortDirection } from '../components/SortDropdown'
 import ToastMessage from '../components/ToastMessage'
+import Icon from '../constants/Icons'
 import { fetchShipments } from '../services/api'
 import useDestinations from '../contexts/useDestinations'
 import '../components/styles/Dropdown.css'
 import '../components/styles/Popup.css'
 import './styles/Dashboard.css'
 
-const filters = ['Kaikki', 'Matkalla', 'Toimitettu', 'Viivästynyt'] as const
+const filters = ['Kaikki', 'Matkalla', 'Saapunut', 'Viivästynyt'] as const
 const sortOptions = [
     { value: 'name', label: 'Nimi' },
     { value: 'eta', label: 'Saapumisaika' },
@@ -144,15 +145,7 @@ export default function Dashboard() {
                                     onChange={(e) => setSearch(e.target.value)}
                                 />
                                 <span className='shipment-search__icon' aria-hidden='true'>
-                                    <svg
-                                        xmlns='http://www.w3.org/2000/svg'
-                                        height='20px'
-                                        viewBox='0 -960 960 760'
-                                        width='20px'
-                                        fill='#8b9498'
-                                    >
-                                        <path d='M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z' />
-                                    </svg>
+                                    <Icon icon='search' size={20} color='#8b9498' viewbox='0 -960 960 760'/>
                                 </span>
                             </label>
                         </div>
@@ -206,7 +199,7 @@ export default function Dashboard() {
                                     </div>
                                     <div className='shipment-status'>
                                         <span className='mobile-field-label'>TILANNE</span>
-                                        <span className={`status-badge status-badge--${shipmentStatusLabels[shipment.status] === 'Matkalla' ? 'transit' : shipmentStatusLabels[shipment.status] === 'Toimitettu' ? 'delivered' : 'delayed'}`}>
+                                        <span className={`status-badge status-badge--${shipmentStatusLabels[shipment.status] === 'Matkalla' ? 'in transit' : shipmentStatusLabels[shipment.status] === 'Saapunut' ? 'arrived' : 'delayed'}`}>
                                             <span className='status-badge__dot' aria-hidden='true'></span>
                                             {shipmentStatusLabels[shipment.status]}
                                         </span>

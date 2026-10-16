@@ -149,18 +149,7 @@
     color: #9a7122;
 }
 
-.profile-toggle-button__chevron {
-    width: 20px;
-    height: 20px;
-    flex: 0 0 auto;
-    stroke: currentColor;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: 1.8;
-    transition: transform .18s ease;
-}
-
-.profile-toggle-button[aria-expanded='true'] .profile-toggle-button__chevron {
+.profile-toggle-button[aria-expanded='true'] .button-chevron {
     transform: rotateX(180deg);
 }
 

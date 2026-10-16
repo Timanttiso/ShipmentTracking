@@ -29,11 +29,6 @@
     white-space: nowrap;
 }
 
-.app-header__brand svg {
-    display: block;
-    flex: 0 0 auto;
-}
-
 .app-header__brand:focus-visible {
     outline: 2px solid #d59a37;
     outline-offset: 4px;

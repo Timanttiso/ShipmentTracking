@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactElement } from 'react'
+import Icon from '../constants/Icons'
 import './styles/SortDropdown.css'
 
 interface SortDropdownOption<Value extends string> {
@@ -69,7 +70,7 @@ export default function SortDropdown<Value extends string>({
                     type='button'
                 >
                     {selectedOption?.label ?? value}
-                    <span className='dropdown__chevron' aria-hidden='true' />
+                    <Icon icon='chevron' size={16} color='none' viewbox='0 0 20 20' className='button-chevron'/>
                 </button>
                 {isOpen && (
                     <div className='dropdown__menu  shipment-sort__menu' role='menu'>

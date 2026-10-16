@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import Icon from '../constants/Icons'
 import './styles/ToastMessage.css'
 
 interface ToastMessageProps {
@@ -20,13 +21,9 @@ export default function ToastMessage({ message, onAfterToast, isSuccess = true }
         message && (
             <div className={`toast ${isSuccess ? 'toast-success' : 'toast-error'}`} role='status' aria-live='polite'>
                 {isSuccess ? (
-                    <svg aria-hidden='true' viewBox='0 0 20 20' fill='none'>
-                        <path d='m4.5 10.2 3.4 3.4 7.6-7.7' />
-                    </svg>
+                    <Icon icon='checkmark' size={19} color='none' viewbox='0 0 20 20' className='toast-message-icon' />
                 ) : (
-                    <svg aria-hidden='true' viewBox='0 0 20 20' fill='currentColor'>
-                        <path d='M4.4 4.4L10 10l5.6-5.6 1.2 1.2L11.2 11.2l5.6 5.6-1.2 1.2L10 12.4 4.4 18l-1.2-1.2 5.6-5.6-5.6-5.6z' />
-                    </svg>
+                    <Icon icon='x' size={19} color='currentColor' viewbox='0 0 20 20' className='toast-message-icon' />
                 )}
                 <span>{message}</span>
             </div>

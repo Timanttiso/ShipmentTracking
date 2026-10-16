@@ -28,10 +28,7 @@
     color: #5e3131;
 }
 
-.toast svg {
-    width: 19px;
-    height: 19px;
-    flex: 0 0 auto;
+.toast-message-icon {
     stroke: currentColor;
     stroke-linecap: round;
     stroke-linejoin: round;

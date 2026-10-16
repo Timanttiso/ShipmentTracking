@@ -64,3 +64,11 @@ body {
     outline: 1px solid var(--profile-navy), #102a43;
     box-shadow: 0 0 0 3px rgba(16, 42, 67, .09);
 }
+
+.button-chevron {
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+    transition: transform .18s ease;
+}

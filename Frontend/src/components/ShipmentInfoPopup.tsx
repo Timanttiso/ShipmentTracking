@@ -61,7 +61,7 @@ export default function ShipmentInfoPopup({ setActiveMap, activeMap, formatDateT
                     <div>
                         <dt>Tila</dt>
                         <dd>
-                            <span className={`status-badge status-badge--${shipmentStatusLabels[activeMap.status] === 'Matkalla' ? 'transit' : shipmentStatusLabels[activeMap.status] === 'Toimitettu' ? 'delivered' : 'delayed'}`}>
+                            <span className={`status-badge status-badge--${shipmentStatusLabels[activeMap.status] === 'Matkalla' ? 'in transit' : shipmentStatusLabels[activeMap.status] === 'Saapunut' ? 'arrived' : 'delayed'}`}>
                                 <span className='status-badge__dot' aria-hidden='true'></span>
                                 {shipmentStatusLabels[activeMap.status]}
                             </span>

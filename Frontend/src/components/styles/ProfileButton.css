@@ -45,14 +45,8 @@
     line-height: 1;
 }
 
-.profile-menu__trigger-chevron {
-    width: 12px;
-    height: 12px;
-    fill: none;
-    stroke: currentColor;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: 1.5;
+.profile-menu__trigger[aria-expanded='true'] .button-chevron {
+    transform: rotateX(180deg);
 }
 
 .profile-menu__panel {
@@ -130,24 +124,19 @@
     background: #f4f6f8;
 }
 
-.profile-menu__item svg {
-    width: 17px;
-    height: 17px;
-    flex: 0 0 auto;
-    color: #6b7782;
-}
-
 .profile-menu__item--danger {
     color: #a34236;
-}
-
-.profile-menu__item--danger svg {
-    color: currentColor;
 }
 
 .profile-menu__item--danger:hover {
     background: #fbf0ee;
     color: #87372d;
+}
+
+.logout-button-icon {
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 @media (max-width: 360px) {

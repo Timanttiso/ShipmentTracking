@@ -1,12 +1,13 @@
 import type { ReactNode } from 'react'
 
-type IconName = 'visibilityOff' | 'visibility'
+type IconName = 'visibility' | 'visibilityOff' | 'search' | 'chevron' | 'settings' | 'exit' | 'checkmark' | 'x'
 
 interface IconProps {
     icon: IconName
     size?: number
     color?: string
-    viewport?: string
+    stroke?: string
+    viewbox?: string
     className?: string
 }
 
@@ -16,18 +17,41 @@ const iconPaths: Record<IconName, ReactNode> = {
     ),
     visibilityOff: (
         <path d="m644-428-58-58q9-47-27-88t-93-32l-58-58q17-8 34.5-12t37.5-4q75 0 127.5 52.5T660-500q0 20-4 37.5T644-428Zm128 126-58-56q38-29 67.5-63.5T832-500q-50-101-143.5-160.5T480-720q-29 0-57 4t-55 12l-62-62q41-17 84-25.5t90-8.5q151 0 269 83.5T920-500q-23 59-60.5 109.5T772-302Zm20 246L624-222q-35 11-70.5 16.5T480-200q-151 0-269-83.5T40-500q21-53 53-98.5t73-81.5L56-792l56-56 736 736-56 56ZM222-624q-29 26-53 57t-41 67q50 101 143.5 160.5T480-280q20 0 39-2.5t39-5.5l-36-38q-11 3-21 4.5t-21 1.5q-75 0-127.5-52.5T300-500q0-11 1.5-21t4.5-21l-84-82Zm319 93Zm-151 75Z" />
+    ),
+    search: (
+        <path d='M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z' />
+    ),
+    chevron: (
+        <path d='m5 7.5 5 5 5-5' />
+    ),
+    settings: (
+        <path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z" />
+    ),
+    exit: (
+        <>
+            <path d='M13 4h7v16h-7' />
+            <path d='M3 12h11' />
+            <path d='m10 8 4 4-4 4' />
+        </>
+    ),
+    checkmark: (
+        <path d='m4.5 10.2 3.4 3.4 7.6-7.7' />
+    ),
+    x: (
+        <path d='M4.4 4.4L10 10l5.6-5.6 1.2 1.2L11.2 11.2l5.6 5.6-1.2 1.2L10 12.4 4.4 18l-1.2-1.2 5.6-5.6-5.6-5.6z' />
     )
 }
 
-export default function Icon({ icon, size = 24, color = 'currentColor', viewport = '0 -960 960 960', className }: IconProps) {
+export default function Icon({ icon, size = 24, color = 'currentColor', stroke = 'currentColor', viewbox = '0 -960 960 960', className }: IconProps) {
     return (
         <svg
             className={className}
             xmlns='http://www.w3.org/2000/svg'
             height={size}
-            viewBox={viewport}
+            viewBox={viewbox}
             width={size}
             fill={color}
+            stroke={stroke}
         >
             {iconPaths[icon]}
         </svg>
