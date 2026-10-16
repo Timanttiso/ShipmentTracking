@@ -11,37 +11,6 @@
     color: var(--profile-ink);
 }
 
-.profile-toast {
-    position: fixed;
-    z-index: 110;
-    top: 84px;
-    right: clamp(16px, 4vw, 40px);
-    display: flex;
-    max-width: min(420px, calc(100vw - 32px));
-    min-height: 48px;
-    align-items: center;
-    gap: 11px;
-    box-sizing: border-box;
-    padding: 11px 16px;
-    border: 1px solid #c9d9ce;
-    border-radius: 4px;
-    background: #f1f7f2;
-    box-shadow: 0 6px 18px rgba(16, 42, 67, .12);
-    color: #315e43;
-    font-size: 13px;
-    font-weight: 700;
-}
-
-.profile-toast svg {
-    width: 19px;
-    height: 19px;
-    flex: 0 0 auto;
-    stroke: currentColor;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: 1.8;
-}
-
 .profile-page__heading {
     margin-bottom: 28px;
 }

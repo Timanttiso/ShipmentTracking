@@ -3,6 +3,7 @@ import { shipmentStatusLabels, type Shipment } from '../types/shipment'
 import AddShipmentPopup from '../components/AddShipmentPopup'
 import ShipmentInfoPopup from '../components/ShipmentInfoPopup'
 import SortDropdown, { type SortDirection } from '../components/SortDropdown'
+import ToastMessage from '../components/ToastMessage'
 import { fetchShipments } from '../services/api'
 import '../components/styles/Dropdown.css'
 import '../components/styles/Popup.css'
@@ -30,13 +31,14 @@ const formatDateTime = (value: string | null, fallback: string) => {
 
 export default function Dashboard() {
     const [shipments, setShipments] = useState<Shipment[]>([])
-    const [error, setError] = useState('')
     const [search, setSearch] = useState('')
     const [activeFilter, setActiveFilter] = useState<(typeof filters)[number]>('Kaikki')
     const [sortBy, setSortBy] = useState<SortOption>('name')
     const [activeMap, setActiveMap] = useState<Shipment | null>(null)
     const [isAddPopupOpen, setIsAddPopupOpen] = useState(false)
     const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
+    const [error, setError] = useState('')
+    const [successMessage, setSuccessMessage] = useState('')
 
     const visibleShipments = shipments.filter((shipment) => {
         const matchesSearch = `${shipment.shipment_name} ${shipment.ship_mmsi}`
@@ -81,6 +83,7 @@ export default function Dashboard() {
     const handleShipmentAdd = () => {
         setIsAddPopupOpen(false)
         PopulateShipmentList()
+        setSuccessMessage('Lähetys lisätty.')
     }
 
     useEffect(() => {
@@ -90,6 +93,7 @@ export default function Dashboard() {
     return (
         <main className='dashboard-page'>
             <div className='dashboard-main'>
+                <ToastMessage message={successMessage} onAfterToast={() => setSuccessMessage('')} />
                 <section className='dashboard-heading' aria-labelledby='page-title'>
                     <h1 id='page-title'>Lähetykset</h1>
                     <button className='add-shipment-button' onClick={() => setIsAddPopupOpen(true)}>Lisää Lähetys</button>
@@ -215,7 +219,7 @@ export default function Dashboard() {
                 />
             )}
             {isAddPopupOpen && (
-                <AddShipmentPopup onClose={handleShipmentAdd} />
+                <AddShipmentPopup onClose={() => setIsAddPopupOpen(false)} onAdd={handleShipmentAdd} />
             )}
         </main>
     )

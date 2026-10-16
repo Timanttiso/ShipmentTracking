@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { updateSettings, changePassword, deleteAccount } from '../services/auth'
 import DestinationDropdown from '../components/DestinationDropdown'
 import DestinationManagerPopup from '../components/DestinationManagerPopup'
+import ToastMessage from '../components/ToastMessage'
 import Icon from '../constants/Icons'
 import { useAuth } from '../contexts/AuthContext'
 import { useDestinations } from '../contexts/DestinationContext'
@@ -26,14 +27,6 @@ export default function ProfilePage() {
     const [error, setError] = useState(destinationFetchError)
     const [resetPwError, setResetPwError] = useState('')
     const [successMessage, setSuccessMessage] = useState('')
-
-    useEffect(() => {
-        if (!successMessage) return
-
-        const timeoutId = window.setTimeout(() => setSuccessMessage(''), 4000)
-
-        return () => window.clearTimeout(timeoutId)
-    }, [successMessage])
 
     const handleUpdateSettings = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -130,14 +123,7 @@ export default function ProfilePage() {
                     }
                 />
             )}
-            {successMessage && (
-                <div className='profile-toast' role='status' aria-live='polite'>
-                    <svg aria-hidden='true' viewBox='0 0 20 20' fill='none'>
-                        <path d='m4.5 10.2 3.4 3.4 7.6-7.7' />
-                    </svg>
-                    <span>{successMessage}</span>
-                </div>
-            )}
+            <ToastMessage message={successMessage} onAfterToast={() => setSuccessMessage('')} />
             <main className='profile-page'>
                 <header className='profile-page__heading'>
                     <h1>Profiili</h1>

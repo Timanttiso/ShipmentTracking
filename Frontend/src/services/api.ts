@@ -43,3 +43,9 @@ export const updateDestination = (id: number, destination: DestinationRequest): 
         body: JSON.stringify(destination),
     })
 }
+
+export const deleteDestination = (id: number): Promise<void> => {
+    return requestHelper<void>(`/api/destinations/destination/${id}`, true, {
+        method: 'DELETE',
+    })
+}

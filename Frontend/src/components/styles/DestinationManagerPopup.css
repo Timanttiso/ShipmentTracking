@@ -41,6 +41,7 @@
 .destination-manager-inputs {
     display: flex;
     gap: 14px;
+    align-items: end;
 }
 
 .destination-manager__select {
@@ -65,4 +66,35 @@
     border-color: #8d9b8e;
     outline: 2px solid rgba(141, 155, 142, .22);
     outline-offset: 1px;
+}
+
+.destination-delete-btn {
+    margin-right: auto;
+}
+
+.destination-manager__primary-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.destination-manager__actions {
+    flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+    .destination-manager-inputs {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .destination-manager__actions .destination-delete-btn,
+    .destination-manager__primary-actions {
+        flex: 1 1 100%;
+    }
+
+    .destination-manager__primary-actions > .popup-form__submit {
+        flex: 1 1 auto;
+        min-width: 0;
+        white-space: nowrap;
+    }
 }

@@ -2,7 +2,8 @@ import { useState } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
 import type { Destination } from '../types/destination'
 import LocationPicker from './LocationPicker'
-import { addDestination, updateDestination } from '../services/api'
+import ToastMessage from './ToastMessage'
+import { addDestination, updateDestination, deleteDestination } from '../services/api'
 import { useDestinations } from '../contexts/DestinationContext'
 import './styles/DestinationManagerPopup.css'
 
@@ -30,7 +31,9 @@ export default function DestinationManagerPopup({
     const [coordinates, setCoordinates] = useState(initialCoordinates)
     const [mapCenter, setMapCenter] = useState(initialCoordinates)
     const [submitting, setSubmitting] = useState(false)
+    const [deleting, setDeleting] = useState(false)
     const [error, setError] = useState('')
+    const [successMessage, setSuccessMessage] = useState('')
 
     const handleSelectLocation = (lat: number, lng: number) => {
         setCoordinates({ lat, lng })
@@ -59,6 +62,7 @@ export default function DestinationManagerPopup({
         e.preventDefault()
         setError('')
         setSubmitting(true)
+        setSuccessMessage('')
 
         const newDestination = {
             destination_name: '',
@@ -73,10 +77,7 @@ export default function DestinationManagerPopup({
                 setSelectedDestination(addedDestination)
                 await setDefaultDestination(addedDestination.id)
                 await populateDestinations()
-
-                setDestinationName('')
-                setCoordinates(initialCoordinates)
-                onClose()
+                setSuccessMessage('Määränpää lisätty.')
             } catch (error: unknown) {
                 const message = error instanceof Error ? error.message : 'Yhteysvirhe'
 
@@ -104,10 +105,7 @@ export default function DestinationManagerPopup({
 
                 if (selectedDestination?.id === destinationToEdit.id) setSelectedDestination(updatedDestination)
                 await populateDestinations()
-
-                setDestinationToEditName('')
-                setCoordinates(initialCoordinates)
-                onClose()
+                setSuccessMessage('Määränpää muokattu.')
             } catch (error: unknown) {
                 const message = error instanceof Error ? error.message : 'Yhteysvirhe'
 
@@ -116,6 +114,38 @@ export default function DestinationManagerPopup({
                 setSubmitting(false)
             }
         }
+    }
+
+    const handleDelete = async () => {
+        if (!destinationToEdit) {
+            setError('Valitse poistettava määränpää!')
+            return
+        }
+
+        setError('')
+        setSuccessMessage('')
+        if (!window.confirm(`Haluatko varmasti poistaa määränpään '${destinationToEdit?.destination_name}'? Myös kaikki tätä määränpäätä käyttävät lähetykset poistetaan.`)) return
+        setDeleting(true)
+
+        try {
+            await deleteDestination(destinationToEdit.id)
+            await populateDestinations()
+            setSuccessMessage('Määränpää poistettu.')
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : 'Yhteysvirhe'
+
+            setError(message)
+        } finally {
+            setDeleting(false)
+        }
+    }
+
+    const handleAfterSuccess = () => {
+        setSuccessMessage('')
+        setDestinationName('')
+        setDestinationToEditName('')
+        setDestinationToEdit(null)
+        setCoordinates(initialCoordinates)
     }
 
     return (
@@ -127,6 +157,10 @@ export default function DestinationManagerPopup({
                 }}
                 role='presentation'
             >
+                <ToastMessage
+                    message={successMessage}
+                    onAfterToast={handleAfterSuccess}
+                />
                 <section
                     className='popup-dialog'
                     role='dialog'
@@ -213,21 +247,31 @@ export default function DestinationManagerPopup({
 
                         {error && <p className="error-message">{error}</p>}
 
-                        <footer className='popup-form__actions'>
-                            <button
-                                className='popup-form__cancel'
-                                onClick={onClose}
-                                type='button'
-                            >
-                                Peruuta
-                            </button>
+                        <footer className='popup-form__actions destination-manager__actions'>
+                            {activeTab === 'Muokkaa' && (
+                                <div className='destination-delete-btn'>
+                                    <button className='delete-button' onClick={handleDelete} type='button'>
+                                        {deleting ? 'Poistetaan' : 'Poista määränpää'}
+                                    </button>
+                                </div>
+                            )}
 
-                            <button className='popup-form__submit' type='submit'>
-                                {activeTab === 'Lisää'
-                                    ? submitting ? 'Lisätään...' : 'Lisää määränpää'
-                                    : submitting ? 'Tallennetaan...' : 'Tallenna muutokset'
-                                }
-                            </button>
+                            <div className='destination-manager__primary-actions'>
+                                <button
+                                    className='popup-form__cancel'
+                                    onClick={onClose}
+                                    type='button'
+                                >
+                                    Peruuta
+                                </button>
+
+                                <button className='popup-form__submit' type='submit'>
+                                    {activeTab === 'Lisää'
+                                        ? submitting ? 'Lisätään...' : 'Lisää määränpää'
+                                        : submitting ? 'Tallennetaan...' : 'Tallenna muutokset'
+                                    }
+                                </button>
+                            </div>
                         </footer>
                     </form>
                 </section>

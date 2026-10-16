@@ -6,9 +6,10 @@ import { useDestinations } from '../contexts/DestinationContext'
 
 type AddShipmentPopupProps = {
     onClose: () => void
+    onAdd: () => void
 }
 
-export default function AddShipmentPopup({ onClose }: AddShipmentPopupProps): JSX.Element {
+export default function AddShipmentPopup({ onClose, onAdd }: AddShipmentPopupProps): JSX.Element {
     const { destinations, defaultDestination, destinationFetchError } = useDestinations()
 
     const [shipmentName, setShipmentName] = useState('')
@@ -32,7 +33,7 @@ export default function AddShipmentPopup({ onClose }: AddShipmentPopupProps): JS
             document.documentElement.style.overflow = previousDocumentOverflow
             window.removeEventListener('keydown', closeOnEscape)
         }
-    }, [onClose])
+    }, [onClose, onAdd])
 
     useEffect(() => {
         if (!defaultDestination) return
@@ -64,7 +65,7 @@ export default function AddShipmentPopup({ onClose }: AddShipmentPopupProps): JS
             setShipMmsi('')
             setEta('')
             setSubmitting(false)
-            onClose()
+            onAdd()
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : 'Yhteysvirhe'
 
