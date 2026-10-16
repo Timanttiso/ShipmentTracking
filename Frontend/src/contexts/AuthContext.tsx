@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { checkAuth, fetchLogin, type AuthUser } from '../services/auth'
-import { ApiError, authExpiredEvent } from '../services/serviceHelper'
+import { checkAuth, fetchLogin, fetchLogout, type AuthUser } from '../services/auth'
+import { ApiError, authExpiredEvent, tokenKey } from '../services/serviceHelper'
 
 interface AuthContextValue {
     user: AuthUser | null
@@ -12,7 +12,6 @@ interface AuthContextValue {
     logout: () => void
 }
 
-const tokenKey = 'shipmentTrackingAuthToken'
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -81,7 +80,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     }
 
-    const logout = () => {
+    const logout = async () => {
+        await fetchLogout()
         localStorage.removeItem(tokenKey)
         setUser(null)
     }

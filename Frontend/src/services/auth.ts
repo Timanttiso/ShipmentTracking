@@ -12,6 +12,13 @@ interface LoginResponse {
     token: string
 }
 
+export const fetchRegister = (reqBody: Record<string, unknown>): Promise<UserResponse> => {
+    return requestHelper<UserResponse>('/api/auth/register', false, {
+        method: 'POST',
+        body: JSON.stringify(reqBody),
+    })
+}
+
 export const checkAuth = (): Promise<AuthUser> => {
     return requestHelper<AuthUser>('/api/auth/me', false)
 }
@@ -23,10 +30,9 @@ export const fetchLogin = (reqBody: Record<string, unknown>): Promise<LoginRespo
     })
 }
 
-export const fetchRegister = (reqBody: Record<string, unknown>): Promise<UserResponse> => {
-    return requestHelper<UserResponse>('/api/auth/register', false, {
+export const fetchLogout = (): Promise<void> => {
+    return requestHelper<void>('/api/auth/logout', true, {
         method: 'POST',
-        body: JSON.stringify(reqBody),
     })
 }
 

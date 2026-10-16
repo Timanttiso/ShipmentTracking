@@ -1,4 +1,5 @@
 export const authExpiredEvent = 'shipmentTracking:auth-expired'
+export const tokenKey = 'shipmentTrackingAuthToken'
 
 export class ApiError extends Error {
     status: number
@@ -17,7 +18,12 @@ interface ErrorResponse {
 const isErrorResponse = (value: unknown): value is ErrorResponse =>
     typeof value === 'object' && value !== null && ('error' in value || 'message' in value)
 
-const requestHelper = async <TResponse = unknown>(path: string, authRequired: boolean, options: RequestInit = {}): Promise<TResponse> => {
+const requestHelper = async <TResponse = unknown>(
+    path: string,
+    authRequired: boolean,
+    options: RequestInit = {},
+    retried: boolean = false
+): Promise<TResponse> => {
     const token = localStorage.getItem('shipmentTrackingAuthToken')
     if (authRequired && !token) {
         window.dispatchEvent(new Event(authExpiredEvent))
@@ -38,7 +44,13 @@ const requestHelper = async <TResponse = unknown>(path: string, authRequired: bo
 
     if (!res.ok) {
         if (authRequired && res.status === 401) {
-            window.dispatchEvent(new Event(authExpiredEvent))
+            if (!retried) {
+                await tryToRefreshAccessToken()
+                return requestHelper(path, authRequired, options, true)
+            }
+            if (retried) {
+                window.dispatchEvent(new Event(authExpiredEvent))
+            }
         }
 
         const body: unknown = await res.json()
@@ -55,6 +67,20 @@ const requestHelper = async <TResponse = unknown>(path: string, authRequired: bo
     }
 
     return (await res.json() as TResponse)
+}
+
+const tryToRefreshAccessToken = async () => {
+    const res = await refreshToken()
+    if (res?.token) {
+        localStorage.setItem(tokenKey, res.token)
+    }
+}
+
+const refreshToken = (): Promise<{ token: string }> => {
+    return requestHelper<{ token: string }>('/api/auth/refresh', true, {
+        method: 'POST',
+        credentials: 'include',
+    })
 }
 
 export default requestHelper

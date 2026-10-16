@@ -135,7 +135,7 @@ usersRouter.post('/logout', async(request, response, next) => {
             await RefreshTokenService.deleteByHash(await hashToken(refreshToken))
         }
         response.clearCookie('refreshToken', { path: refreshCookieOptions.path })
-        response.status(200).end()
+        response.status(204).end()
     }
     catch(error){
         next(error)
