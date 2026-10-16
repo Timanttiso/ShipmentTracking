@@ -19,7 +19,7 @@
 }
 
 .dashboard-main {
-    width: min(100%, 1530px);
+    width: min(100%, 1100px);
     box-sizing: border-box;
     margin: 0 auto;
     padding: 29px clamp(24px, 4.4vw, 68px) 45px;
@@ -88,35 +88,6 @@
 .add-shipment-button:active {
     box-shadow: 0 1px 3px rgba(16, 42, 67, .18);
     transform: translateY(0);
-}
-
-.logout-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 36px;
-    padding: 0 12px;
-    border: 1px solid #e4c9c3;
-    border-radius: 3px;
-    background: #fffdfc;
-    color: #985244;
-    cursor: pointer;
-    font: inherit;
-    font-size: 12px;
-    font-weight: 700;
-}
-
-.logout-button:hover,
-.logout-button:focus-visible {
-    border-color: #c9897e;
-    background: #f8ece9;
-    color: #823d32;
-}
-
-.logout-button svg {
-    width: 17px;
-    height: 17px;
-    flex: 0 0 auto;
 }
 
 .shipment-toolbar {
@@ -290,11 +261,11 @@
 }
 
 .shipment-name,
+.shipment-destination,
 .shipment-eta,
 .shipment-updated-column {
     display: grid;
     justify-items: start;
-    gap: 5px;
     min-width: 0;
 }
 
@@ -320,6 +291,7 @@
     overflow-wrap: anywhere;
 }
 
+.shipment-destination strong,
 .shipment-eta strong {
     color: #273746;
     font-size: 12px;
@@ -406,29 +378,26 @@
 }
 
 @media (max-width: 850px) {
-    .dashboard-main {
-        padding-top: 37px;
-    }
-
     .shipment-list__header,
     .shipment-row {
         grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr) minmax(0, 1fr) minmax(90px, .68fr) 24px;
-        column-gap: 10px;
     }
 }
 
 @media (max-width: 640px) {
     .dashboard-main {
-        padding: 31px 17px 36px;
+        padding: 17px;
     }
 
     .dashboard-heading {
+        /*flex-wrap: wrap;
+        justify-content: center;*/
+
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         align-items: center;
-        column-gap: 12px;
-        row-gap: 16px;
-        margin-bottom: 25px;
+        margin-bottom: 7px;
+        gap: 20px;
     }
 
     .dashboard-heading h1 {
@@ -441,16 +410,6 @@
         grid-column: 1 / -1;
         grid-row: 2;
         justify-self: center;
-    }
-
-    .logout-button {
-        grid-column: 2;
-        grid-row: 1;
-        justify-content: center;
-        align-self: center;
-        min-height: 34px;
-        gap: 5px;
-        padding-inline: 8px;
     }
 
     .shipment-toolbar {
@@ -518,6 +477,7 @@
     }
 
     .shipment-name,
+    .shipment-destination,
     .shipment-eta,
     .shipment-updated-column,
     .shipment-status {
@@ -562,14 +522,6 @@
     .shipment-name .shipment-updated {
         max-width: 100%;
         text-align: right;
-    }
-
-    .shipment-eta {
-        gap: 4px;
-    }
-
-    .shipment-eta strong {
-        font-size: 12px;
     }
 
     .shipment-updated {

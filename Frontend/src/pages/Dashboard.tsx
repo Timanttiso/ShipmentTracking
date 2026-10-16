@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react'
-import { shipmentStatusLabels, type Shipment } from '../types/shipment'
+import { useState, useEffect, useCallback } from 'react'
+import type Shipment from '../types/shipment'
+import { shipmentStatusLabels } from '../types/shipment'
 import AddShipmentPopup from '../components/AddShipmentPopup'
 import ShipmentInfoPopup from '../components/ShipmentInfoPopup'
 import SortDropdown, { type SortDirection } from '../components/SortDropdown'
 import ToastMessage from '../components/ToastMessage'
 import { fetchShipments } from '../services/api'
+import useDestinations from '../contexts/useDestinations'
 import '../components/styles/Dropdown.css'
 import '../components/styles/Popup.css'
 import './styles/Dashboard.css'
@@ -40,6 +42,10 @@ export default function Dashboard() {
     const [error, setError] = useState('')
     const [successMessage, setSuccessMessage] = useState('')
 
+    const { destinations } = useDestinations()
+
+    const destinationById = new Map(destinations.map((destination) => [destination.id, destination]))
+
     const visibleShipments = shipments.filter((shipment) => {
         const matchesSearch = `${shipment.shipment_name} ${shipment.ship_mmsi}`
             .toLocaleLowerCase('fi')
@@ -48,7 +54,6 @@ export default function Dashboard() {
 
         return matchesSearch && matchesFilter
     }).sort((a, b) => {
-
         let comparison: number
 
         if (sortBy === 'name') {
@@ -68,27 +73,26 @@ export default function Dashboard() {
         return sortDirection === 'asc' ? comparison : -comparison
     })
 
-    const PopulateShipmentList = async () => {
-        setError('')
-
+    const populateShipmentList = useCallback(async () => {
         try {
             const shipmentData = await fetchShipments()
             setShipments(shipmentData)
+            setError('')
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : 'Yhteysvirhe'
             setError(message)
         }
-    }
+    }, [])
 
-    const handleShipmentAdd = () => {
+    const handleShipmentAdd = async () => {
         setIsAddPopupOpen(false)
-        PopulateShipmentList()
+        await populateShipmentList()
         setSuccessMessage('Lähetys lisätty.')
     }
 
     useEffect(() => {
-        PopulateShipmentList()
-    }, [])
+        void Promise.resolve().then(populateShipmentList)
+    }, [populateShipmentList])
 
     return (
         <main className='dashboard-page'>
@@ -160,12 +164,14 @@ export default function Dashboard() {
                                 <span>LÄHETYS</span>
                                 <span>Viimeksi päivitetty</span>
                             </span>
+                            <span>Määränpää</span>
                             <span>ARVIOITU SAAPUMISAIKA</span>
                             <span>TILANNE</span>
                         </div>
 
                         {error && <p className="error-message">{error}</p>}
                         {visibleShipments.map((shipment) => {
+                            shipment.destination_name = destinationById.get(shipment.destination_id ?? -1)?.destination_name ?? 'Ei määritetty'
                             return (
                                 <article
                                     className='shipment-row'
@@ -187,8 +193,12 @@ export default function Dashboard() {
                                         <h2>{shipment.shipment_name}</h2>
                                         <div className='shipment-updated-group'>
                                             <span className='mobile-field-label'>Viimeksi päivitetty</span>
-                                            <span className='shipment-updated'>{formatDateTime(shipment.updated_at || shipment.created_at, 'Ei päivitystietoa')}</span>
+                                            <span className='shipment-updated'>{formatDateTime(shipment.updated_at ?? shipment.created_at, 'Ei päivitystietoa')}</span>
                                         </div>
+                                    </div>
+                                    <div className='shipment-destination'>
+                                        <span className='mobile-field-label'>Määränpää</span>
+                                        <strong>{shipment.destination_name}</strong>
                                     </div>
                                     <div className='shipment-eta'>
                                         <span className='mobile-field-label'>ARVIOITU SAAPUMISAIKA</span>

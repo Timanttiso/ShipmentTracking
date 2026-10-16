@@ -1,8 +1,9 @@
 import { useEffect, type JSX, type Dispatch, type SetStateAction } from 'react'
-import { shipmentStatusLabels, type Shipment } from '../types/shipment'
+import type Shipment from '../types/shipment'
+import { shipmentStatusLabels } from '../types/shipment'
 import './styles/ShipmentInfoPopup.css'
 
-type shipmentInfoPopupProps = {
+interface shipmentInfoPopupProps {
     setActiveMap: Dispatch<SetStateAction<Shipment | null>>
     activeMap: Shipment
     formatDateTime: (value: string | null, fallback: string) => string
@@ -27,7 +28,7 @@ export default function ShipmentInfoPopup({ setActiveMap, activeMap, formatDateT
             document.documentElement.style.overflow = previousDocumentOverflow
             window.removeEventListener('keydown', closeOnEscape)
         }
-    }, [activeMap])
+    }, [activeMap, setActiveMap])
     
     return (
         <div
@@ -54,7 +55,8 @@ export default function ShipmentInfoPopup({ setActiveMap, activeMap, formatDateT
                 </header>
                 <dl className='map-dialog__details'>
                     <div><dt>Arvioitu saapumisaika</dt><dd>{formatDateTime(activeMap.eta, 'Ei arvioitua saapumisaikaa')}</dd></div>
-                    <div><dt>Viimeksi päivitetty</dt><dd>{formatDateTime(activeMap.updated_at, 'Ei päivitystietoa')}</dd></div>
+                    <div><dt>Viimeksi päivitetty</dt><dd>{formatDateTime(activeMap.updated_at ?? activeMap.created_at, 'Ei päivitystietoa')}</dd></div>
+                    <div><dt>Määränpää</dt><dd>{activeMap.destination_name}</dd></div>
                     <div><dt>MMSI</dt><dd>{activeMap.ship_mmsi}</dd></div>
                     <div>
                         <dt>Tila</dt>

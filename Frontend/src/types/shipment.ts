@@ -6,7 +6,7 @@ export const shipmentStatusLabels: Record<ShipmentStatus, string> = {
     3: 'Viivästynyt',
 }
 
-export type Shipment = {
+export default interface Shipment {
     id: number
     shipment_name: string
     ship_mmsi: string
@@ -18,4 +18,5 @@ export type Shipment = {
     created_at: string | null
     updated_at: string | null
     destination_id: number | null
+    destination_name?: string
 }
