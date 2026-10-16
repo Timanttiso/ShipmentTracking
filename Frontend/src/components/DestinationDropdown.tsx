@@ -1,8 +1,8 @@
-import type { Destination } from '../types/destination'
+import type Destination from '../types/destination'
 import { useEffect, useRef, useState, type ReactElement } from 'react'
 import './styles/DestinationDropdown.css'
 
-type DestinationDropdownProps = {
+interface DestinationDropdownProps {
     options: readonly Destination[]
     selectedOption: Destination | null
     onChange: (value: Destination) => void

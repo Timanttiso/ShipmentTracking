@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState, type ReactElement } from 'react'
 import './styles/SortDropdown.css'
 
-type SortDropdownOption<Value extends string> = {
+interface SortDropdownOption<Value extends string> {
     value: Value
     label: string
 }
 
 export type SortDirection = 'asc' | 'desc'
 
-type SortDropdownProps<Value extends string> = {
+interface SortDropdownProps<Value extends string> {
     options: readonly SortDropdownOption<Value>[]
     value: Value
     onChange: (value: Value) => void

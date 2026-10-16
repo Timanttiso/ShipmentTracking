@@ -22,7 +22,7 @@ const requestHelper = async <TResponse = unknown>(
     path: string,
     authRequired: boolean,
     options: RequestInit = {},
-    retried: boolean = false
+    retried = false
 ): Promise<TResponse> => {
     const token = localStorage.getItem('shipmentTrackingAuthToken')
     if (authRequired && !token) {

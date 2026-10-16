@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
+import useAuth from '../contexts/useAuth'
 import './styles/ProfileButton.css'
 
 export default function ProfileButton() {
@@ -35,15 +35,15 @@ export default function ProfileButton() {
         }
     }, [isOpen])
 
-    const handleSettings = () => {
+    const handleSettings = async () => {
         setIsOpen(false)
-        navigate('/profile')
+        await navigate('/profile')
     }
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         setIsOpen(false)
         logout()
-        navigate('/')
+        await navigate('/')
     }
 
     return (

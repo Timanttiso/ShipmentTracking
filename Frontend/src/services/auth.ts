@@ -1,12 +1,5 @@
 import requestHelper from './serviceHelper'
-
-export interface AuthUser {
-    id: number
-    username: string
-    email: string
-    default_destination_id: number
-    default_destination_name: string
-}
+import type AuthUser from '../types/user'
 
 interface LoginResponse {
     token: string
@@ -36,7 +29,7 @@ export const fetchLogout = (): Promise<void> => {
     })
 }
 
-type SettingsRequest = {
+interface SettingsRequest {
     username?: string,
     email?: string,
     default_destination_id?: number

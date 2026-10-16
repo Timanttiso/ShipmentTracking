@@ -5,8 +5,8 @@ import DestinationDropdown from '../components/DestinationDropdown'
 import DestinationManagerPopup from '../components/DestinationManagerPopup'
 import ToastMessage from '../components/ToastMessage'
 import Icon from '../constants/Icons'
-import { useAuth } from '../contexts/AuthContext'
-import { useDestinations } from '../contexts/DestinationContext'
+import useAuth from '../contexts/useAuth'
+import useDestinations from '../contexts/useDestinations'
 import './styles/ProfilePage.css'
 
 export default function ProfilePage() {
@@ -98,7 +98,7 @@ export default function ProfilePage() {
         try {
             await deleteAccount()
             logout()
-            navigate('/')
+            await navigate('/')
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : 'Yhteysvirhe'
 
@@ -158,7 +158,7 @@ export default function ProfilePage() {
                                 <span>Oletus määränpää</span>
                                 <DestinationDropdown
                                     options={destinations}
-                                    selectedOption={selectedDestination ? selectedDestination : defaultDestination}
+                                    selectedOption={selectedDestination ?? defaultDestination}
                                     onChange={(value) => setSelectedDestination(value)}
                                     onOpenManager={() => setIsDestinationManagerOpen(true)}
                                 />

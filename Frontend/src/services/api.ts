@@ -1,8 +1,8 @@
-import requestHelper from "./serviceHelper"
-import type { Shipment } from "../types/shipment"
-import type { Destination } from "../types/destination"
+import requestHelper from './serviceHelper'
+import type Shipment from '../types/shipment'
+import type Destination from '../types/destination'
 
-type AddShipmentRequest = {
+interface AddShipmentRequest {
     shipment_name: string
     ship_mmsi: string
     eta: string | null
@@ -20,7 +20,7 @@ export const addShipment = (shipment: AddShipmentRequest): Promise<[Shipment]> =
     })
 }
 
-type DestinationRequest = {
+interface DestinationRequest {
     destination_name: string,
     lon: number,
     lat: number

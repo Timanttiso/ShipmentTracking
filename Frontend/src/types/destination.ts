@@ -1,4 +1,4 @@
-export type Destination = {
+export default interface Destination {
     id: number,
     destination_name: string,
     lon: string,

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 
 type IconName = 'visibilityOff' | 'visibility'
 
-type IconProps = {
+interface IconProps {
     icon: IconName
     size?: number
     color?: string

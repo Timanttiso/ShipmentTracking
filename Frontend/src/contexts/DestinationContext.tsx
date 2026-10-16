@@ -1,18 +1,9 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import type { Destination } from '../types/destination'
+import { useCallback, useEffect, useState, type ReactNode } from 'react'
+import type Destination from '../types/destination'
 import { fetchDestinations } from '../services/api'
 import { updateSettings } from '../services/auth'
-import { useAuth } from './AuthContext'
-
-interface DestinationContextValue {
-    populateDestinations: () => Promise<void>
-    destinations: Destination[]
-    defaultDestination: Destination | null
-    setDefaultDestination: (id: number) => Promise<void>
-    destinationFetchError: string
-}
-
-const DestinationsContext = createContext<DestinationContextValue | undefined>(undefined)
+import { DestinationsContext } from './useDestinations'
+import useAuth from './useAuth'
 
 export function DestinationProvider({ children }: { children: ReactNode }) {
     const [destinations, setDestinations] = useState<Destination[]>([])
@@ -22,9 +13,7 @@ export function DestinationProvider({ children }: { children: ReactNode }) {
 
     const defaultDestination = destinations.find(d => d.id === user?.default_destination_id) ?? null
 
-    const populateDestinations = async () => {
-        setDestinationFetchError('')
-
+    const populateDestinations = useCallback(async () => {
         try {
             let destinationData = await fetchDestinations()
             destinationData = destinationData.sort((a, b) => {
@@ -32,13 +21,14 @@ export function DestinationProvider({ children }: { children: ReactNode }) {
             })
 
             setDestinations(destinationData)
+            setDestinationFetchError('')
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : 'Yhteysvirhe'
 
             setDestinationFetchError(message)
             throw error
         }
-    }
+    }, [])
 
     const setDefaultDestination = async (id: number) => {
         setDestinationFetchError('')
@@ -55,20 +45,12 @@ export function DestinationProvider({ children }: { children: ReactNode }) {
     }
 
     useEffect(() => {
-        populateDestinations()
-    }, [])
+        void Promise.resolve().then(populateDestinations)
+    }, [populateDestinations])
 
     return (
         <DestinationsContext.Provider value={{ populateDestinations, destinations, defaultDestination, setDefaultDestination, destinationFetchError }}>
             {children}
         </DestinationsContext.Provider>
     )
-}
-
-export function useDestinations() {
-    const context = useContext(DestinationsContext)
-    if (!context) {
-        throw new Error('useAuth must be used within an AuthProvider')
-    }
-    return context
 }

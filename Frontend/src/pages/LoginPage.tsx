@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
+import useAuth from '../contexts/useAuth'
 import Icon from '../constants/Icons'
 import './styles/LoginPage.css'
 
@@ -24,7 +24,7 @@ export default function LoginPage() {
             await login({ username, password })
             setUsername('')
             setPassword('')
-            navigate('/dashboard')
+            await navigate('/dashboard')
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : 'Connection error'
             setError(message)

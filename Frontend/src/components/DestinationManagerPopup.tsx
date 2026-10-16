@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
-import type { Destination } from '../types/destination'
+import type Destination from '../types/destination'
 import LocationPicker from './LocationPicker'
 import ToastMessage from './ToastMessage'
 import { addDestination, updateDestination, deleteDestination } from '../services/api'
-import { useDestinations } from '../contexts/DestinationContext'
+import useDestinations from '../contexts/useDestinations'
 import './styles/DestinationManagerPopup.css'
 
-type DestinationManagerPopupProps = {
+interface DestinationManagerPopupProps {
     onClose: () => void
     selectedDestination: Destination | null
     setSelectedDestination: Dispatch<SetStateAction<Destination | null>>

@@ -3,18 +3,18 @@ import { useEffect } from 'react'
 import 'leaflet/dist/leaflet.css'
 import './styles/LocationPicker.css'
 
-type LocationCoordinates = {
+interface LocationCoordinates {
     lat: number
     lng: number
 }
 
-type LocationPickerProps = {
+interface LocationPickerProps {
     center: LocationCoordinates // Updates when editable destination is changed.
     coordinates: LocationCoordinates // Updates when map is clicked
     onSelect: (lat: number, lng: number) => void
 }
 
-type MapClickHandlerProps = {
+interface MapClickHandlerProps {
     onSelect: (position: LocationCoordinates) => void
 }
 
@@ -33,7 +33,7 @@ function MapViewUpdater({ center }: { center: LocationCoordinates }) {
     
     useEffect(() => {
         map.setView([center.lat, center.lng])
-    }, [center])
+    }, [center, map])
 
     return null
 }

@@ -1,10 +1,11 @@
 import { useEffect, useState, type JSX } from 'react'
+import type Destination from '../types/destination'
 import { addShipment } from '../services/api'
 import DestinationDropdown from './DestinationDropdown'
 import DestinationManagerPopup from './DestinationManagerPopup'
-import { useDestinations } from '../contexts/DestinationContext'
+import useDestinations from '../contexts/useDestinations'
 
-type AddShipmentPopupProps = {
+interface AddShipmentPopupProps {
     onClose: () => void
     onAdd: () => void
 }
@@ -12,13 +13,14 @@ type AddShipmentPopupProps = {
 export default function AddShipmentPopup({ onClose, onAdd }: AddShipmentPopupProps): JSX.Element {
     const { destinations, defaultDestination, destinationFetchError } = useDestinations()
 
-    const [shipmentName, setShipmentName] = useState('')
-    const [shipMmsi, setShipMmsi] = useState('')
-    const [selectedDestination, setSelectedDestination] = useState(defaultDestination)
-    const [eta, setEta] = useState('')
     const [submitting, setSubmitting] = useState(false)
     const [error, setError] = useState(destinationFetchError)
     const [isDestinationManagerOpen, setIsDestinationManagerOpen] = useState(false)
+    const [shipmentName, setShipmentName] = useState('')
+    const [shipMmsi, setShipMmsi] = useState('')
+    const [eta, setEta] = useState('')
+    const [selectedDestinationOverride, setSelectedDestinationOverride] = useState<Destination | null>(null)
+    const selectedDestination = selectedDestinationOverride ?? defaultDestination
 
     useEffect(() => {
         const previousDocumentOverflow = document.documentElement.style.overflow
@@ -34,11 +36,6 @@ export default function AddShipmentPopup({ onClose, onAdd }: AddShipmentPopupPro
             window.removeEventListener('keydown', closeOnEscape)
         }
     }, [onClose, onAdd])
-
-    useEffect(() => {
-        if (!defaultDestination) return
-        setSelectedDestination(defaultDestination)
-    }, [defaultDestination])
 
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -79,7 +76,7 @@ export default function AddShipmentPopup({ onClose, onAdd }: AddShipmentPopupPro
             <DestinationManagerPopup
                 onClose={() => setIsDestinationManagerOpen(false)}
                 selectedDestination={selectedDestination}
-                setSelectedDestination={setSelectedDestination}
+                setSelectedDestination={setSelectedDestinationOverride}
                 initialCoordinates={
                     // Opens the location of the currently selected destination by default
                     selectedDestination
@@ -151,8 +148,8 @@ export default function AddShipmentPopup({ onClose, onAdd }: AddShipmentPopupPro
                             <span>Määränpää</span>
                             <DestinationDropdown
                                 options={destinations}
-                                selectedOption={selectedDestination ? selectedDestination : defaultDestination}
-                                onChange={(value) => setSelectedDestination(value)}
+                                selectedOption={selectedDestination ?? defaultDestination}
+                                onChange={value => setSelectedDestinationOverride(value)}
                                 onOpenManager={() => setIsDestinationManagerOpen(true)}
                             />
                         </div>

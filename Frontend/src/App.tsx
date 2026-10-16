@@ -5,8 +5,9 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import Dashboard from './pages/Dashboard'
 import ProfilePage from './pages/ProfilePage'
-import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { DestinationProvider } from './contexts/DestinationContext'
+import { AuthProvider } from './contexts/AuthContext'
+import useAuth from './contexts/useAuth'
 import './App.css'
 
 function PrivateRoute({ children }: { children: ReactNode }) {

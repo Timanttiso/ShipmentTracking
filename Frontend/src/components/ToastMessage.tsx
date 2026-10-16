@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import './styles/ToastMessage.css'
 
-type ToastMessageProps = {
+interface ToastMessageProps {
     message: string
     onAfterToast: () => void
     isSuccess?: boolean
@@ -14,7 +14,7 @@ export default function ToastMessage({ message, onAfterToast, isSuccess = true }
         const timeoutId = window.setTimeout(onAfterToast, 4000)
 
         return () => window.clearTimeout(timeoutId)
-    }, [message])
+    }, [message, onAfterToast])
 
     return (
         message && (

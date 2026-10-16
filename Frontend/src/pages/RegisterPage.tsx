@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { fetchRegister } from '../services/auth'
-import { useAuth } from '../contexts/AuthContext'
+import useAuth from '../contexts/useAuth'
 import Icon from '../constants/Icons'
 import './styles/LoginPage.css'
 

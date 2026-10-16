@@ -1,18 +1,9 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { checkAuth, fetchLogin, fetchLogout, type AuthUser } from '../services/auth'
+import { checkAuth, fetchLogin, fetchLogout } from '../services/auth'
 import { ApiError, authExpiredEvent, tokenKey } from '../services/serviceHelper'
-
-interface AuthContextValue {
-    user: AuthUser | null
-    refreshUser: () => Promise<void>
-    isAuthenticated: boolean
-    loading: boolean
-    login: (credentials: { username: string; password: string }) => Promise<void>
-    logout: () => void
-}
-
-const AuthContext = createContext<AuthContextValue | undefined>(undefined)
+import type AuthUser from '../types/user'
+import { AuthContext } from './useAuth'
 
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<AuthUser | null>(null)
@@ -52,10 +43,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, [])
 
     useEffect(() => {
-        const handleAuthExpired = () => {
+        const handleAuthExpired = async () => {
             localStorage.removeItem(tokenKey)
             setUser(null)
-            navigate('/', { replace: true })
+            await navigate('/', { replace: true })
         }
 
         window.addEventListener(authExpiredEvent, handleAuthExpired)
@@ -91,12 +82,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             {children}
         </AuthContext.Provider>
     )
-}
-
-export function useAuth() {
-    const context = useContext(AuthContext)
-    if (!context) {
-        throw new Error('useAuth must be used within an AuthProvider')
-    }
-    return context
 }
