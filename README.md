@@ -50,7 +50,11 @@ The terminal will display where the frontend started running and you can open th
 ## Frontend
 
 ### Tech Stack
-The frontend is made using typescript.
+* React.js 19 — UI framework
+* React compiler — build-time optimization tool
+* Vite — Build tool and dev server
+* Leaflet — library for building maps (picking destination location)
+* TypeScript
 
 ## Backend
 
