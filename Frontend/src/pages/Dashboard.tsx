@@ -199,7 +199,7 @@ export default function Dashboard() {
                                     </div>
                                     <div className='shipment-status'>
                                         <span className='mobile-field-label'>TILANNE</span>
-                                        <span className={`status-badge status-badge--${shipmentStatusLabels[shipment.status] === 'Matkalla' ? 'in transit' : shipmentStatusLabels[shipment.status] === 'Saapunut' ? 'arrived' : 'delayed'}`}>
+                                        <span className={`status-badge status-badge--${shipmentStatusLabels[shipment.status] === 'Matkalla' ? 'in-transit' : shipmentStatusLabels[shipment.status] === 'Saapunut' ? 'arrived' : 'delayed'}`}>
                                             <span className='status-badge__dot' aria-hidden='true'></span>
                                             {shipmentStatusLabels[shipment.status]}
                                         </span>

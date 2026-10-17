@@ -323,12 +323,12 @@
     background: currentColor;
 }
 
-.status-badge--transit {
+.status-badge--in-transit {
     background: var(--dash-good-soft);
     color: var(--dash-good);
 }
 
-.status-badge--delivered {
+.status-badge--arrived {
     background: var(--dash-neutral-soft);
     color: var(--dash-neutral);
 }
