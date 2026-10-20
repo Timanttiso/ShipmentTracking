@@ -4,6 +4,7 @@ import DestinationService from '../services/destinationService.js';
 import RefreshTokenService from '../services/refreshTokenService.js';
 import auth from '../utils/auth.js'
 import { generateAccessToken, hashToken, createRefreshToken, refreshCookieOptions } from '../utils/tokens.js';
+import { loginLimiter } from '../utils/LoginLimiter.js';
 import 'dotenv/config'
 
 const usersRouter = express.Router()
@@ -60,7 +61,7 @@ usersRouter.post('/register', auth.authenticationNotRequired, async (request, re
 
 })
 
-usersRouter.post('/login', auth.authenticationNotRequired, async (request, response, next) => {
+usersRouter.post('/login', loginLimiter, auth.authenticationNotRequired, async (request, response, next) => {
     try{
         const {username, password} = request.body
         const user = await UserService.checkCredentials({ username, password })
@@ -162,7 +163,7 @@ usersRouter.patch('/settings/change-password', auth.authenticationRequired, asyn
         const { old_password, new_password } = request.body
         
         if(old_password == new_password){
-            return response.status(400).json({error: 'Syötä eri salasana vaihtaaksesi salasanan'})
+            return response.status(400).json({error: 'Syötä uusi salasana'})
         }
 
         if(!passwordRegex.test(new_password)){
