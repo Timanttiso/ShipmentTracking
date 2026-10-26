@@ -7,12 +7,12 @@ const unknownEndpoint = (req, res) => {
 
 const errorHandler = (err, req, res, next) => {
     /*
-    // How to use this errorHandler with the ApiError class (in e.g., services)
+    // How to use this errorHandler with the ApiError class
 
     import ApiError from '../utils/ApiError.js'
 
-    if (!user.name) {
-        throw new ApiError('Missing name in registerUser()', 400, 'Käyttäjänimi vaaditaan')
+    if (problem) {
+        throw new ApiError('Message to show developers', HTTP status, 'Message to send to the client')
     }
     */
     
@@ -30,6 +30,7 @@ const errorHandler = (err, req, res, next) => {
 
     // For unhandled errors
     // Prints the actual error stack to backend console/terminal for developers to see
+    // As a future enhancment, this could also log unhandled errors to some log file.
     logger.error(err)
     // returns error status 500 and error message 'Internal server error' to client
     return res.status(500).json({ error: 'Internal Server Error' })

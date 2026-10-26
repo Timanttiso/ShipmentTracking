@@ -1,5 +1,4 @@
 /**
- * To throw an error with this class:
  * throw new ApiError('developer-side message', HTTP status, 'client-side message')
  */
 class ApiError extends Error {
