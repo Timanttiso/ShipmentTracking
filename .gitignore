@@ -4,6 +4,7 @@
 # files created by downloading modules
 package-lock.json
 pnpm-lock.yaml
+pnpm-workspace.yaml
 node_modules/
 
 # Logs
