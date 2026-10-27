@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Sivu-1" id="-cwvP9C4khoMg4O61iH4">
-    <mxGraphModel dx="1677" dy="957" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2012" dy="1148" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -127,7 +127,7 @@
         <mxCell id="jeJGfDfuQ-ZuuQwvJVNp-5" parent="jeJGfDfuQ-ZuuQwvJVNp-3" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="ship_name (String)" vertex="1">
           <mxGeometry height="30" width="140" y="60" as="geometry" />
         </mxCell>
-        <mxCell id="jeJGfDfuQ-ZuuQwvJVNp-6" parent="jeJGfDfuQ-ZuuQwvJVNp-3" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="mmsi (Int)" vertex="1">
+        <mxCell id="jeJGfDfuQ-ZuuQwvJVNp-6" parent="jeJGfDfuQ-ZuuQwvJVNp-3" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="mmsi (String)" vertex="1">
           <mxGeometry height="30" width="140" y="90" as="geometry" />
         </mxCell>
         <mxCell id="jeJGfDfuQ-ZuuQwvJVNp-7" parent="jeJGfDfuQ-ZuuQwvJVNp-3" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="lon (Decimal)" vertex="1">
