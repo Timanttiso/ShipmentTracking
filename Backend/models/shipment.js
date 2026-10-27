@@ -7,19 +7,39 @@ const Shipment = {
             .returning('*')
     },
     async getAllForUser(user_id, dbConn = db){
-        return dbConn('shipments')
-            .select('*')
-            .where({ user_id })
+        return dbConn('shipments as s')
+            .join('destinations as d', 's.destination_id', 'd.id')
+            .where('s.user_id', user_id)
+            .select(
+                's.*',
+                'd.destination_name',
+                'd.lon',
+                'd.lat'
+            )
     },
     async getAllForUserByStatus(user_id, status, dbConn = db){
-        return dbConn('shipments')
-            .select('*')
-            .where({ user_id, status })
+        return dbConn('shipments as s')
+            .join('destinations as d', 's.destination_id', 'd.id')
+            .where('s.user_id', user_id)
+            .where('s.status', status)
+            .select(
+                's.*',
+                'd.destination_name',
+                'd.lon',
+                'd.lat'
+            )
     },
     async getById(id, user_id, dbConn = db){
-        return dbConn('shipments')
-            .select('*')
-            .where({id, user_id})
+        return dbConn('shipments as s')
+            .join('destinations as d', 's.destination_id', 'd.id')
+            .where('s.user_id', user_id)
+            .where('s.id', id)
+            .select(
+                's.*',
+                'd.destination_name',
+                'd.lon',
+                'd.lat'
+            )
             .first()
     },
     async updateShipmentInformation(id, user_id, {shipment_name, ship_mmsi, eta, destination_id}, dbConn = db){
