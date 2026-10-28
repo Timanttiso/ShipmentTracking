@@ -37,14 +37,14 @@ beforeEach(() => {
 describe('usersController unit tests', () => {
     test('Register a user', async() => {
         const input = {
-            username: "unitTestUser",
-            password: "testPassword2!",
-            email: "unitTestUser@test.com"
+            username: 'unitTestUser',
+            password: 'testPassword2!',
+            email: 'unitTestUser@test.com'
         }
         const output = {
-            username: "unitTestUser",
-            password: "testPassword2!",
-            email: "unitTestUser@test.com",
+            username: 'unitTestUser',
+            password: 'testPassword2!',
+            email: 'unitTestUser@test.com',
             user_id: 1
         }
 

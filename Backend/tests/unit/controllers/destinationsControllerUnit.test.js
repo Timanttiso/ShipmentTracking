@@ -58,12 +58,12 @@ beforeEach(() => {
 describe('destinationsController unit tests', () => {
     test('Add a destination', async () => {
         const input = {
-            destination_name: "TestDestination",
+            destination_name: 'TestDestination',
             lon: 0.00,
             lat: 0.00
         }
         const output = {
-            destination_name: "TestDestination",
+            destination_name: 'TestDestination',
             lon: 0.00,
             lat: 0.00,
             user_id: 8
@@ -86,7 +86,7 @@ describe('destinationsController unit tests', () => {
     test('Get destinations', async() => {
         const output = [{
             id: 1,
-            destination_name: "TestDestination",
+            destination_name: 'TestDestination',
             lon: 0.00,
             lat: 0.00,
             user_id: 8
@@ -107,7 +107,7 @@ describe('destinationsController unit tests', () => {
     test('Get a single destination', async() => {
         const output = {
             id: 1,
-            destination_name: "TestDestination",
+            destination_name: 'TestDestination',
             lon: 0.00,
             lat: 0.00,
             user_id: 8
@@ -123,18 +123,18 @@ describe('destinationsController unit tests', () => {
         expect(response.body).toEqual(output)
 
         expect(destinationService.GetById).toHaveBeenCalledTimes(1)
-        expect(destinationService.GetById).toHaveBeenCalledWith("1", 8)
+        expect(destinationService.GetById).toHaveBeenCalledWith('1', 8)
     }),
     test('Patch a single destination', async() => {
         const input = {
-            destination_name: "TestDestinationEdited",
+            destination_name: 'TestDestinationEdited',
             lon: 0.00,
             lat: 0.00
         }
 
         const output = {
             id: 1,
-            destination_name: "TestDestinationEdited",
+            destination_name: 'TestDestinationEdited',
             lon: 0.00,
             lat: 0.00,
             user_id: 8
@@ -151,7 +151,7 @@ describe('destinationsController unit tests', () => {
         expect(response.body).toEqual(output)
 
         expect(destinationService.UpdateDestinationInfo).toHaveBeenCalledTimes(1)
-        expect(destinationService.UpdateDestinationInfo).toHaveBeenCalledWith("1", 8, input)
+        expect(destinationService.UpdateDestinationInfo).toHaveBeenCalledWith('1', 8, input)
     }),
     test('Delete a destination', async() => {
         await api
@@ -159,6 +159,6 @@ describe('destinationsController unit tests', () => {
             .expect(204)
 
         expect(destinationService.DeleteDestination).toHaveBeenCalledTimes(1)
-        expect(destinationService.DeleteDestination).toHaveBeenCalledWith("1", 8)
+        expect(destinationService.DeleteDestination).toHaveBeenCalledWith('1', 8)
     })
 })

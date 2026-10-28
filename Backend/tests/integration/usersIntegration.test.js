@@ -17,9 +17,9 @@ afterAll(async () => {
 describe('User integration tests', () => {
     test('Fail to register user with bad password', async () => {
         const input = {
-            username: "integration user",
-            password: "badpassword",
-            email: "integrationUser@integration.com"
+            username: 'integration user',
+            password: 'badpassword',
+            email: 'integrationUser@integration.com'
         }
 
         const response = await api
@@ -33,9 +33,9 @@ describe('User integration tests', () => {
 
     test('Successfully register a user', async () => {
         const input = {
-            username: "integration user",
-            password: "testPassword2!",
-            email: "integrationUser@integration.com"
+            username: 'integration user',
+            password: 'testPassword2!',
+            email: 'integrationUser@integration.com'
         }
 
         const response = await api

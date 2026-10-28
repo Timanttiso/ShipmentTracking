@@ -15,12 +15,12 @@ describe('Destinations integration tests', async () => {
     const { user, token } = await createTestUser()
     test('add two destinations', async () => {
         const input = {
-            destination_name: "TestDestination",
+            destination_name: 'TestDestination',
             lon: 0.00,
             lat: 0.00
         }
         const input2 = {
-            destination_name: "TestDestination2",
+            destination_name: 'TestDestination2',
             lon: 0.00,
             lat: 0.00
         }
@@ -40,15 +40,15 @@ describe('Destinations integration tests', async () => {
             .expect('Content-Type', /application\/json/)
 
         expect(response.body[0].destination_name).toBe(input.destination_name)
-        expect(response.body[0].lon).toBe("0.00") //Would expect this to be in a numeric format, but apparently pg parses any "decimal" format value to a string
-        expect(response.body[0].lat).toBe("0.00")
+        expect(response.body[0].lon).toBe('0.00') //Would expect this to be in a numeric format, but apparently pg parses any "decimal" format value to a string
+        expect(response.body[0].lat).toBe('0.00')
         expect(response.body[0].user_id).toBe(user.id)
 
     }),
 
     test('Try to add a duplicate', async () => {
         const input = {
-            destination_name: "TestDestination",
+            destination_name: 'TestDestination',
             lon: 0.00,
             lat: 0.00
         }
@@ -71,12 +71,12 @@ describe('Destinations integration tests', async () => {
             .expect(200)
             .expect('Content-Type', /application\/json/)
 
-        expect(response.body[0].destination_name).toBe("TestDestination")
-        expect(response.body[1].destination_name).toBe("TestDestination2")
+        expect(response.body[0].destination_name).toBe('TestDestination')
+        expect(response.body[1].destination_name).toBe('TestDestination2')
     }),
 
     test('Get one of the destinations', async () => {
-        const destination = await db.select('id').from('destinations').where({destination_name: "TestDestination2"}).first()
+        const destination = await db.select('id').from('destinations').where({destination_name: 'TestDestination2'}).first()
 
         const response = await api
             .get(`/api/destinations/destination/${destination.id}`)
@@ -84,14 +84,14 @@ describe('Destinations integration tests', async () => {
             .expect(200)
             .expect('Content-Type', /application\/json/)
 
-        expect(response.body.destination_name).toBe("TestDestination2")
+        expect(response.body.destination_name).toBe('TestDestination2')
     }),
 
     test('Patch a destination', async () => {
-        const destination = await db.select('id').from('destinations').where({destination_name: "TestDestination2"}).first()
+        const destination = await db.select('id').from('destinations').where({destination_name: 'TestDestination2'}).first()
 
         const input = {
-            destination_name: "TestDestination2Edited"
+            destination_name: 'TestDestination2Edited'
         }
 
         await api
@@ -101,11 +101,10 @@ describe('Destinations integration tests', async () => {
             .expect(200)
             .expect('Content-Type', /application\/json/)
 
-
     }),
 
     test('Get destination to check it was updated', async () => {
-        const destination = await db.select('id').from('destinations').where({destination_name: "TestDestination2Edited"}).first()
+        const destination = await db.select('id').from('destinations').where({destination_name: 'TestDestination2Edited'}).first()
 
         const response = await api
             .get(`/api/destinations/destination/${destination.id}`)
@@ -113,11 +112,11 @@ describe('Destinations integration tests', async () => {
             .expect(200)
             .expect('Content-Type', /application\/json/)
 
-        expect(response.body.destination_name).toBe("TestDestination2Edited")
+        expect(response.body.destination_name).toBe('TestDestination2Edited')
     }),
 
     test('Delete the destination', async () => {
-        const destination = await db.select('id').from('destinations').where({destination_name: "TestDestination2Edited"}).first()
+        const destination = await db.select('id').from('destinations').where({destination_name: 'TestDestination2Edited'}).first()
 
         await api
             .delete(`/api/destinations/destination/${destination.id}`)
