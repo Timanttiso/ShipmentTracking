@@ -28,6 +28,16 @@ const ShipService = {
         }
 
         return UserShip
+    },
+
+    async UnFollowShip(user_id, ship_id){
+        const existingShipLink = await User_Ship.GetUserShipByShipId(user_id, ship_id)
+
+        if(!existingShipLink){
+            throw new ApiError('Ship link not found for user in UnFollowShip()', 404, 'Laivaa ei löytynyt')
+        }
+
+        return await User_Ship.UnfollowShip(user_id, ship_id)
     }
 }
 

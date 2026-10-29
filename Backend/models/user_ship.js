@@ -19,6 +19,11 @@ const User_Ship = {
             .where('s.id', ship_id)
             .select('us.ship_nickname', 's.*')
             .first()
+    },
+    async UnfollowShip(user_id, ship_id, dbConn = db){
+        return dbConn('user_ships')
+            .where({user_id: user_id, ship_id:ship_id})
+            .delete()
     }
 }
 

@@ -45,4 +45,20 @@ shipsRouter.post('/add-ship', auth.authenticationRequired, async (request, respo
 })
 //#endregion
 
+//#region DELETE endpoints
+shipsRouter.delete('/unfollow/:id', auth.authenticationRequired, async (request, response, next) => {
+    try {
+        const { id } = request.params
+
+        await ShipService.UnFollowShip(request.user.id, id)
+
+        response.status(204).end()
+    }
+    catch(error){
+        next(error)
+    }
+})
+
+//#endregion
+
 export default shipsRouter
