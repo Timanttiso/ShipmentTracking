@@ -7,7 +7,7 @@
   "scripts": {
     "postinstall": "npm run db:create && npx knex migrate:latest",
     "start": "cross-env NODE_ENV=production node index.js",
-    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "dev": "cross-env NODE_ENV=development nodemon --signal SIGINT index.js",
     "db:create": "node scripts/createDatabase.js",
     "test": "vitest run",
     "test:unit": "vitest run --project unit",
@@ -27,6 +27,7 @@
     "express-rate-limit": "^8.7.1",
     "jsonwebtoken": "^9.0.3",
     "knex": "^3.3.0",
+    "mqtt": "^5.16.1",
     "pg": "^8.23.0"
   }
 }
