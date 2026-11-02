@@ -7,7 +7,6 @@ import SortDropdown, { type SortDirection } from '../components/SortDropdown'
 import ToastMessage from '../components/ToastMessage'
 import Icon from '../constants/Icons'
 import { fetchShipments } from '../services/api'
-import useDestinations from '../contexts/useDestinations'
 import '../components/styles/Dropdown.css'
 import '../components/styles/Popup.css'
 import './styles/Dashboard.css'
@@ -42,10 +41,6 @@ export default function Dashboard() {
     const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
     const [error, setError] = useState('')
     const [successMessage, setSuccessMessage] = useState('')
-
-    const { destinations } = useDestinations()
-
-    const destinationById = new Map(destinations.map((destination) => [destination.id, destination]))
 
     const visibleShipments = shipments.filter((shipment) => {
         const matchesSearch = `${shipment.shipment_name} ${shipment.ship_mmsi}`
@@ -164,7 +159,6 @@ export default function Dashboard() {
 
                         {error && <p className="error-message">{error}</p>}
                         {visibleShipments.map((shipment) => {
-                            shipment.destination_name = destinationById.get(shipment.destination_id ?? -1)?.destination_name ?? 'Ei määritetty'
                             return (
                                 <article
                                     className='shipment-row'
@@ -191,7 +185,7 @@ export default function Dashboard() {
                                     </div>
                                     <div className='shipment-destination'>
                                         <span className='mobile-field-label'>Määränpää</span>
-                                        <strong>{shipment.destination_name}</strong>
+                                        <strong>{shipment.destination_name ?? 'Ei määritetty'}</strong>
                                     </div>
                                     <div className='shipment-eta'>
                                         <span className='mobile-field-label'>ARVIOITU SAAPUMISAIKA</span>
