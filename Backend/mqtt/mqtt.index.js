@@ -1,7 +1,7 @@
 import logger from '../utils/logger.js';
 import { createMqttClient, closeMqttClient } from './mqtt.client.js';
 import { reloadSubscriptions } from './mqtt.subscriptionManager.js';
-import { handleMqttMessage } from './mqtt.messageHandler.js';
+import handleMqttMessage from './mqtt.messageHandler.js';
 
 let currentMMSIs = new Set();
 let client = null;
