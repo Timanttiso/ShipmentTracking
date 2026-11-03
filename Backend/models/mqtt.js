@@ -9,10 +9,10 @@ const MqttModel = {
             .distinct('ships.mmsi');
             //.whereIn('shipments.status', [1, 3]);
     },
-    async updateShipInformation(mmsi, { ship_name, lon, lat, updated_at }, dbConn = db) {
+    async updateShipInformation(mmsi, updates, dbConn = db) {
         return dbConn('ships')
             .where({ mmsi })
-            .update({ ship_name, lon, lat, updated_at })
+            .update(updates)
             .returning('*');
     }
 };

@@ -40,8 +40,8 @@ export default async function handleMqttMessage(topic, payload) {
     let messageBody;
 
     const [prefix, mmsi, messageType] = topic.split('/');
-    if (prefix !== 'vessels-v2' || messageType !== 'location' || !mmsi) {
-        logger.error(`Invalid MQTT prefix '${prefix}', messageType '${messageType}', or missing MMSI.`);
+    if (prefix !== 'vessels-v2' || !mmsi) {
+        logger.error(`Invalid MQTT prefix '${prefix}' or missing MMSI.`);
         return;
     };
 
@@ -52,22 +52,32 @@ export default async function handleMqttMessage(topic, payload) {
         return;
     };
 
-    const lon = Number(messageBody?.lon);
-    const lat = Number(messageBody?.lat);
+    let shipBody = {};
 
-    if (!lon || !lat || lon < -180 || lon > 180 || lat < -90 || lat > 90) {
-        logger.error('Invalid coordinates in MQTT message.');
-        return;
+    switch(messageType) {
+        case 'location': {
+            const lon = Number(messageBody?.lon);
+            const lat = Number(messageBody?.lat);
+
+            if (lon < -180 || lon > 180 || lat < -90 || lat > 90) {
+                logger.error('Invalid coordinates in MQTT message.');
+                return;
+            }
+
+            const aisTime = Number(messageBody?.time);
+
+            shipBody = {
+                lon,
+                lat,
+                ...(aisTime ? { updated_at: new Date(aisTime * 1000) } : {})
+            };
+            break;
+        };
+        default: {
+            logger.error(`Unsupported MQTT message type '${messageType}'.`);
+            return;
+        };
     };
-
-    let shipBody = {
-        ship_name: messageBody?.ship_name ?? null,
-        lon,
-        lat
-    };
-
-    const aisTime = Number(messageBody?.time);
-    if (aisTime) shipBody.updated_at = new Date(aisTime * 1000);
 
     let state = shipStates.get(mmsi);
     if (!state) {
