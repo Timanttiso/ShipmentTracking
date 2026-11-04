@@ -1,4 +1,4 @@
-import MqttModel from '../models/mqtt.js';
+import Ship from '../models/ship.js';
 import logger from '../utils/logger.js';
 
 const SHIP_UPDATE_INTERVAL_MS = 60_000;
@@ -19,7 +19,7 @@ async function processPendingUpdate(mmsi, state) {
             state.lastUpdateStartedAt = now;
 
             try {
-                await MqttModel.updateShipInformation(mmsi, shipBody);
+                await Ship.updateShipInformation(mmsi, shipBody);
             } catch (error) {
                 logger.error('MQTT Failed to update ship information', error);
                 state.pendingMessage ??= shipBody;

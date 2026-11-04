@@ -1,7 +1,7 @@
-import MqttModel from '../models/mqtt.js';
+import Ship from '../models/ship.js';
 
 export async function getDesiredMMSIs() {
-    const rows = await MqttModel.getMMSIs();
+    const rows = await Ship.getMMSIs();
     const desiredMMSIs = new Set(rows.map(({ mmsi }) => mmsi));
 
     return desiredMMSIs;

@@ -27,6 +27,20 @@ const Ship = {
             .where({mmsi:mmsi})
             .update({ship_name: ship_name, lon:lon, lat:lat})
             .returning('*')
+    },
+
+    async dynamicUpdateShipInformation(mmsi, updates, dbConn = db) {
+        return dbConn('ships')
+            .where({ mmsi })
+            .update(updates)
+            .returning('*');
+    },
+
+    async getMMSIs(dbConn = db) {
+        return dbConn('ships')
+            .join('shipments', 'shipments.ship_id', 'ships.id')
+            .distinct('ships.mmsi')
+            .whereIn('shipments.status', [1, 3]);
     }
 }
 
