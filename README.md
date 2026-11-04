@@ -32,7 +32,7 @@ You need to swap the DB_PASSWORD to your postgre password. If you do not have th
 ```
 npm run dev
 ```
-This will run the API in the development environment.
+This will run the API in the development environment. This will also start up the MQTT listener service.
 
 ### Frontend
 
@@ -65,9 +65,11 @@ The terminal will display where the frontend started running and you can open th
 * Node.js
 * Express.js
 
-### Authentication
+### Authentication / Security
 
 * jsonwebtoken.js 
+* bcrypt
+* express-rate-limit
 
 ### Database / Query Builder
 
@@ -76,15 +78,19 @@ The terminal will display where the frontend started running and you can open th
 
 ### MQTT service
 
+* mqtt.js
 
+### Testing
+
+* vitest
+* supertest
 
 ### Misc
 
 * dotenv
 * cross-env
-* bcrypt
 * nodemon
-* cookie-parser
+* cookie-parser  
 
 ---
 ### Available API endpoints
@@ -112,6 +118,10 @@ The terminal will display where the frontend started running and you can open th
 |GET     |  /api/destinations/destination/:id   |Retrieves a specific destination                                |
 |POST    |  /api/destinations/add-destination   |Adds a destination for the current user                         |
 |PATCH   |  /api/destinations/destination/:id   |Updates a destination                                           |
-
-
+|DELETE  |  /api/destinations/destination/:id   |Deletes a destination                                           |
+||||
+|GET     |  /api/ships/                         |Retrieves all ships for the current user                        |
+|GET     |  /api/ships/:id                      |Retrieves information of one ship                               |
+|POST    |  /api/ships/add-ship                 |Adds a ship to the follow list of the user and adds the ship if it does not exist |
+|DELETE  |  /api/ships/unfollow/:id             |Deletes the link between the user and the chosen ship           |
 ---
