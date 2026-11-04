@@ -19,7 +19,7 @@ async function processPendingUpdate(mmsi, state) {
             state.lastUpdateStartedAt = now;
 
             try {
-                await Ship.updateShipInformation(mmsi, shipBody);
+                await Ship.dynamicUpdateShipInformation(mmsi, shipBody);
             } catch (error) {
                 logger.error('MQTT Failed to update ship information', error);
                 state.pendingMessage ??= shipBody;
