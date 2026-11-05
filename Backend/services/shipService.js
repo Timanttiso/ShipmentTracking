@@ -30,6 +30,36 @@ const ShipService = {
         return UserShip
     },
 
+    async UpdateShip(user_id, ship_id, { ship_nickname, mmsi }){
+        const ExistingShip = await Ship.GetById(ship_id)
+        const ExistingConnection = await User_Ship.GetUserShipByShipId(user_id, ship_id)
+        if(!ExistingShip || !ExistingConnection){
+            throw new ApiError('Ship or ship connection not found for user in UpdateShip()', 404, 'Laivaa ei löytynyt')
+        }
+
+        if(ship_nickname){
+            await User_Ship.UpdateShipNickname(user_id, ship_id, ship_nickname)
+        }
+
+        if(mmsi){
+            let target = await Ship.GetByMMSI(mmsi)
+            if(!target) {
+                target = await Ship.Add(mmsi)
+            }
+
+            if(target.id != ship_id){
+                const ExistingLink = await User_Ship.GetUserShipByShipId(user_id, target.id)
+                if(ExistingLink){
+                    throw new ApiError('User already follows the ship with the new MMSI in UpdateShip()', 409, 'Seuraat jo tätä laivaa')
+                }
+                await User_Ship.UpdateConnection(user_id, target.id, ship_id)
+            } 
+
+            return await User_Ship.GetUserShipByShipId(user_id, target.id)
+        }
+        return await User_Ship.GetUserShipByShipId(user_id, ship_id)
+    },
+
     async UnFollowShip(user_id, ship_id){
         const existingShipLink = await User_Ship.GetUserShipByShipId(user_id, ship_id)
 

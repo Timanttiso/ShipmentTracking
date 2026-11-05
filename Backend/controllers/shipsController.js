@@ -45,6 +45,26 @@ shipsRouter.post('/add-ship', auth.authenticationRequired, async (request, respo
 })
 //#endregion
 
+//#region PATCH endpoints
+
+shipsRouter.patch('/ship/:id', auth.authenticationRequired, async(request, response, next) => {
+    try{
+        // Actual ship id, not the connection, though if this is too hard to use in the frontend it needs to be swapped to something more fitting
+        // The ship id changes when updating this so updating the same connection feels a bit odd in postman, something to take into account
+        const { id } = request.params
+        const { ship_nickname, mmsi } = request.body
+        
+        const UpdatedShip = await ShipService.UpdateShip(request.user.id, id, { ship_nickname, mmsi })
+
+        response.status(200).json(UpdatedShip)
+    }
+    catch(error){
+        next(error)
+    }
+})
+
+//#endregion
+
 //#region DELETE endpoints
 shipsRouter.delete('/unfollow/:id', auth.authenticationRequired, async (request, response, next) => {
     try {

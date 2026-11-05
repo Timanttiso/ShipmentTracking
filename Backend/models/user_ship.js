@@ -20,6 +20,18 @@ const User_Ship = {
             .select('us.ship_nickname', 's.*')
             .first()
     },
+    async  UpdateShipNickname(user_id, ship_id, ship_nickname, dbConn = db){
+        return dbConn('user_ships')
+            .where('user_id', user_id)
+            .where('ship_id', ship_id)
+            .update({ ship_nickname: ship_nickname })
+    },
+    async UpdateConnection(user_id, ship_id, old_ship_id, dbConn = db){
+        return dbConn('user_ships')
+            .where('user_id', user_id)
+            .where('ship_id', old_ship_id)
+            .update({ ship_id: ship_id })
+    },
     async UnfollowShip(user_id, ship_id, dbConn = db){
         return dbConn('user_ships')
             .where({user_id: user_id, ship_id:ship_id})
