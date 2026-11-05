@@ -3,8 +3,10 @@ import app from './app.js';
 import logger from './utils/logger.js';
 import RefreshTokenService from './services/refreshTokenService.js';
 import startMqttWorker from './mqtt/mqtt.index.js';
+import ShipService from './services/shipService.js';
 
 const cleanUpInterval = 60 * 60 * 1000; //hour in ms
+const shipCleanupInterval = 24 * 60 * 60 * 1000 // 24 hours, daily
 
 const server = app.listen(config.PORT, () => {
     logger.info(`API running on port: ${config.PORT}`);
@@ -26,6 +28,20 @@ const cleanup = async () => {
 cleanup();
 const timer = setInterval(cleanup, cleanUpInterval);
 timer.unref();
+
+const cleanupShips = async () => {
+    try{
+        let count = await ShipService.DeleteDeprecatedShips()
+        logger.info(`Cleanup: deleted ${count} deprecated ships from the database`);
+    }
+    catch(error){
+        logger.error('Ship cleanup failed: ', error);
+    }
+}
+
+cleanupShips();
+const shipTimer = setInterval(cleanupShips, shipCleanupInterval);
+shipTimer.unref();
 
 async function gracefulShutdown() {
     if (shuttingDown) return;

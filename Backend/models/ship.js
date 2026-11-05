@@ -41,6 +41,13 @@ const Ship = {
             .join('shipments', 'shipments.ship_id', 'ships.id')
             .distinct('ships.mmsi')
             .whereIn('shipments.status', [1, 3]);
+    },
+
+    async DeleteDeprecated(dbConn = db){
+        return dbConn('ships')
+            .whereNotExists(dbConn('user_ships').select(1).whereRaw('user_ships.ship_id = ships.id'))
+            .whereNotExists(dbConn('shipments').select(1).whereRaw('shipments.ship_id = ships.id'))
+            .delete()
     }
 }
 

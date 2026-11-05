@@ -68,6 +68,10 @@ const ShipService = {
         }
 
         return await User_Ship.UnfollowShip(user_id, ship_id)
+    },
+
+    async DeleteDeprecatedShips(){
+        return await Ship.DeleteDeprecated()
     }
 }
 
