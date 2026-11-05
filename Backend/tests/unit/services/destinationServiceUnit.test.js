@@ -33,8 +33,8 @@ describe('Destination service unit tests', () => {
         const output = {
             id: 1,
             destination_name: 'UnitTestDestination',
-            lon: '20.0',
-            lat: '30.0',
+            lon: 20.0,
+            lat: 30.0,
             user_id: 7
         }
 
@@ -57,15 +57,15 @@ describe('Destination service unit tests', () => {
         {
             id: 1,
             destination_name: 'UnitTestDestination',
-            lon: '20.0',
-            lat: '30.0',
+            lon: 20.0,
+            lat: 30.0,
             user_id: 7
         },
         {
             id: 3,
             destination_name: 'UnitTestDestination2',
-            lon: '20.0',
-            lat: '30.0',
+            lon: 20.0,
+            lat: 30.0,
             user_id: 7
         }
         ]
@@ -85,8 +85,8 @@ describe('Destination service unit tests', () => {
         {
             id: 3,
             destination_name: 'UnitTestDestination',
-            lon: '20.0',
-            lat: '30.0',
+            lon: 20.0,
+            lat: 30.0,
             user_id: 7
         }
 
@@ -105,8 +105,8 @@ describe('Destination service unit tests', () => {
         {
             id: 3,
             destination_name: 'UnitTestDestination',
-            lon: '20.0',
-            lat: '30.0',
+            lon: 20.0,
+            lat: 30.0,
             user_id: 7
         }
 
@@ -125,16 +125,16 @@ describe('Destination service unit tests', () => {
         {
             id: 3,
             destination_name: 'UnitTestDestination',
-            lon: '20.0',
-            lat: '30.0',
+            lon: 20.0,
+            lat: 30.0,
             user_id: 7
         }
         const output2 = 
         {
             id: 3,
             destination_name: 'UnitTestDestinationEdited',
-            lon: '20.0',
-            lat: '30.0',
+            lon: 20.0,
+            lat: 30.0,
             user_id: 7
         }
 
@@ -157,8 +157,8 @@ describe('Destination service unit tests', () => {
         {
             id: 3,
             destination_name: 'UnitTestDestination',
-            lon: '20.0',
-            lat: '30.0',
+            lon: 20.0,
+            lat: 30.0,
             user_id: 7
         }
 

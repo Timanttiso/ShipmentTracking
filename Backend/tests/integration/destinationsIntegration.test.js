@@ -40,8 +40,8 @@ describe('Destinations integration tests', async () => {
             .expect('Content-Type', /application\/json/)
 
         expect(response.body[0].destination_name).toBe(input.destination_name)
-        expect(response.body[0].lon).toBe('0.00') //Would expect this to be in a numeric format, but apparently pg parses any "decimal" format value to a string
-        expect(response.body[0].lat).toBe('0.00')
+        expect(response.body[0].lon).toBe(0.00)
+        expect(response.body[0].lat).toBe(0.00)
         expect(response.body[0].user_id).toBe(user.id)
 
     }),
@@ -113,6 +113,26 @@ describe('Destinations integration tests', async () => {
             .expect('Content-Type', /application\/json/)
 
         expect(response.body.destination_name).toBe('TestDestination2Edited')
+    }),
+
+    test('Test rounding', async () => {
+        const input = {
+            destination_name: 'TestDestination2',
+            lon: 60.12497,
+            lat: 60.24721
+        }
+        
+        const response = await api
+            .post('/api/destinations/add-destination')
+            .set('Authorization', `Bearer ${token}`)
+            .send(input)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        expect(response.body[0].destination_name).toBe(input.destination_name)
+        expect(response.body[0].lon).toBe(input.lon)
+        expect(response.body[0].lat).toBe(input.lat)
+        expect(response.body[0].user_id).toBe(user.id)
     }),
 
     test('Delete the destination', async () => {

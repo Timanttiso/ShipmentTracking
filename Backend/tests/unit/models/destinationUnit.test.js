@@ -51,14 +51,14 @@ describe('Destination model unit tests', () => {
 
         expect(result[0].id).toBeDefined()
         expect(result[0].destination_name).toBe('TestDestination')
-        expect(result[0].lon).toBe('10.00')
-        expect(result[0].lat).toBe('20.00')
+        expect(result[0].lon).toBe(10.00)
+        expect(result[0].lat).toBe(20.00)
         expect(result[0].user_id).toBe(user.id)
 
         expect(result[1].id).toBeDefined()
         expect(result[1].destination_name).toBe('TestDestination2')
-        expect(result[1].lon).toBe('20.00')
-        expect(result[1].lat).toBe('30.00')
+        expect(result[1].lon).toBe(20.00)
+        expect(result[1].lat).toBe(30.00)
         expect(result[1].user_id).toBe(user.id)
     }),
 
@@ -92,8 +92,8 @@ describe('Destination model unit tests', () => {
 
         expect(result.id).toBe(targetDestination[0].id)
         expect(result.destination_name).toBe('TestDestination2')
-        expect(result.lon).toBe('20.00')
-        expect(result.lat).toBe('30.00')
+        expect(result.lon).toBe(20.00)
+        expect(result.lat).toBe(30.00)
         expect(result.user_id).toBe(user.id)
     }),
 
@@ -127,8 +127,8 @@ describe('Destination model unit tests', () => {
 
         expect(result.id).toBe(targetDestination[0].id)
         expect(result.destination_name).toBe('TestDestination2')
-        expect(result.lon).toBe('20.00')
-        expect(result.lat).toBe('30.00')
+        expect(result.lon).toBe(20.00)
+        expect(result.lat).toBe(30.00)
         expect(result.user_id).toBe(user.id)
     }),
 
@@ -146,8 +146,8 @@ describe('Destination model unit tests', () => {
 
         expect(result[0].id).toBe(result[0].id)
         expect(result[0].destination_name).toBe('TestDestinationEdited')
-        expect(result[0].lon).toBe('30.00')
-        expect(result[0].lat).toBe('40.00')
+        expect(result[0].lon).toBe(30.00)
+        expect(result[0].lat).toBe(40.00)
         expect(result[0].user_id).toBe(user.id)
     }),
 
@@ -165,8 +165,8 @@ describe('Destination model unit tests', () => {
 
         expect(result.id).toBe(destination[0].id)
         expect(result.destination_name).toBe('TestDestination')
-        expect(result.lon).toBe('20.00')
-        expect(result.lat).toBe('30.00')
+        expect(result.lon).toBe(20.00)
+        expect(result.lat).toBe(30.00)
         expect(result.user_id).toBe(user.id)
 
         await Destination.deleteDestination(destination[0].id)
