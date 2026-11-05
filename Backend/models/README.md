@@ -1,5 +1,5 @@
 # Models
-The last layer in the backend API structure are the models.
+The last layer in the backend API structure are the models. Different models interact with the specific database table that they are named after.
 
 ## Role
 

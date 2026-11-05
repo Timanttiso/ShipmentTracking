@@ -1,6 +1,6 @@
 # Controllers
 
-Controllers are the first layer in the API structure.
+Controllers are the first layer in the API structure. Controllers expose endpoints for the clients. Every controller exposes endpoints for specific backend resources. The controllers export a router, which is used in app.js.
 
 ## Role
 
