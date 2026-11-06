@@ -11,6 +11,7 @@ const usersRouter = express.Router()
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
 //#region GET endpoints
+// Gets the information of the currently logged in user
 usersRouter.get('/me', auth.authenticationRequired, async (request, response, next) => {
     try{
         const user = await UserService.getById(request.user.id)
@@ -40,6 +41,7 @@ usersRouter.get('/me', auth.authenticationRequired, async (request, response, ne
 //#endregion
 
 //#region POST endpoints
+// Registers a new user
 usersRouter.post('/register', auth.authenticationNotRequired, async (request, response, next) => {
     try {
         const { username, password, email} = request.body
@@ -61,6 +63,7 @@ usersRouter.post('/register', auth.authenticationNotRequired, async (request, re
 
 })
 
+// Checks user's password and name and returns a JSON web token and a refresh token if password and name match
 usersRouter.post('/login', loginLimiter, auth.authenticationNotRequired, async (request, response, next) => {
     try{
         const {username, password} = request.body
@@ -87,6 +90,7 @@ usersRouter.post('/login', loginLimiter, auth.authenticationNotRequired, async (
     }
 })
 
+// Gives the user a new JSON web token if the refresh token of the user is valid
 usersRouter.post('/refresh', async (request, response, next) => {
     try{
         const refreshToken = request.cookies.refreshToken
@@ -129,6 +133,7 @@ usersRouter.post('/refresh', async (request, response, next) => {
     }
 })
 
+// Deletes user's refresh token upon logging out
 usersRouter.post('/logout', async(request, response, next) => {
     try{
         const refreshToken = request.cookies?.refreshToken
@@ -145,6 +150,7 @@ usersRouter.post('/logout', async(request, response, next) => {
 //#endregion
 
 //#region PATCH endpoints
+// Updates the user's settings such as the username, email and default Id
 usersRouter.patch('/settings', auth.authenticationRequired, async (request, response, next) => {
     try{
         const { username, email, default_destination_id } = request.body
@@ -158,6 +164,7 @@ usersRouter.patch('/settings', auth.authenticationRequired, async (request, resp
     }
 })
 
+// Allows the user to update their password. Requires the old and new password to be provided
 usersRouter.patch('/settings/change-password', auth.authenticationRequired, async (request, response, next) => {
     try{
         const { old_password, new_password } = request.body
@@ -181,7 +188,7 @@ usersRouter.patch('/settings/change-password', auth.authenticationRequired, asyn
 //#endregion
 
 //#region DELETE endpoints
-
+// Deletes the account of the current user
 usersRouter.delete('/settings/delete-account', auth.authenticationRequired, async (request, response, next) => {
     try{
         await UserService.DeleteUser(request.user.id)

@@ -5,6 +5,7 @@ import auth from '../utils/auth.js'
 const shipsRouter = express.Router()
 
 //#region GET endpoints
+// Gets all ships that the current user has a link to in the user_ships table
 shipsRouter.get('/', auth.authenticationRequired, async (request, response, next) => {
     try{
         const UserShips = await ShipService.GetAllUserShips(request.user.id)
@@ -16,6 +17,7 @@ shipsRouter.get('/', auth.authenticationRequired, async (request, response, next
     }
 })
 
+// Returns the informations of a specific ship based on id. This is the id of the actual ship not the link
 shipsRouter.get('/ship/:id', auth.authenticationRequired, async (request, response, next) => {
     try{
         const { id } = request.params
@@ -31,6 +33,8 @@ shipsRouter.get('/ship/:id', auth.authenticationRequired, async (request, respon
 //#endregion
 
 //#region POST endpoints
+// Adds a ship connection for the current user based on the given MMSI. If the ship does not exist in the database it will also be added.
+// Returns the connection information, if needed can be modified to return the ship information as well
 shipsRouter.post('/add-ship', auth.authenticationRequired, async (request, response, next)  => {
     try{
         const { ship_nickname, mmsi } = request.body
@@ -46,7 +50,8 @@ shipsRouter.post('/add-ship', auth.authenticationRequired, async (request, respo
 //#endregion
 
 //#region PATCH endpoints
-
+// Updates the ship user link nickname if it is given. Also updates the followed ship's MMSI if it is given. The connection will swap to the other ship's id with that MMSI. 
+// If the ship with that MMSI does not exist in the database it is created.
 shipsRouter.patch('/ship/:id', auth.authenticationRequired, async(request, response, next) => {
     try{
         // Actual ship id, not the connection, though if this is too hard to use in the frontend it needs to be swapped to something more fitting
@@ -66,6 +71,7 @@ shipsRouter.patch('/ship/:id', auth.authenticationRequired, async(request, respo
 //#endregion
 
 //#region DELETE endpoints
+// Deletes a link between a ship and a user. You need to give the ship's id in the route, not the ship link's id.
 shipsRouter.delete('/unfollow/:id', auth.authenticationRequired, async (request, response, next) => {
     try {
         const { id } = request.params

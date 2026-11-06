@@ -5,6 +5,7 @@ import auth from '../utils/auth.js'
 const shipmentsRouter = express.Router()
 
 //#region GET endpoints
+// Gets all shipments for the current user. This also includes the destination and ship information linked to the shipments
 shipmentsRouter.get('/', auth.authenticationRequired, async (request, response, next) => {
     try{
         const shipments = await ShipmentService.GetAllShipmentsForUser(request.user.id)
@@ -16,6 +17,7 @@ shipmentsRouter.get('/', auth.authenticationRequired, async (request, response, 
     }
 })
 
+// Filters the shipments based on the status of the shipment. The wanted status is given in the route
 shipmentsRouter.get('/status/:status', auth.authenticationRequired, async(request, response, next) => {
     try{
         const { status } = request.params
@@ -32,6 +34,7 @@ shipmentsRouter.get('/status/:status', auth.authenticationRequired, async(reques
     }
 })
 
+// Gets a specific shipment based on it's id
 shipmentsRouter.get('/shipment/:id', auth.authenticationRequired, async(request, response, next) => {
     try{
         const { id } = request.params
@@ -47,6 +50,7 @@ shipmentsRouter.get('/shipment/:id', auth.authenticationRequired, async(request,
 //#endregion
 
 //#region POST endpoints
+// Adds a new shipment for the current user
 shipmentsRouter.post('/add-shipment',auth.authenticationRequired, async (request, response, next) => {
     try{
         const { shipment_name, eta, destination_id, ship_id } = request.body
@@ -69,6 +73,7 @@ shipmentsRouter.post('/add-shipment',auth.authenticationRequired, async (request
 //#endregion
 
 //#region PATCH endpoints
+// Updates a specific shipment with the given id in the route
 shipmentsRouter.patch('/shipment/:id', auth.authenticationRequired, async(request, response, next) => {
     try{
         const { id } = request.params
@@ -93,6 +98,7 @@ shipmentsRouter.patch('/shipment/:id', auth.authenticationRequired, async(reques
 })
 
 // Not 100% sure if required, since this could also be done in the MQTT listener service
+// Updates the status of the shipment
 shipmentsRouter.patch('/shipment/status/:id', auth.authenticationRequired, async(request, response, next) => {
     try{
         const { id } = request.params
@@ -113,7 +119,7 @@ shipmentsRouter.patch('/shipment/status/:id', auth.authenticationRequired, async
 //#endregion
 
 //#region DELETE endpoints
-
+// Deletes a shipment with the given id in the route
 shipmentsRouter.delete('/shipment/:id', auth.authenticationRequired, async(request, response, next) => {
     try{
         const { id } = request.params

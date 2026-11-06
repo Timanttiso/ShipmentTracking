@@ -62,35 +62,35 @@ The terminal will display where the frontend started running and you can open th
 
 ### Runtime and Web framework
 
-* Node.js
-* Express.js
+* Node.js — Javascript run time environment
+* Express.js — Node.js web application framework
 
 ### Authentication / Security
 
-* jsonwebtoken.js 
-* bcrypt
-* express-rate-limit
+* jsonwebtoken.js — Module to implement JSON web tokens
+* bcrypt — Password hashing function
+* express-rate-limit — Basic limiter middleware for express.js
 
 ### Database / Query Builder
 
-* PostgreSQL
-* knex.js
+* PostgreSQL — Object-relational database management system
+* knex.js — SQL query builder
 
 ### MQTT service
 
-* mqtt.js
+* mqtt.js — MQTT client library
 
 ### Testing
 
-* vitest
-* supertest
+* vitest — Testing framework
+* supertest — Node.js API testing library
 
 ### Misc
 
-* dotenv
-* cross-env
-* nodemon
-* cookie-parser  
+* dotenv — Loads enviromental variables
+* cross-env — Allows using environmental variables across multiple OSs
+* nodemon — Development tool for restarting application upon a code change
+* cookie-parser — Cookie parser library
 
 ---
 ### Available API endpoints
@@ -124,4 +124,77 @@ The terminal will display where the frontend started running and you can open th
 |GET     |  /api/ships/:id                      |Retrieves information of one ship                               |
 |POST    |  /api/ships/add-ship                 |Adds a ship to the follow list of the user and adds the ship if it does not exist |
 |DELETE  |  /api/ships/unfollow/:id             |Deletes the link between the user and the chosen ship           |
+
+
+### Backend project structure
+The backend API project follows a Controller-Service-Model pattern. Below you can see the whole project structure for the backend side of the application.
+```
+backend/
+├── app.js                                          # Backend main entry point
+├── index.js                                        # Boots up the server and loads app.js
+├── knexfile.js                                     # Contains configurations for knex
+├── package.json
+├── vitset.config.js                                # Configuration file for vitest
+├── .env                                            # Secret environmental variable file
+├── controllers/                                    # Controllers expose endpoints for clients to call
+│   ├── destinationsController.js
+│   ├── shipmentsController.js
+│   ├── shipsController.js
+│   ├── usersController.js
+│   └── README.md
+├── db/
+│   ├── migrations/                                 # Migrations setup the database structure and apply changes to it
+│   │   └── ...
+│   └── db.js                                       # Contains the primary database instance used in the models
+├── models/                                         # Models interact with the database
+│   ├── destination.js
+│   ├── refreshToken.js
+│   ├── ship.js
+│   ├── shipment.js
+│   ├── user_ships.js
+│   ├── users.js
+│   └── README.md
+├── mqtt/
+│   ├── mqtt.client.js                              # Creates the MQTT client
+│   ├── mqtt.index.js                               # Starts the MQTT worker
+│   ├── mqtt.messageHandler.js                      # Handles recieved MQTT messages
+│   └── mqtt.subscriptionManager.js                 # Handles MQTT topic subscription
+├── scripts/
+│   ├── createDatabase.js                           # Creates the database during project setup if it does not exist
+│   └── createTestDatabase.js                       # Creates two temporary test databases when running tests
+├── services/                                       # Services are used to house business logic
+│   ├── destinationService.js
+│   ├── refreshTokenService.js
+│   ├── shipmentService.js
+│   ├── shipService.js
+│   ├── userService.js
+│   └── README.md
+├── tests/
+│   ├── helpers/
+│   │   └── authHelper.js                           # A helper used in integration tests to avoid authentication issues
+│   ├── integration/                                # A folder containing all integration tests
+│   │   ├── destinationsIntegrations.test.js
+│   │   └── usersIntegrations.test.js
+│   ├── setup/
+│   │   ├── env.js                                  # Overwrites .env variables with values needed in testing
+│   │   ├── globalSetup.integration.js              # Glonal setup for integration tests
+│   │   └── globalSetup.unit.js                     # Global setup for unit tests
+│   ├── unit/                                       # A folder containing all unit tests by type
+│   │   ├── controllers/                            # Controller unit tests
+│   │   │   ├── destinationsControllerUnit.test.js
+│   │   │   └── usersControllerUnit.test.js
+│   │   ├── models/                                 # Model unit tests
+│   │   │   └── destinationUnit.test.js
+│   │   └── services/                               # Service unit tests
+│   │       └── destinationServiceUnit.test.js
+│   └── README.md
+├── utils/                                          # Misc utilities
+│   ├── ApiError.js                                 # Defined API error
+│   ├── auth.js                                     # Authentication middleware
+│   ├── config.js                                   # Configuration file
+│   ├── logger.js                                   # Logger middleware
+│   ├── LoginLimiter.js                             # Login limiter middleware
+│   └── tokens.js                                   # Token related methods
+└── README.md
+```
 ---

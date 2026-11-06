@@ -5,6 +5,7 @@ import auth from '../utils/auth.js'
 const DestinationRouter = express.Router()
 
 //#region GET endpoints
+// Gets all of destinations linked to the currently logged in user
 DestinationRouter.get('/', auth.authenticationRequired, async (request, response, next) => {
     try{
         const destinations = await DestinationService.GetAllForUser(request.user.id)
@@ -16,6 +17,7 @@ DestinationRouter.get('/', auth.authenticationRequired, async (request, response
     }
 })
 
+// Gets a specific destination with the id given in the route. Though the destination needs to be linked to the user.
 DestinationRouter.get('/destination/:id', auth.authenticationRequired, async (request, response, next) => {
     try{
         const { id } = request.params
@@ -31,6 +33,7 @@ DestinationRouter.get('/destination/:id', auth.authenticationRequired, async (re
 //#endregion
 
 //#region POST endpoints
+// Adds a destination for the current user
 DestinationRouter.post('/add-destination', auth.authenticationRequired, async (request, response, next) => {
     try{
         const { destination_name, lon, lat } = request.body
@@ -46,6 +49,7 @@ DestinationRouter.post('/add-destination', auth.authenticationRequired, async (r
 //#endregion
 
 //#region PATCH endpoints
+// Updates a specific destination
 DestinationRouter.patch('/destination/:id', auth.authenticationRequired, async (request, response, next) => {
     try{
         const { id } = request.params
@@ -63,6 +67,7 @@ DestinationRouter.patch('/destination/:id', auth.authenticationRequired, async (
 //#endregion
 
 //#region DELETE endpoints
+// Deletes a destination with the id given in the route
 DestinationRouter.delete('/destination/:id', auth.authenticationRequired, async (request, response, next) => {
     try{
         const { id } = request.params
