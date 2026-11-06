@@ -152,7 +152,7 @@ backend/
 │   ├── ship.js
 │   ├── shipment.js
 │   ├── user_ships.js
-│   ├── users.js
+│   ├── user.js
 │   └── README.md
 ├── mqtt/
 │   ├── mqtt.client.js                              # Creates the MQTT client
