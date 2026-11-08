@@ -10,7 +10,7 @@ const api = supertest(app)
 
 const credentials = { username: 'IntegrationTestUser', password: 'testPassword2!'}
 
-let user, token, tempCredentials
+let user, token
 
 const getRefreshCookie = (response) => {
     const cookie = response.headers['set-cookie'].find((c) => c.startsWith('refreshToken='))
@@ -20,7 +20,7 @@ const getRefreshCookie = (response) => {
 
 beforeEach(async () => {
     await db.raw('TRUNCATE users, destinations, shipments, refresh_tokens RESTART IDENTITY CASCADE');
-    ({ user, token, tempCredentials } = await createTestUser())
+    ({ user, token } = await createTestUser())
 })
 
 afterAll(async () => {
@@ -98,9 +98,7 @@ describe('User integration tests', async () => {
         expect(response.body.id).toBe(user.id)
         expect(response.body.username).toBe(user.username)
         expect(response.body.email).toBe(user.email)
-    })
-    // Not working yet :D
-    /*,
+    }),
     
     test('Refresh the token through the refresh endpoint', async () => {
         const [userInDb] = await db('users').insert({
@@ -128,8 +126,127 @@ describe('User integration tests', async () => {
         expect(newRefreshToken).toBeDefined()
         expect(newRefreshToken).not.toBe(oldToken)
 
-        const RefreshTokens = await db('refresh_tokens').where({ user_id: user.id})
+        const RefreshTokens = await db('refresh_tokens').where({ user_id: userInDb.id})
         expect(RefreshTokens).toHaveLength(1)
+    }),
+
+    test('Logout and check that the token was deleted', async () => {
+        const [userInDb] = await db('users').insert({
+            username: credentials.username,
+            email: 'IntegrationTestUser@test.com',
+            password_hash: await bcrypt.hash(credentials.password, 4)
+        }).returning('*')
+
+        const agent = supertest.agent(app)
+        await agent
+            .post('/api/auth/login')
+            .send(credentials)
+            .expect(200)
+
+        let RefreshTokens = await db('refresh_tokens').where({ user_id: userInDb.id})
+        expect(RefreshTokens).toHaveLength(1)
+
+        await agent
+            .post('/api/auth/logout')
+            .expect(204)
+
+        RefreshTokens = await db('refresh_tokens').where({ user_id: userInDb.id})
+        expect(RefreshTokens).toHaveLength(0)
+    }),
+
+    test('Update user settings', async () => {
+        const [userInDb] = await db('users').insert({
+            username: credentials.username,
+            email: 'IntegrationTestUser@test.com',
+            password_hash: await bcrypt.hash(credentials.password, 4)
+        }).returning('*')
+        const agent = supertest.agent(app)
+        const login = await agent
+            .post('/api/auth/login')
+            .send(credentials)
+            .expect(200)
+
+        let userInfo = await agent
+            .get('/api/auth/me')
+            .set('Authorization', `Bearer ${login.body.token}`)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+        expect(userInfo.body.id).toBe(userInDb.id)
+        expect(userInfo.body.username).toBe(userInDb.username)
+        expect(userInfo.body.email).toBe(userInDb.email)
+
+        const editedUserSettings = {
+            username: 'IntegrationTestUserEdited',
+            email: 'IntegrationTestUserEdited@test.com'
+        }
+
+        await agent
+            .patch('/api/auth/settings')
+            .set('Authorization', `Bearer ${login.body.token}`)
+            .send(editedUserSettings)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+        userInfo = await agent
+            .get('/api/auth/me')
+            .set('Authorization', `Bearer ${login.body.token}`)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+        
+        expect(userInfo.body.id).toBe(userInDb.id)
+        expect(userInfo.body.username).toBe(editedUserSettings.username)
+        expect(userInfo.body.email).toBe(editedUserSettings.email)
+    }),
+
+    test('Change password', async () => {
+        const [userInDb] = await db('users').insert({
+            username: credentials.username,
+            email: 'IntegrationTestUser@test.com',
+            password_hash: await bcrypt.hash(credentials.password, 4)
+        }).returning('*')
+        const agent = supertest.agent(app)
+        const login = await agent
+            .post('/api/auth/login')
+            .send(credentials)
+            .expect(200)
+        
+        await agent
+            .patch('/api/auth/settings/change-password')
+            .set('Authorization', `Bearer ${login.body.token}`)
+            .send({ old_password: 'testPassword2!', new_password: 'testPassword3!'})
+            .expect(204)
+
+        const editedPassUser = await db('users').select('*').where({id: userInDb.id}).first()
+
+        expect(editedPassUser.password_hash).toBeDefined()
+        expect(editedPassUser.password_hash).not.toBe(userInDb.password_hash)
+    }),
+
+    test('Delete user', async () => {
+        const [userInDb] = await db('users').insert({
+            username: credentials.username,
+            email: 'IntegrationTestUser@test.com',
+            password_hash: await bcrypt.hash(credentials.password, 4)
+        }).returning('*')
+        const agent = supertest.agent(app)
+        const login = await agent
+            .post('/api/auth/login')
+            .send(credentials)
+            .expect(200)
+
+        let testUser = await db('users').select('*').where({ id: userInDb.id }).first()
+        expect(testUser.id).toBe(userInDb.id)
+        expect(testUser.username).toBe(userInDb.username)
+        expect(testUser.email).toBe(userInDb.email)
+        
+        await agent
+            .delete('/api/auth/settings/delete-account')
+            .set('Authorization', `Bearer ${login.body.token}`)
+            .expect(204)
+        
+        testUser = await db('users').select('*').where({ id: userInDb.id }).first()
+
+        expect(testUser).not.toBeDefined()
     })
-        */
 })

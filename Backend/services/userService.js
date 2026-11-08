@@ -3,22 +3,24 @@ import bcrypt from 'bcrypt'
 import ApiError from '../utils/ApiError.js'
 import Destination from '../models/destination.js'
 
-const saltRounds = 12
+const saltRounds = process.env.NODE_ENV === 'test' ? 4 : 12 // 12 salt rounds is very time taxing in testing
+
 
 const UserService = {
     async register({username, password, email}) {
-        const existingUsername = await User.findByName(username)
-        if(existingUsername){
-            throw new ApiError('Username already taken in register()', 409, 'Tämä käyttäjänimi on jo käytössä')
-        }
-        const existingEmail = await User.findByEmail(email)
-        if(existingEmail){
-            throw new ApiError('An account with an existing email found in register()', 409, 'Tämä sähköposti on jo käytössä')
-        }
         const password_hash = await bcrypt.hash(password, saltRounds)
-
-        return await User.register({ username, password_hash, email })
-        
+        try{
+            return await User.register({ username, password_hash, email })
+        }
+        catch(error){
+            // 23505 error code is for a unique constraint violation
+            if(error.code === '23505'){
+                if(error.constraint.includes('email')) {
+                    throw new ApiError('Email already taken in register()', 409, 'Sähköposti on jo käytössä')
+                }
+                throw new ApiError('Username already taken in register()', 409, 'Käyttäjänimi on jo käytössä')
+            }
+        }
     },
 
     async checkCredentials({username, password}){
