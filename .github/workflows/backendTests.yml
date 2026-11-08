@@ -28,10 +28,12 @@ jobs:
                     --health-retries 10
         env:
             NODE_ENV: test
+            PORT: 3001
             DB_HOST: localhost
             DB_PORT: 5432
             DB_USER: postgres
             DB_PASSWORD: postgres
+            DB_NAME: shipmenttracking
             JWT_SECRET: ci-test-secret
                 
         steps:
