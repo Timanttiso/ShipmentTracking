@@ -2,7 +2,7 @@
 .env
 
 # files created by downloading modules
-package-lock.json
+Frontend/package-lock.json
 pnpm-lock.yaml
 pnpm-workspace.yaml
 node_modules/
