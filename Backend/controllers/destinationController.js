@@ -3,7 +3,7 @@ import DestinationService from '../services/destinationService.js'
 import auth from '../utils/auth.js'
 
 const DestinationRouter = express.Router()
-//test change 3
+//test change 4
 //#region GET endpoints
 // Gets all of destinations linked to the currently logged in user
 DestinationRouter.get('/', auth.authenticationRequired, async (request, response, next) => {
