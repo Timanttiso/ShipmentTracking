@@ -91,7 +91,7 @@ export default function RegisterPage() {
                             required
                             minLength={8}
                             pattern='(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}'
-                            title='Vähintään 8 merkkiä: iso- ja pienikirjain, numero sekä erikoismerkki.'
+                            title='Vähintään 8 merkkiä: iso- ja pieni kirjain, numero sekä erikoismerkki.'
                             onChange={(e) => setPassword(e.target.value)}
                         />
                         <button

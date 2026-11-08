@@ -1,9 +1,12 @@
 import { useEffect, useState, type JSX } from 'react'
-import type Destination from '../types/destination'
+import type Destination from '../models/destination'
+import type Ship from '../models/ship'
 import { addShipment } from '../services/api'
-import DestinationDropdown from './DestinationDropdown'
+import Dropdown from './Dropdown'
 import DestinationManagerPopup from './DestinationManagerPopup'
+import ShipManagerPopup from './ShipManagerPopup'
 import useDestinations from '../contexts/useDestinations'
+import useShips from '../contexts/useShips'
 
 interface AddShipmentPopupProps {
     onClose: () => void
@@ -12,12 +15,14 @@ interface AddShipmentPopupProps {
 
 export default function AddShipmentPopup({ onClose, onAdd }: AddShipmentPopupProps): JSX.Element {
     const { destinations, defaultDestination, destinationFetchError } = useDestinations()
+    const { ships, shipFetchError } = useShips()
 
     const [submitting, setSubmitting] = useState(false)
-    const [error, setError] = useState(destinationFetchError)
+    const [error, setError] = useState(destinationFetchError || shipFetchError)
     const [isDestinationManagerOpen, setIsDestinationManagerOpen] = useState(false)
+    const [isShipManagerOpen, setIsShipManagerOpen] = useState(false)
     const [shipmentName, setShipmentName] = useState('')
-    const [shipMmsi, setShipMmsi] = useState('')
+    const [selectedShip, setSelectedShip] = useState<Ship | null>(null)
     const [eta, setEta] = useState('')
     const [selectedDestinationOverride, setSelectedDestinationOverride] = useState<Destination | null>(null)
     const selectedDestination = selectedDestinationOverride ?? defaultDestination
@@ -41,7 +46,12 @@ export default function AddShipmentPopup({ onClose, onAdd }: AddShipmentPopupPro
         e.preventDefault()
 
         if (!selectedDestination) {
-            setError('Valitse määränpää!')
+            setError('Valitse määränpää.')
+            return
+        }
+
+        if (!selectedShip) {
+            setError('Valitse Laiva.')
             return
         }
 
@@ -50,7 +60,7 @@ export default function AddShipmentPopup({ onClose, onAdd }: AddShipmentPopupPro
 
         const newShipment = {
             shipment_name: shipmentName.trim(),
-            ship_mmsi: shipMmsi.trim(),
+            ship_id: selectedShip.id,
             eta: eta ? new Date(eta).toISOString() : null,
             destination_id: selectedDestination.id
         }
@@ -59,7 +69,6 @@ export default function AddShipmentPopup({ onClose, onAdd }: AddShipmentPopupPro
             await addShipment(newShipment)
 
             setShipmentName('')
-            setShipMmsi('')
             setEta('')
             setSubmitting(false)
             onAdd()
@@ -80,9 +89,17 @@ export default function AddShipmentPopup({ onClose, onAdd }: AddShipmentPopupPro
                 initialCoordinates={
                     // Opens the location of the currently selected destination by default
                     selectedDestination
-                        ? { lat: Number(selectedDestination.lat), lng: Number(selectedDestination.lon) }
+                        ? { lat: selectedDestination.lat, lng: selectedDestination.lon }
                         : { lat: 63.859577, lng: 23.037560 }
                 }
+            />
+        )
+    } else if (isShipManagerOpen) {
+        return (
+            <ShipManagerPopup
+                onClose={() => setIsShipManagerOpen(false)}
+                selectedShip={selectedShip}
+                setSelectedShip={setSelectedShip}
             />
         )
     } else {
@@ -131,30 +148,6 @@ export default function AddShipmentPopup({ onClose, onAdd }: AddShipmentPopupPro
                         </label>
 
                         <label className='popup-form__field'>
-                            <span>Laivan MMSI</span>
-                            <input
-                                name='ship_mmsi'
-                                type='text'
-                                inputMode='numeric'
-                                value={shipMmsi}
-                                onChange={(e) => setShipMmsi(e.target.value)}
-                                placeholder='Esim. 123456789'
-                                required
-                                maxLength={20}
-                            />
-                        </label>
-
-                        <div className='popup-form__field'>
-                            <span>Määränpää</span>
-                            <DestinationDropdown
-                                options={destinations}
-                                selectedOption={selectedDestination ?? defaultDestination}
-                                onChange={value => setSelectedDestinationOverride(value)}
-                                onOpenManager={() => setIsDestinationManagerOpen(true)}
-                            />
-                        </div>
-
-                        <label className='popup-form__field'>
                             <span>Arvioitu saapumisaika</span>
                             <input
                                 name='eta'
@@ -163,6 +156,30 @@ export default function AddShipmentPopup({ onClose, onAdd }: AddShipmentPopupPro
                                 onChange={(e) => setEta(e.target.value)}
                             />
                         </label>
+
+                        <label className='popup-form__field'>
+                            <span>Laiva</span>
+                            <Dropdown
+                                getOptionLabel={(ship) => ship?.ship_nickname ?? null}
+                                label='Laiva'
+                                options={ships}
+                                selectedOption={selectedShip}
+                                onChange={option => setSelectedShip(option)}
+                                onAdd={() => setIsShipManagerOpen(true)}
+                            />
+                        </label>
+
+                        <div className='popup-form__field'>
+                            <span>Määränpää</span>
+                            <Dropdown
+                                getOptionLabel={(destination) => destination?.destination_name ?? null}
+                                label='Määränpää'
+                                options={destinations}
+                                selectedOption={selectedDestination ?? defaultDestination}
+                                onChange={option => setSelectedDestinationOverride(option)}
+                                onAdd={() => setIsDestinationManagerOpen(true)}
+                            />
+                        </div>
 
                         {error && <p className="error-message">{error}</p>}
 

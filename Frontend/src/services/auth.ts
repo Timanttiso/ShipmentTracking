@@ -1,5 +1,5 @@
 import requestHelper from './serviceHelper'
-import type AuthUser from '../types/user'
+import type AuthUser from '../models/user'
 
 interface LoginResponse {
     token: string

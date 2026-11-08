@@ -12,7 +12,7 @@ export default function ToastMessage({ message, onAfterToast, isSuccess = true }
     useEffect(() => {
         if (!message) return
 
-        const timeoutId = window.setTimeout(onAfterToast, 4000)
+        const timeoutId = window.setTimeout(onAfterToast, 3000)
 
         return () => window.clearTimeout(timeoutId)
     }, [message, onAfterToast])

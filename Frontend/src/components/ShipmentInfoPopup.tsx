@@ -1,6 +1,6 @@
 import { useEffect, type JSX, type Dispatch, type SetStateAction } from 'react'
-import type Shipment from '../types/shipment'
-import { shipmentStatusLabels } from '../types/shipment'
+import type Shipment from '../models/shipment'
+import { shipmentStatusLabels } from '../models/shipment'
 import './styles/ShipmentInfoPopup.css'
 
 interface shipmentInfoPopupProps {
@@ -9,8 +9,13 @@ interface shipmentInfoPopupProps {
     formatDateTime: (value: string | null, fallback: string) => string
 }
 
-const mapEmbedUrl = (shipment: Shipment, zoom = 6) =>
-    `https://maps.google.com/maps?q=${shipment.lat},${shipment.lon}&z=${zoom}&output=embed`
+const mapEmbedUrl = (shipment: Shipment, zoom = 6) => {
+    if (!shipment.lon || !shipment.lat) {
+        return `https://maps.google.com/maps?output=embed`
+    } else {
+        return `https://maps.google.com/maps?q=${shipment.lat},${shipment.lon}&z=${zoom}&output=embed`
+    }
+}
 
 export default function ShipmentInfoPopup({ setActiveMap, activeMap, formatDateTime }: shipmentInfoPopupProps): JSX.Element {
     useEffect(() => {
@@ -57,7 +62,7 @@ export default function ShipmentInfoPopup({ setActiveMap, activeMap, formatDateT
                     <div><dt>Arvioitu saapumisaika</dt><dd>{formatDateTime(activeMap.eta, 'Ei arvioitua saapumisaikaa')}</dd></div>
                     <div><dt>Viimeksi päivitetty</dt><dd>{formatDateTime(activeMap.updated_at ?? activeMap.created_at, 'Ei päivitystietoa')}</dd></div>
                     <div><dt>Määränpää</dt><dd>{activeMap.destination_name}</dd></div>
-                    <div><dt>MMSI</dt><dd>{activeMap.ship_mmsi}</dd></div>
+                    <div><dt>MMSI</dt><dd>{activeMap.mmsi}</dd></div>
                     <div>
                         <dt>Tila</dt>
                         <dd>

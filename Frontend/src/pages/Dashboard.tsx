@@ -1,15 +1,16 @@
-import { useState, useEffect, useCallback } from 'react'
-import type Shipment from '../types/shipment'
-import { shipmentStatusLabels } from '../types/shipment'
-import AddShipmentPopup from '../components/AddShipmentPopup'
+import { useState, useEffect, useCallback, lazy } from 'react'
+import type Shipment from '../models/shipment'
+import { shipmentStatusLabels } from '../models/shipment'
 import ShipmentInfoPopup from '../components/ShipmentInfoPopup'
 import SortDropdown, { type SortDirection } from '../components/SortDropdown'
 import ToastMessage from '../components/ToastMessage'
 import Icon from '../constants/Icons'
+import PageTabs from '../components/PageTabs'
 import { fetchShipments } from '../services/api'
-import '../components/styles/Dropdown.css'
 import '../components/styles/Popup.css'
 import './styles/Dashboard.css'
+
+const AddShipmentPopup = lazy(() => import ('../components/AddShipmentPopup'));
 
 const filters = ['Kaikki', 'Matkalla', 'Saapunut', 'Viivästynyt'] as const
 const sortOptions = [
@@ -43,7 +44,7 @@ export default function Dashboard() {
     const [successMessage, setSuccessMessage] = useState('')
 
     const visibleShipments = shipments.filter((shipment) => {
-        const matchesSearch = `${shipment.shipment_name} ${shipment.ship_mmsi}`
+        const matchesSearch = `${shipment.shipment_name} ${shipment.mmsi}`
             .toLocaleLowerCase('fi')
             .includes(search.toLocaleLowerCase('fi'))
         const matchesFilter = activeFilter === 'Kaikki' || shipmentStatusLabels[shipment.status] === activeFilter
@@ -94,10 +95,11 @@ export default function Dashboard() {
         <main className='dashboard-page'>
             <div className='dashboard-main'>
                 <ToastMessage message={successMessage} onAfterToast={() => setSuccessMessage('')} />
-                <section className='dashboard-heading' aria-labelledby='page-title'>
-                    <h1 id='page-title'>Lähetykset</h1>
+                <PageTabs />
+                <header className='dashboard-heading' aria-labelledby='page-title'>
+                    <h1>Lähetykset</h1>
                     <button className='add-shipment-button' onClick={() => setIsAddPopupOpen(true)}>Lisää Lähetys</button>
-                </section>
+                </header>
 
                 <section className='shipment-section' aria-label='Lähetyslista'>
                     <div className='shipment-toolbar'>
@@ -140,7 +142,7 @@ export default function Dashboard() {
                                     onChange={(e) => setSearch(e.target.value)}
                                 />
                                 <span className='shipment-search__icon' aria-hidden='true'>
-                                    <Icon icon='search' size={20} color='#8b9498' viewbox='0 -960 960 760'/>
+                                    <Icon icon='search' size={20} color='#8b9498' viewbox='0 -960 960 760' />
                                 </span>
                             </label>
                         </div>

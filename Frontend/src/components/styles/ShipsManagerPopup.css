@@ -1,0 +1,7 @@
+.manager-popup__dialog--ship {
+    width: min(640px, 100%);
+}
+
+.manager-popup__dialog--ship .manager-popup-inputs {
+    flex-wrap: wrap;
+}

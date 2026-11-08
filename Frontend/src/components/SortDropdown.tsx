@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactElement } from 'react'
 import Icon from '../constants/Icons'
+import './styles/Dropdown.css'
 import './styles/SortDropdown.css'
 
 interface SortDropdownOption<Value extends string> {

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { updateSettings, changePassword, deleteAccount } from '../services/auth'
-import DestinationDropdown from '../components/DestinationDropdown'
+import Dropdown from '../components/Dropdown'
 import DestinationManagerPopup from '../components/DestinationManagerPopup'
 import ToastMessage from '../components/ToastMessage'
 import Icon from '../constants/Icons'
@@ -118,7 +118,7 @@ export default function ProfilePage() {
                     initialCoordinates={
                         // Opens the location of the currently selected destination by default
                         selectedDestination
-                            ? { lat: Number(selectedDestination.lat), lng: Number(selectedDestination.lon) }
+                            ? { lat: selectedDestination.lat, lng: selectedDestination.lon }
                             : { lat: 63.859577, lng: 23.037560 }
                     }
                 />
@@ -156,11 +156,13 @@ export default function ProfilePage() {
 
                             <div className='popup-form__field profile-settings-form__destination'>
                                 <span>Oletus määränpää</span>
-                                <DestinationDropdown
+                                <Dropdown
+                                    getOptionLabel={(destination) => destination?.destination_name ?? null}
+                                    label='Määränpää'
                                     options={destinations}
                                     selectedOption={selectedDestination ?? defaultDestination}
-                                    onChange={(value) => setSelectedDestination(value)}
-                                    onOpenManager={() => setIsDestinationManagerOpen(true)}
+                                    onChange={option => setSelectedDestination(option)}
+                                    onAdd={() => setIsDestinationManagerOpen(true)}
                                 />
                             </div>
 
@@ -232,7 +234,7 @@ export default function ProfilePage() {
                                             required
                                             minLength={8}
                                             pattern='(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}'
-                                            title='Vähintään 8 merkkiä: iso- ja pienikirjain, numero sekä erikoismerkki.'
+                                            title='Vähintään 8 merkkiä: iso- ja pieni kirjain, numero sekä erikoismerkki.'
                                             onChange={(e) => setNewPassword(e.target.value)}
                                         />
                                         <button
@@ -257,7 +259,7 @@ export default function ProfilePage() {
                                             placeholder='Toista salasanasi'
                                             value={confirmPassword}
                                             required
-                                            minLength={5}
+                                            minLength={8}
                                             onChange={(e) => setConfirmPassword(e.target.value)}
                                         />
                                         <button

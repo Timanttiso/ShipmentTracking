@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import type Destination from '../types/destination'
+import type Destination from '../models/destination'
 
 interface DestinationContextValue {
     populateDestinations: () => Promise<void>
@@ -14,7 +14,7 @@ export const DestinationsContext = createContext<DestinationContextValue | undef
 export default function useDestinations() {
     const context = useContext(DestinationsContext)
     if (!context) {
-        throw new Error('useAuth must be used within an AuthProvider')
+        throw new Error('useDestinations must be used within an AuthProvider')
     }
     return context
 }

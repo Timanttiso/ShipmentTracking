@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { checkAuth, fetchLogin, fetchLogout } from '../services/auth'
 import { ApiError, authExpiredEvent, tokenKey } from '../services/serviceHelper'
-import type AuthUser from '../types/user'
+import type AuthUser from '../models/user'
 import { AuthContext } from './useAuth'
 
 export function AuthProvider({ children }: { children: ReactNode }) {

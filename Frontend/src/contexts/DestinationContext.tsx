@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
-import type Destination from '../types/destination'
+import type Destination from '../models/destination'
 import { fetchDestinations } from '../services/api'
 import { updateSettings } from '../services/auth'
 import { DestinationsContext } from './useDestinations'

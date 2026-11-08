@@ -126,7 +126,7 @@
     font-weight: 800;
 }
 
-.popup-form__actions button:hover,
+.popup-form__actions button:hover:not(:disabled),
 .popup-form__actions button:focus-visible {
     filter: brightness(.94);
 }
@@ -141,6 +141,13 @@
     border: 1px solid transparent;
     background: var(--dash-navy, #172b3a);
     color: #fff;
+}
+
+.popup-form__submit:disabled {
+    border-color: #dedfdc;
+    background: #f2f1ed;
+    color: #969b9a;
+    cursor: default;
 }
 
 @media (max-width: 520px) {
