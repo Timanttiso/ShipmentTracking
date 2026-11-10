@@ -57,10 +57,8 @@ describe('User integration tests', async () => {
             .expect(201)
             .expect('Content-Type', /application\/json/)
 
-        const passwordMatch = await bcrypt.compare(input.password, response.body[0].password_hash)
 
         expect(response.body[0].username).toBe(input.username)
-        expect(passwordMatch).toBe(true)
         expect(response.body[0].email).toBe(input.email)
     }),
 

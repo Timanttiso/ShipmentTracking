@@ -9,7 +9,8 @@ export default defineConfig({
                     environment: 'node',
                     include: ['tests/unit/**/*.test.js'],
                     globalSetup: ['./tests/setup/globalSetup.unit.js'],
-                    setupFiles: ['./tests/setup/env.js']
+                    setupFiles: ['./tests/setup/env.js'],
+                    fileParallelism: false
                 }
             },
             {

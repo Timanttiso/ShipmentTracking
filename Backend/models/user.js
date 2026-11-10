@@ -4,7 +4,7 @@ const User = {
     async register({ username, password_hash, email }, dbConn = db) {
         return dbConn('users')
             .insert({ username, password_hash, email })
-            .returning('*')
+            .returning(['id', 'username', 'email', 'default_destination_id'])
     },
 
     async findByName(username, dbConn = db){
@@ -24,7 +24,7 @@ const User = {
     async findById(id, dbConn = db){
         return dbConn('users')
             .select('*')
-            .where({ id: id})
+            .where({ id: id })
             .first()
     },
 
@@ -32,7 +32,7 @@ const User = {
         return dbConn('users')
             .where({ id })
             .update({ username: username, email: email, default_destination_id, default_destination_id})
-            .returning('*')
+            .returning(['id', 'username', 'email', 'default_destination_id'])
     },
 
     async UpdatePassword(id, password_hash, dbConn = db){
