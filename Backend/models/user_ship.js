@@ -4,7 +4,7 @@ const User_Ship = {
     async Add(user_id, ship_id, ship_nickname, dbConn = db){
         return dbConn('user_ships')
             .insert({user_id: user_id, ship_id: ship_id, ship_nickname: ship_nickname})
-            .returning('*')
+            .returning(['id as user_ship_id', 'user_id', 'ship_id', 'ship_nickname'])
     },
     async GetUserShips(user_id, dbConn = db){
         return dbConn('user_ships as us')

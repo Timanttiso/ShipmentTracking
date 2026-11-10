@@ -13,7 +13,8 @@ const ShipService = {
             throw new ApiError('User already has a connection to this ship In AddShip()', 409, 'Seuraat jo tätä alusta')
         }
         const newShipConnection = await User_Ship.Add(user_id, AddedShip.id, ship_nickname)
-        return newShipConnection
+        const AddedShipInDb = await User_Ship.GetUserShipByShipId(user_id, newShipConnection[0].ship_id)
+        return AddedShipInDb
     },
 
     async GetAllUserShips(user_id){

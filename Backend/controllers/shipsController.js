@@ -34,7 +34,7 @@ shipsRouter.get('/ship/:id', auth.authenticationRequired, async (request, respon
 
 //#region POST endpoints
 // Adds a ship connection for the current user based on the given MMSI. If the ship does not exist in the database it will also be added.
-// Returns the connection information, if needed can be modified to return the ship information as well
+// Returns the connection information along with the ship infromation like in the GET endpoint
 shipsRouter.post('/add-ship', auth.authenticationRequired, async (request, response, next)  => {
     try{
         const { ship_nickname, mmsi } = request.body
