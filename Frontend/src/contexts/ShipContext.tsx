@@ -16,7 +16,6 @@ export function ShipProvider({ children }: { children: ReactNode }) {
 
 			setShips(shipData);
 			setShipFetchError('');
-			return shipData;
 		} catch (error: unknown) {
 			const message = error instanceof Error ? error.message : 'Yhteysvirhe';
 

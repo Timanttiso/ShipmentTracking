@@ -7,10 +7,3 @@ export default interface Ship {
 	lat: number | null;
 	updated_at: string | null;
 }
-
-export interface CreatedShip {
-	id: number;
-	user_id: number;
-	ship_id: number;
-	ship_nickname: string;
-}

@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react';
 import type Ship from '../models/ship';
 
 interface ShipContextValue {
-	populateShips: () => Promise<Ship[]>;
+	populateShips: () => Promise<void>;
 	ships: Ship[];
 	shipFetchError: string;
 }

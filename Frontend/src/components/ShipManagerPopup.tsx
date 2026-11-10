@@ -58,11 +58,9 @@ export default function ShipManagerPopup({
 		if (activeTab === 'Lisää') {
 			const newShip = { ship_nickname: shipName.trim(), mmsi: shipMmsi.trim() };
 			try {
-				const [addedShip] = await addUserShip(newShip); // <-- returns different format than the ships from /api/ships
-				//setSelectedShip?.(addedShip);
-				const newShips = await populateShips();
-				const formattedShip = newShips.find((s) => s.id === addedShip.ship_id) ?? null;
-				setSelectedShip?.(formattedShip);
+				const addedShip = await addUserShip(newShip);
+				setSelectedShip?.(addedShip);
+				await populateShips();
 				handleOnSuccess();
 				setSuccessMessage('Laiva lisätty.');
 				if (setSelectedShip) onClose();
@@ -87,13 +85,13 @@ export default function ShipManagerPopup({
 			}
 
 			try {
-				const [updatedShip] = await updateShip(shipToEdit.id, newShip);
+				const updatedShip = await updateShip(shipToEdit.id, newShip);
 
 				if (setSelectedShip && selectedShip?.id === shipToEdit.id) setSelectedShip(updatedShip);
 
 				await populateShips();
 				handleOnSuccess();
-				setSuccessMessage('Määränpää muokattu.');
+				setSuccessMessage('Laiva muokattu.');
 			} catch (error: unknown) {
 				const message = error instanceof Error ? error.message : 'Yhteysvirhe';
 
@@ -120,6 +118,7 @@ export default function ShipManagerPopup({
 		try {
 			await deleteShip(shipToEdit.id);
 			await populateShips();
+			if (setSelectedShip && selectedShip?.id === shipToEdit.id) setSelectedShip(null);
 			handleOnSuccess();
 			setSuccessMessage('Laiva poistettu.');
 		} catch (error: unknown) {

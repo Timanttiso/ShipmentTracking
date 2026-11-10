@@ -3,7 +3,6 @@ import type Shipment from '../models/shipment'
 import type { CreatedShipment } from '../models/shipment'
 import type Destination from '../models/destination'
 import type Ship from '../models/ship'
-import type { CreatedShip } from '../models/ship'
 
 interface AddShipmentRequest {
     shipment_name: string
@@ -62,15 +61,15 @@ export const fetchUserShips = (): Promise<Ship[]> => {
     return requestHelper<Ship[]>('/api/ships', true)
 }
 
-export const addUserShip = (ship: ShipRequest): Promise<[CreatedShip]> => {
-    return requestHelper<[CreatedShip]>('/api/ships/add-ship', true, {
+export const addUserShip = (ship: ShipRequest): Promise<Ship> => {
+    return requestHelper<Ship>('/api/ships/add-ship', true, {
         method: 'POST',
         body: JSON.stringify(ship),
     })
 }
 
-export const updateShip = (id: number, ship: ShipRequest): Promise<[Ship]> => {
-    return requestHelper<[Ship]>(`/api/ships/ship/${id}`, true, {
+export const updateShip = (id: number, ship: ShipRequest): Promise<Ship> => {
+    return requestHelper<Ship>(`/api/ships/ship/${id}`, true, {
         method: 'PATCH',
         body: JSON.stringify(ship),
     })

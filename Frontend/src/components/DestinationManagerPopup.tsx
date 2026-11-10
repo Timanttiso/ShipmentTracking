@@ -150,6 +150,7 @@ export default function DestinationManagerPopup({
 		try {
 			await deleteDestination(destinationToEdit.id);
 			await populateDestinations();
+			if (setSelectedDestination && selectedDestination?.id === destinationToEdit.id) setSelectedDestination(null);
 			handleOnSuccess();
 			setSuccessMessage('Määränpää poistettu.');
 		} catch (error: unknown) {
