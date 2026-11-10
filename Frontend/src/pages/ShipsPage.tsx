@@ -6,7 +6,7 @@ import ShipManagerPopup from '../components/ShipManagerPopup';
 import './styles/ManagerPage.css';
 
 export default function ShipsPage() {
-	const { ships, shipFetchError } = useShips()
+	const { ships, shipFetchError } = useShips();
 	const [isManagerOpen, setIsManagerOpen] = useState(false);
 	const [shipToEdit, setShipToEdit] = useState<Ship | null>(null);
 
@@ -51,7 +51,10 @@ export default function ShipsPage() {
 							type='button'
 							aria-label={`Muokkaa laivaa ${ship.ship_nickname}`}
 						>
-							<h2 className='manager-list__details'>{ship.ship_nickname}</h2>
+							<div className='manager-list__details'>
+								<h2>{ship.ship_nickname}</h2>
+								<span className='manager-list__mmsi'>MMSI: {ship.mmsi}</span>
+							</div>
 							<span className='shipment-row__open' aria-hidden='true'>
 								↗
 							</span>

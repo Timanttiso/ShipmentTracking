@@ -53,10 +53,13 @@ export default function DestinationsPage() {
 							type='button'
 							aria-label={`Muokkaa määränpäätä ${destination.destination_name}`}
 						>
-							<h2 className='manager-list__details'>{destination.destination_name}</h2>
+							<div className='manager-list__details'>
+								<h2>{destination.destination_name}</h2>
+							</div>
 							{defaultDestination?.id === destination.id && (
 								<span className='manager-list__badge manager-list__badge--default'>Oletus</span>
 							)}
+
 							<span className='shipment-row__open' aria-hidden='true'>
 								↗
 							</span>

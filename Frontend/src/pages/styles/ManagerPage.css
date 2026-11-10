@@ -37,12 +37,24 @@
     min-width: 0;
     gap: 4px;
     overflow: hidden;
+    margin-right: auto;
+}
+
+.manager-list__details h2 {
+    margin: 0;
     color: #102a43;
     font-size: 15px;
     font-weight: 800;
     text-overflow: ellipsis;
     white-space: nowrap;
-    margin-right: auto;
+}
+
+.manager-list__mmsi {
+    color: #586874;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
 }
 
 .manager-list__badge--default {
