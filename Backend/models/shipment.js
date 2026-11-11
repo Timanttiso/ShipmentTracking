@@ -20,7 +20,7 @@ const Shipment = {
                 'sh.mmsi',
                 'sh.lon',
                 'sh.lat',
-                'sh.updated_at'
+                'sh.updated_at as ship_updated_at'
             )
     },
     async getAllForUserByStatus(user_id, status, dbConn = db){
@@ -38,7 +38,7 @@ const Shipment = {
                 'sh.mmsi',
                 'sh.lon',
                 'sh.lat',
-                'sh.updated_at'
+                'sh.updated_at as ship_updated_at'
             )
     },
     async getById(id, user_id, dbConn = db){
@@ -56,20 +56,20 @@ const Shipment = {
                 'sh.mmsi',
                 'sh.lon',
                 'sh.lat',
-                'sh.updated_at'
+                'sh.updated_at as ship_updated_at'
             )
             .first()
     },
     async updateShipmentInformation(id, user_id, {shipment_name, eta, destination_id, ship_id}, dbConn = db){
         return dbConn('shipments')
             .where({ id, user_id })
-            .update({ shipment_name: shipment_name, eta: eta, destination_id: destination_id, ship_id})
+            .update({ shipment_name: shipment_name, eta: eta, destination_id: destination_id, ship_id, updated_at: dbConn.fn.now()})
             .returning('*')
     },
     async updateShipmentStatus(id, user_id, { status }, dbConn = db){
         return dbConn('shipments')
             .where({ id, user_id })
-            .update({ status: status})
+            .update({ status: status, updated_at: dbConn.fn.now() })
             .returning('*')
     },
     async removeShipment(id, dbConn = db){
