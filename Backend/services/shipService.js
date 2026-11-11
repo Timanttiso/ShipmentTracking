@@ -1,12 +1,14 @@
 import Ship from "../models/ship.js";
 import User_Ship from "../models/user_ship.js";
 import ApiError from "../utils/ApiError.js";
+import { requestSubscriptionReload } from "../mqtt/mqtt.index.js";
 
 const ShipService = {
     async AddShip(user_id, ship_nickname, mmsi){
         let AddedShip = await Ship.GetByMMSI(mmsi)
         if(!AddedShip){
             AddedShip = await Ship.Add(mmsi)
+            requestSubscriptionReload()
         }
         const ExistingUserShipConnection = await User_Ship.GetUserShipByShipId(user_id, AddedShip.id)
         if(ExistingUserShipConnection){
@@ -54,8 +56,9 @@ const ShipService = {
                     throw new ApiError('User already follows the ship with the new MMSI in UpdateShip()', 409, 'Seuraat jo tätä laivaa')
                 }
                 await User_Ship.UpdateConnection(user_id, target.id, ship_id)
+                requestSubscriptionReload()
             } 
-
+            
             return await User_Ship.GetUserShipByShipId(user_id, target.id)
         }
         return await User_Ship.GetUserShipByShipId(user_id, ship_id)

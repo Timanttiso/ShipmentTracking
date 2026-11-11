@@ -4,6 +4,7 @@ import logger from './utils/logger.js';
 import RefreshTokenService from './services/refreshTokenService.js';
 import startMqttWorker from './mqtt/mqtt.index.js';
 import ShipService from './services/shipService.js';
+import { requestSubscriptionReload } from './mqtt/mqtt.index.js';
 
 const cleanUpInterval = 60 * 60 * 1000; //hour in ms
 const shipCleanupInterval = 24 * 60 * 60 * 1000 // 24 hours, daily
@@ -32,6 +33,9 @@ timer.unref();
 const cleanupShips = async () => {
     try{
         let count = await ShipService.DeleteDeprecatedShips()
+        if(count > 0){
+            requestSubscriptionReload()
+        }
         logger.info(`Cleanup: deleted ${count} deprecated ships from the database`);
     }
     catch(error){
