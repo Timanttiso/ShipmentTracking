@@ -10,7 +10,9 @@ vi.doMock('../../../models/user.js', async (importOriginal) => {
             findByName: vi.fn(),
             findByEmail: vi.fn(),
             findById: vi.fn(),
-            updateUserSettings: vi.fn()
+            updateUserSettings: vi.fn(),
+            UpdatePassword: vi.fn(),
+            RemoveUser: vi.fn()
         }
     }
 })
@@ -269,5 +271,56 @@ describe('User service unit tests', () => {
         expect(User.findByName).toHaveBeenCalledOnce()
         expect(User.findByEmail).toHaveBeenCalledOnce()
         expect(Destination.getById).toHaveBeenCalledOnce()
+    }),
+
+    test('Change password', async () => {
+        const input = {
+            old_password: 'testPassword1!',
+            new_password: 'testPassword2!'
+        }
+
+        const user = {
+            id: 1,
+            username: 'UnitTestUser',
+            password_hash: await bcrypt.hash('testPassword1!', 4),
+            email: 'UnitTestUser@test.com',
+            default_destination_id: null
+        }
+
+        const output = {
+            id: 1,
+            username: 'UnitTestUser',
+            password_hash: await bcrypt.hash('testPassword2!', 4),
+            email: 'UnitTestUser@test.com',
+            default_destination_id: null
+        }
+
+        User.findById.mockResolvedValue(user)
+        User.UpdatePassword.mockResolvedValue(output)
+
+        const result = await userService.ChangePassword(1, input)
+
+        expect(result).toEqual(output)
+        expect(User.findById).toHaveBeenCalledOnce()
+        expect(User.UpdatePassword).toHaveBeenCalledOnce()
+    }),
+
+    test('Delete user', async () => {
+        const user = {
+            id: 1,
+            username: 'UnitTestUser',
+            password_hash: 'testPassword1!',
+            email: 'UnitTestUser@test.com',
+            default_destination_id: null
+        }
+
+        User.findById.mockResolvedValue(user)
+        User.RemoveUser.mockResolvedValue(1)
+
+        const result = await userService.DeleteUser(1)
+
+        expect(result).toBe(1)
+        expect(User.findById).toHaveBeenCalledOnce()
+        expect(User.RemoveUser).toHaveBeenCalledOnce()
     })
 })
