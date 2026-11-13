@@ -174,6 +174,8 @@ backend/
 │   │   └── authHelper.js                           # A helper used in integration tests to avoid authentication issues
 │   ├── integration/                                # A folder containing all integration tests
 │   │   ├── destinationsIntegrations.test.js
+│   │   ├── shipmentsIntegration.test.js
+│   │   ├── shipsIntegration.test.js
 │   │   └── usersIntegrations.test.js
 │   ├── setup/
 │   │   ├── env.js                                  # Overwrites .env variables with values needed in testing
@@ -182,11 +184,15 @@ backend/
 │   ├── unit/                                       # A folder containing all unit tests by type
 │   │   ├── controllers/                            # Controller unit tests
 │   │   │   ├── destinationsControllerUnit.test.js
+│   │   │   ├── shipsControllerUnit.test.js
 │   │   │   └── usersControllerUnit.test.js
 │   │   ├── models/                                 # Model unit tests
-│   │   │   └── destinationUnit.test.js
+│   │   │   ├── destinationUnit.test.js
+│   │   │   └── usersUnit.test.js
 │   │   └── services/                               # Service unit tests
-│   │       └── destinationServiceUnit.test.js
+│   │       ├── destinationServiceUnit.test.js
+│   │       ├── shipServiceUnit.test.js
+│   │       └── userServiceUnit.test.js
 │   └── README.md
 ├── utils/                                          # Misc utilities
 │   ├── ApiError.js                                 # Defined API error
@@ -197,4 +203,25 @@ backend/
 │   └── tokens.js                                   # Token related methods
 └── README.md
 ```
+
+### Backend testing instructions and details
+
+The backend API has a comprehensive automated testing environment built with the Vitest testing framework. The backend testing suites cover all of the different important backend components. Tested areas are: controllers, services and models. 
+
+**Important commands to know:**
+
+```
+npm run test                # Runs all integration and unit test suites
+
+npm run test:unit           # Runs all unit test suites
+
+npm run test:integration    # Runs all integration test suites
+```
+
+Integration tests test a whole part of the system by calling an endpoint and checking that it returns the correct values. Unit tests on the other hand test specific parts of the code, such as specific controller, service or model actions. Most of the unit tests mock the services or models they need to use to isolate the tested part. Model unit tests use the temporary unit test database.
+
+### Backend CI pipeline
+
+For this project we have made a simple backend CI pipeline that is used for testing. When backend code is pushed to the repository the CI pipeline runs all of the unit and integration test suites against the uploaded version of the codebase. Changes made to the frontend side of the project do not trigger the CI pipeline. The pipeline was created using Github Actions. The pipeline makes sure that the uploaded code actually works in the intended manner.
+
 ---
