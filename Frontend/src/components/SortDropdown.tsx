@@ -1,102 +1,102 @@
-import { useEffect, useRef, useState, type ReactElement } from 'react'
-import Icon from '../constants/Icons'
-import './styles/Dropdown.css'
-import './styles/SortDropdown.css'
+import { useEffect, useRef, useState, type ReactElement } from 'react';
+import Icon from '../constants/Icons';
+import './styles/Dropdown.css';
+import './styles/SortDropdown.css';
 
 interface SortDropdownOption<Value extends string> {
-    value: Value
-    label: string
+	value: Value;
+	label: string;
 }
 
 interface SortDropdownProps<Value extends string> {
-    options: readonly SortDropdownOption<Value>[]
-    value: Value
-    onChange: (value: Value) => void
-    isDirectionAscending: boolean
-    onDirectionChange: (isSortDirectionAsc: boolean) => void
+	options: readonly SortDropdownOption<Value>[];
+	value: Value;
+	onChange: (value: Value) => void;
+	isDirectionAscending: boolean;
+	onDirectionChange: (isSortDirectionAsc: boolean) => void;
 }
 
 export default function SortDropdown<Value extends string>({
-    options,
-    value,
-    onChange,
-    isDirectionAscending,
-    onDirectionChange
+	options,
+	value,
+	onChange,
+	isDirectionAscending,
+	onDirectionChange,
 }: SortDropdownProps<Value>): ReactElement {
-    const [isOpen, setIsOpen] = useState(false)
-    const dropdownRef = useRef<HTMLDivElement>(null)
-    const triggerRef = useRef<HTMLButtonElement>(null)
-    const selectedOption = options.find((option) => option.value === value)
+	const [isOpen, setIsOpen] = useState(false);
+	const dropdownRef = useRef<HTMLDivElement>(null);
+	const triggerRef = useRef<HTMLButtonElement>(null);
+	const selectedOption = options.find((option) => option.value === value);
 
-    useEffect(() => {
-        if (!isOpen) return
+	useEffect(() => {
+		if (!isOpen) return;
 
-        const closeOnOutsideClick = (e: PointerEvent) => {
-            if (!dropdownRef.current?.contains(e.target as Node)) setIsOpen(false)
-        }
-        const closeOnEscape = (e: KeyboardEvent) => {
-            if (e.key !== 'Escape') return
-            setIsOpen(false)
-            triggerRef.current?.focus()
-        }
+		const closeOnOutsideClick = (e: PointerEvent) => {
+			if (!dropdownRef.current?.contains(e.target as Node)) setIsOpen(false);
+		};
+		const closeOnEscape = (e: KeyboardEvent) => {
+			if (e.key !== 'Escape') return;
+			setIsOpen(false);
+			triggerRef.current?.focus();
+		};
 
-        document.addEventListener('pointerdown', closeOnOutsideClick)
-        document.addEventListener('keydown', closeOnEscape)
+		document.addEventListener('pointerdown', closeOnOutsideClick);
+		document.addEventListener('keydown', closeOnEscape);
 
-        return () => {
-            document.removeEventListener('pointerdown', closeOnOutsideClick)
-            document.removeEventListener('keydown', closeOnEscape)
-        }
-    }, [isOpen])
+		return () => {
+			document.removeEventListener('pointerdown', closeOnOutsideClick);
+			document.removeEventListener('keydown', closeOnEscape);
+		};
+	}, [isOpen]);
 
-    const selectOption = (nextValue: Value) => {
-        onChange(nextValue)
-        setIsOpen(false)
-        triggerRef.current?.focus()
-    }
+	const selectOption = (nextValue: Value) => {
+		onChange(nextValue);
+		setIsOpen(false);
+		triggerRef.current?.focus();
+	};
 
-    return (
-        <div className='shipment-sort'>
-            <span className='shipment-sort__label'>Järjestä</span>
-            <div className='shipment-sort__dropdown' ref={dropdownRef}>
-                <button
-                    aria-expanded={isOpen}
-                    aria-haspopup='menu'
-                    aria-label={`Järjestä: ${selectedOption?.label ?? value}`}
-                    className='dropdown__trigger shipment-sort__trigger'
-                    onClick={() => setIsOpen((open) => !open)}
-                    ref={triggerRef}
-                    type='button'
-                >
-                    {selectedOption?.label ?? value}
-                    <Icon icon='chevron' size={16} color='none' viewbox='0 0 20 20' className='button-chevron'/>
-                </button>
-                {isOpen && (
-                    <div className='dropdown__menu  shipment-sort__menu' role='menu'>
-                        {options.map((option) => (
-                            <button
-                                aria-checked={value === option.value}
-                                className={`dropdown__option shipment-sort__option${value === option.value ? ' dropdown__option--selected' : ''}`}
-                                key={option.value}
-                                onClick={() => selectOption(option.value)}
-                                role='menuitemradio'
-                                type='button'
-                            >
-                                {option.label}
-                            </button>
-                        ))}
-                    </div>
-                )}
-            </div>
-            <button
-                aria-label={`Järjestys: ${isDirectionAscending  ? 'nouseva' : 'laskeva'}. Vaihda ${isDirectionAscending ? 'laskevaan' : 'nousevaan'} järjestykseen`}
-                className='shipment-sort-direction'
-                onClick={() => onDirectionChange(isDirectionAscending)}
-                title={isDirectionAscending ? 'Nouseva järjestys' : 'Laskeva järjestys'}
-                type='button'
-            >
-                <span aria-hidden='true'>{isDirectionAscending ? '↑' : '↓'}</span>
-            </button>
-        </div>
-    )
+	return (
+		<div className='shipment-sort'>
+			<span className='shipment-sort__label'>Järjestä</span>
+			<div className='shipment-sort__dropdown' ref={dropdownRef}>
+				<button
+					aria-expanded={isOpen}
+					aria-haspopup='menu'
+					aria-label={`Järjestä: ${selectedOption?.label ?? value}`}
+					className='dropdown__trigger shipment-sort__trigger'
+					onClick={() => setIsOpen((open) => !open)}
+					ref={triggerRef}
+					type='button'
+				>
+					{selectedOption?.label ?? value}
+					<Icon icon='chevron' size={16} color='none' viewbox='0 0 20 20' className='button-chevron' />
+				</button>
+				{isOpen && (
+					<div className='dropdown__menu  shipment-sort__menu' role='menu'>
+						{options.map((option) => (
+							<button
+								aria-checked={value === option.value}
+								className={`dropdown__option shipment-sort__option${value === option.value ? ' dropdown__option--selected' : ''}`}
+								key={option.value}
+								onClick={() => selectOption(option.value)}
+								role='menuitemradio'
+								type='button'
+							>
+								{option.label}
+							</button>
+						))}
+					</div>
+				)}
+			</div>
+			<button
+				aria-label={`Järjestys: ${isDirectionAscending ? 'nouseva' : 'laskeva'}. Vaihda ${isDirectionAscending ? 'laskevaan' : 'nousevaan'} järjestykseen`}
+				className='shipment-sort-direction'
+				onClick={() => onDirectionChange(isDirectionAscending)}
+				title={isDirectionAscending ? 'Nouseva järjestys' : 'Laskeva järjestys'}
+				type='button'
+			>
+				<span aria-hidden='true'>{isDirectionAscending ? '↑' : '↓'}</span>
+			</button>
+		</div>
+	);
 }

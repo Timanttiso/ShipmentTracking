@@ -12,9 +12,7 @@ export default function PageTabs() {
 		<nav className='page-tabs' aria-label='Seurannan sivut'>
 			{tabs.map((tab) => (
 				<NavLink
-					className={({ isActive }) =>
-						`page-tabs__link${isActive ? ' page-tabs__link--active' : ''}`
-					}
+					className={({ isActive }) => `page-tabs__link${isActive ? ' page-tabs__link--active' : ''}`}
 					end
 					key={tab.to}
 					to={tab.to}

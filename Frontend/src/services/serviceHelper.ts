@@ -1,86 +1,86 @@
-export const authExpiredEvent = 'shipmentTracking:auth-expired'
-export const tokenKey = 'shipmentTrackingAuthToken'
+export const authExpiredEvent = 'shipmentTracking:auth-expired';
+export const tokenKey = 'shipmentTrackingAuthToken';
 
 export class ApiError extends Error {
-    status: number
+	status: number;
 
-    constructor(status: number, message?: string) {
-        super(message ?? 'Connection error')
-        this.status = status
-    }
+	constructor(status: number, message?: string) {
+		super(message ?? 'Connection error');
+		this.status = status;
+	}
 }
 
 interface ErrorResponse {
-    error?: string
-    message?: string
+	error?: string;
+	message?: string;
 }
 
 const isErrorResponse = (value: unknown): value is ErrorResponse =>
-    typeof value === 'object' && value !== null && ('error' in value || 'message' in value)
+	typeof value === 'object' && value !== null && ('error' in value || 'message' in value);
 
 const requestHelper = async <TResponse = unknown>(
-    path: string,
-    authRequired: boolean,
-    options: RequestInit = {},
-    retried = false
+	path: string,
+	authRequired: boolean,
+	options: RequestInit = {},
+	retried = false
 ): Promise<TResponse> => {
-    const token = localStorage.getItem('shipmentTrackingAuthToken')
-    if (authRequired && !token) {
-        window.dispatchEvent(new Event(authExpiredEvent))
-        throw new ApiError(401, 'Authentication required')
-    }
+	const token = localStorage.getItem('shipmentTrackingAuthToken');
+	if (authRequired && !token) {
+		window.dispatchEvent(new Event(authExpiredEvent));
+		throw new ApiError(401, 'Authentication required');
+	}
 
-    const headers = new Headers(options.headers)
-    headers.set('Content-Type', 'application/json')
+	const headers = new Headers(options.headers);
+	headers.set('Content-Type', 'application/json');
 
-    if (token) {
-        headers.set('Authorization', `Bearer ${token}`)
-    }
+	if (token) {
+		headers.set('Authorization', `Bearer ${token}`);
+	}
 
-    const res = await fetch(path, {
-        ...options,
-        headers,
-    })
+	const res = await fetch(path, {
+		...options,
+		headers,
+	});
 
-    if (!res.ok) {
-        if (authRequired && res.status === 401) {
-            if (!retried) {
-                await tryToRefreshAccessToken()
-                return requestHelper(path, authRequired, options, true)
-            }
-            if (retried) {
-                window.dispatchEvent(new Event(authExpiredEvent))
-            }
-        }
+	if (!res.ok) {
+		if (authRequired && res.status === 401) {
+			if (!retried) {
+				await tryToRefreshAccessToken();
+				return requestHelper(path, authRequired, options, true);
+			}
+			if (retried) {
+				window.dispatchEvent(new Event(authExpiredEvent));
+			}
+		}
 
-        const body: unknown = await res.json()
+		const body: unknown = await res.json();
 
-        const msg = isErrorResponse(body)
-            ? body.error ?? body.message ?? res.statusText
-            : res.statusText
+		const msg = isErrorResponse(body)
+            ? (body.error ?? body.message ?? res.statusText)
+            : res.statusText;
 
-        throw new ApiError(res.status, msg)
-    }
+		throw new ApiError(res.status, msg);
+	}
 
-    if (res.statusText === 'No Content' || res.status === 204 || res.status === 205) {
-        return res as TResponse
-    }
+	if (res.statusText === 'No Content' || res.status === 204 || res.status === 205) {
+		return res as TResponse;
+	}
 
-    return (await res.json() as TResponse)
-}
+	return (await res.json()) as TResponse;
+};
 
 const tryToRefreshAccessToken = async () => {
-    const res = await refreshToken()
-    if (res?.token) {
-        localStorage.setItem(tokenKey, res.token)
-    }
-}
+	const res = await refreshToken();
+	if (res?.token) {
+		localStorage.setItem(tokenKey, res.token);
+	}
+};
 
 const refreshToken = (): Promise<{ token: string }> => {
-    return requestHelper<{ token: string }>('/api/auth/refresh', true, {
-        method: 'POST',
-        credentials: 'include',
-    })
-}
+	return requestHelper<{ token: string }>('/api/auth/refresh', true, {
+		method: 'POST',
+		credentials: 'include',
+	});
+};
 
-export default requestHelper
+export default requestHelper;

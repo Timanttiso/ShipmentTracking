@@ -1,223 +1,230 @@
-import { useState, useEffect, useCallback, lazy } from 'react'
-import type Shipment from '../models/shipment'
-import { shipmentStatusLabels } from '../models/shipment'
-import ShipmentInfoPopup from '../components/ShipmentInfoPopup'
-import SortDropdown from '../components/SortDropdown'
-import ToastMessage from '../components/ToastMessage'
-import Icon from '../constants/Icons'
-import PageTabs from '../components/PageTabs'
-import { fetchShipments } from '../services/api'
-import '../components/styles/Popup.css'
-import './styles/Dashboard.css'
+import { useState, useEffect, useCallback, lazy } from 'react';
+import type Shipment from '../models/shipment';
+import { shipmentStatusLabels } from '../models/shipment';
+import ShipmentInfoPopup from '../components/ShipmentInfoPopup';
+import SortDropdown from '../components/SortDropdown';
+import ToastMessage from '../components/ToastMessage';
+import Icon from '../constants/Icons';
+import PageTabs from '../components/PageTabs';
+import { fetchShipments } from '../services/api';
+import '../components/styles/Popup.css';
+import './styles/Dashboard.css';
 
-const AddShipmentPopup = lazy(() => import ('../components/AddShipmentPopup'));
+const AddShipmentPopup = lazy(() => import('../components/AddShipmentPopup'));
 
-const filters = ['Kaikki', 'Matkalla', 'Saapunut', 'Viivästynyt'] as const
+const filters = ['Kaikki', 'Matkalla', 'Saapunut', 'Viivästynyt'] as const;
 const sortOptions = [
-    { value: 'name', label: 'Nimi' },
-    { value: 'eta', label: 'Saapumisaika' },
-    { value: 'ship_updated_at', label: 'Päivitetty' },
-] as const
+	{ value: 'name', label: 'Nimi' },
+	{ value: 'eta', label: 'Saapumisaika' },
+	{ value: 'ship_updated_at', label: 'Päivitetty' },
+] as const;
 
-type SortOption = (typeof sortOptions)[number]['value']
+type SortOption = (typeof sortOptions)[number]['value'];
 
 const formatDateTime = (value: string | null, fallback: string) => {
-    if (!value) return fallback
+	if (!value) return fallback;
 
-    const date = new Date(value)
+	const date = new Date(value);
 
-    return date.toLocaleString('fi-FI', {
-        dateStyle: 'short',
-        timeStyle: 'short',
-    })
-}
+	return date.toLocaleString('fi-FI', {
+		dateStyle: 'short',
+		timeStyle: 'short',
+	});
+};
 
 export default function Dashboard() {
-    const [shipments, setShipments] = useState<Shipment[]>([])
-    const [search, setSearch] = useState('')
-    const [activeFilter, setActiveFilter] = useState<(typeof filters)[number]>('Kaikki')
-    const [sortBy, setSortBy] = useState<SortOption>('ship_updated_at')
-    const [activeMap, setActiveMap] = useState<Shipment | null>(null)
-    const [isAddPopupOpen, setIsAddPopupOpen] = useState(false)
-    const [isSortDirectionAsc, setIsSortDirectionAsc] = useState(false)
-    const [error, setError] = useState('')
-    const [successMessage, setSuccessMessage] = useState('')
+	const [shipments, setShipments] = useState<Shipment[]>([]);
+	const [search, setSearch] = useState('');
+	const [activeFilter, setActiveFilter] = useState<(typeof filters)[number]>('Kaikki');
+	const [sortBy, setSortBy] = useState<SortOption>('ship_updated_at');
+	const [activeMap, setActiveMap] = useState<Shipment | null>(null);
+	const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
+	const [isSortDirectionAsc, setIsSortDirectionAsc] = useState(false);
+	const [error, setError] = useState('');
+	const [successMessage, setSuccessMessage] = useState('');
 
-    const visibleShipments = shipments.filter((shipment) => {
-        const matchesSearch = `${shipment.shipment_name} ${shipment.mmsi}`
-            .toLocaleLowerCase('fi')
-            .includes(search.toLocaleLowerCase('fi'))
-        const matchesFilter = activeFilter === 'Kaikki' || shipmentStatusLabels[shipment.status] === activeFilter
+	const visibleShipments = shipments
+		.filter((shipment) => {
+			const matchesSearch = `${shipment.shipment_name} ${shipment.mmsi}`
+				.toLocaleLowerCase('fi')
+				.includes(search.toLocaleLowerCase('fi'));
+			const matchesFilter = activeFilter === 'Kaikki' || shipmentStatusLabels[shipment.status] === activeFilter;
 
-        return matchesSearch && matchesFilter
-    }).sort((a, b) => {
-        let comparison: number
+			return matchesSearch && matchesFilter;
+		})
+		.sort((a, b) => {
+			let comparison: number;
 
-        if (sortBy === 'name') {
-            comparison = a.shipment_name.localeCompare(b.shipment_name, 'fi')
-        } else if (sortBy === 'eta') {
-            if (!a.eta || !b.eta) {
-                if (!a.eta && !b.eta) return 0
-                return !a.eta ? 1 : -1
-            }
-            comparison = new Date(a.eta).getTime() - new Date(b.eta).getTime()
-        } else {
-            const aTime = a.ship_updated_at ? new Date(a.ship_updated_at).getTime() : 0
-            const bTime = b.ship_updated_at ? new Date(b.ship_updated_at).getTime() : 0
-            comparison = aTime - bTime
-        }
+			if (sortBy === 'name') {
+				comparison = a.shipment_name.localeCompare(b.shipment_name, 'fi');
+			} else if (sortBy === 'eta') {
+				if (!a.eta || !b.eta) {
+					if (!a.eta && !b.eta) return 0;
+					return !a.eta ? 1 : -1;
+				}
+				comparison = new Date(a.eta).getTime() - new Date(b.eta).getTime();
+			} else {
+				const aTime = a.ship_updated_at ? new Date(a.ship_updated_at).getTime() : 0;
+				const bTime = b.ship_updated_at ? new Date(b.ship_updated_at).getTime() : 0;
+				comparison = aTime - bTime;
+			}
 
-        return isSortDirectionAsc ? comparison : -comparison
-    })
+			return isSortDirectionAsc ? comparison : -comparison;
+		});
 
-    const populateShipmentList = useCallback(async () => {
-        try {
-            const shipmentData = await fetchShipments()
-            setShipments(shipmentData)
-            setError('')
-        } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : 'Yhteysvirhe'
-            setError(message)
-        }
-    }, [])
+	const populateShipmentList = useCallback(async () => {
+		try {
+			const shipmentData = await fetchShipments();
+			setShipments(shipmentData);
+			setError('');
+		} catch (error: unknown) {
+			const message = error instanceof Error ? error.message : 'Yhteysvirhe';
+			setError(message);
+		}
+	}, []);
 
-    const handleShipmentAdd = async () => {
-        setIsAddPopupOpen(false)
-        await populateShipmentList()
-        setSuccessMessage('Lähetys lisätty.')
-    }
+	const handleShipmentAdd = async () => {
+		setIsAddPopupOpen(false);
+		await populateShipmentList();
+		setSuccessMessage('Lähetys lisätty.');
+	};
 
-    useEffect(() => {
-        void Promise.resolve().then(populateShipmentList)
-    }, [populateShipmentList])
+	useEffect(() => {
+		void Promise.resolve().then(populateShipmentList);
+	}, [populateShipmentList]);
 
-    return (
-        <main className='dashboard-page'>
-            <div className='dashboard-main'>
-                <ToastMessage message={successMessage} onAfterToast={() => setSuccessMessage('')} />
-                <PageTabs />
-                <header className='dashboard-heading' aria-labelledby='page-title'>
-                    <h1>Lähetykset</h1>
-                    <button className='add-shipment-button' onClick={() => setIsAddPopupOpen(true)}>Lisää Lähetys</button>
-                </header>
+	return (
+		<main className='dashboard-page'>
+			<div className='dashboard-main'>
+				<ToastMessage message={successMessage} onAfterToast={() => setSuccessMessage('')} />
+				<PageTabs />
+				<header className='dashboard-heading' aria-labelledby='page-title'>
+					<h1>Lähetykset</h1>
+					<button className='add-shipment-button' onClick={() => setIsAddPopupOpen(true)}>
+						Lisää Lähetys
+					</button>
+				</header>
 
-                <section className='shipment-section' aria-label='Lähetyslista'>
-                    <div className='shipment-toolbar'>
-                        <div className='filter-tabs' role='group' aria-label='Suodata lähetyksiä'>
-                            {filters.map((filter) => {
-                                const count = filter === 'Kaikki'
-                                    ? shipments.length
-                                    : shipments.filter((shipment) => shipmentStatusLabels[shipment.status] === filter).length
+				<section className='shipment-section' aria-label='Lähetyslista'>
+					<div className='shipment-toolbar'>
+						<div className='filter-tabs' role='group' aria-label='Suodata lähetyksiä'>
+							{filters.map((filter) => {
+								const count =
+									filter === 'Kaikki'
+										? shipments.length
+										: shipments.filter((shipment) => shipmentStatusLabels[shipment.status] === filter).length;
 
-                                return (
-                                    <button
-                                        className={`filter-tab${activeFilter === filter ? ' filter-tab--active' : ''}`}
-                                        key={filter}
-                                        onClick={() => setActiveFilter(filter)}
-                                        type='button'
-                                        aria-pressed={activeFilter === filter}
-                                    >
-                                        <span>{filter}</span>
-                                        <span className='filter-count'>{count}</span>
-                                    </button>
-                                )
-                            })}
-                        </div>
-                        <div className='shipment-toolbar__actions'>
-                            <SortDropdown
-                                options={sortOptions}
-                                value={sortBy}
-                                onChange={setSortBy}
-                                isDirectionAscending={isSortDirectionAsc}
-                                onDirectionChange={() => setIsSortDirectionAsc((direction) => !direction)}
-                            />
-                            <label className='shipment-search'>
-                                <input
-                                    name='search'
-                                    type='search'
-                                    placeholder='Hae lähetyksiä'
-                                    value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
-                                />
-                                <span className='shipment-search__icon' aria-hidden='true'>
-                                    <Icon icon='search' size={20} color='#8b9498' viewbox='0 -960 960 760' />
-                                </span>
-                            </label>
-                        </div>
-                    </div>
+								return (
+									<button
+										className={`filter-tab${activeFilter === filter ? ' filter-tab--active' : ''}`}
+										key={filter}
+										onClick={() => setActiveFilter(filter)}
+										type='button'
+										aria-pressed={activeFilter === filter}
+									>
+										<span>{filter}</span>
+										<span className='filter-count'>{count}</span>
+									</button>
+								);
+							})}
+						</div>
+						<div className='shipment-toolbar__actions'>
+							<SortDropdown
+								options={sortOptions}
+								value={sortBy}
+								onChange={setSortBy}
+								isDirectionAscending={isSortDirectionAsc}
+								onDirectionChange={() => setIsSortDirectionAsc((direction) => !direction)}
+							/>
+							<label className='shipment-search'>
+								<input
+									name='search'
+									type='search'
+									placeholder='Hae lähetyksiä'
+									value={search}
+									onChange={(e) => setSearch(e.target.value)}
+								/>
+								<span className='shipment-search__icon' aria-hidden='true'>
+									<Icon icon='search' size={20} color='#8b9498' viewbox='0 -960 960 760' />
+								</span>
+							</label>
+						</div>
+					</div>
 
-                    <div className='shipment-list'>
-                        <div className='shipment-list__header' aria-hidden='true'>
-                            <span className='shipment-list__header-name'>
-                                <span>LÄHETYS</span>
-                                <span>Viimeksi päivitetty</span>
-                            </span>
-                            <span>Määränpää</span>
-                            <span>ARVIOITU SAAPUMISAIKA</span>
-                            <span>TILANNE</span>
-                        </div>
+					<div className='shipment-list'>
+						<div className='shipment-list__header' aria-hidden='true'>
+							<span className='shipment-list__header-name'>
+								<span>LÄHETYS</span>
+								<span>Viimeksi päivitetty</span>
+							</span>
+							<span>Määränpää</span>
+							<span>ARVIOITU SAAPUMISAIKA</span>
+							<span>TILANNE</span>
+						</div>
 
-                        {error && <p className="error-message">{error}</p>}
-                        {visibleShipments.map((shipment) => {
-                            return (
-                                <article
-                                    className='shipment-row'
-                                    key={shipment.id}
-                                    onClick={() => setActiveMap(shipment)}
-                                    onKeyDown={(e) => {
-                                        if (e.target !== e.currentTarget) return
-                                        if (e.key === 'Enter' || e.key === ' ') {
-                                            e.preventDefault()
-                                            setActiveMap(shipment)
-                                        }
-                                    }}
-                                    role='button'
-                                    tabIndex={0}
-                                    aria-label={`Avaa lähetyksen ${shipment.shipment_name} tiedot.`}
-                                >
-                                    <div className='shipment-name'>
-                                        <span className='mobile-field-label'>LÄHETYS</span>
-                                        <h2>{shipment.shipment_name}</h2>
-                                        <div className='shipment-updated-group'>
-                                            <span className='mobile-field-label'>Viimeksi päivitetty</span>
-                                            <span className='shipment-updated'>{formatDateTime(shipment.ship_updated_at, 'Ei päivitystietoa')}</span>
-                                        </div>
-                                    </div>
-                                    <div className='shipment-destination'>
-                                        <span className='mobile-field-label'>Määränpää</span>
-                                        <strong>{shipment.destination_name ?? 'Ei määritetty'}</strong>
-                                    </div>
-                                    <div className='shipment-eta'>
-                                        <span className='mobile-field-label'>ARVIOITU SAAPUMISAIKA</span>
-                                        <strong>{formatDateTime(shipment.eta, 'Ei arvioitua saapumisaikaa')}</strong>
-                                    </div>
-                                    <div className='shipment-status'>
-                                        <span className='mobile-field-label'>TILANNE</span>
-                                        <span className={`status-badge status-badge--${shipmentStatusLabels[shipment.status] === 'Matkalla' ? 'in-transit' : shipmentStatusLabels[shipment.status] === 'Saapunut' ? 'arrived' : 'delayed'}`}>
-                                            <span className='status-badge__dot' aria-hidden='true'></span>
-                                            {shipmentStatusLabels[shipment.status]}
-                                        </span>
-                                    </div>
-                                    <span className='shipment-row__open' aria-hidden='true'>↗</span>
-                                </article>
-                            )
-                        })}
-                        {visibleShipments.length === 0 && (
-                            <p className='empty-state'>Lähetyksiä ei löytynyt. Kokeile toista hakua tai suodatinta.</p>
-                        )}
-                    </div>
-                </section>
-            </div>
-            {activeMap && !isAddPopupOpen &&(
-                <ShipmentInfoPopup
-                    setActiveMap={setActiveMap}
-                    activeMap={activeMap}
-                    formatDateTime={formatDateTime}
-                />
-            )}
-            {isAddPopupOpen && !activeMap && (
-                <AddShipmentPopup onClose={() => setIsAddPopupOpen(false)} onAdd={handleShipmentAdd} />
-            )}
-        </main>
-    )
+						{error && <p className='error-message'>{error}</p>}
+						{visibleShipments.map((shipment) => {
+							return (
+								<article
+									className='shipment-row'
+									key={shipment.id}
+									onClick={() => setActiveMap(shipment)}
+									onKeyDown={(e) => {
+										if (e.target !== e.currentTarget) return;
+										if (e.key === 'Enter' || e.key === ' ') {
+											e.preventDefault();
+											setActiveMap(shipment);
+										}
+									}}
+									role='button'
+									tabIndex={0}
+									aria-label={`Avaa lähetyksen ${shipment.shipment_name} tiedot.`}
+								>
+									<div className='shipment-name'>
+										<span className='mobile-field-label'>LÄHETYS</span>
+										<h2>{shipment.shipment_name}</h2>
+										<div className='shipment-updated-group'>
+											<span className='mobile-field-label'>Viimeksi päivitetty</span>
+											<span className='shipment-updated'>
+												{formatDateTime(shipment.ship_updated_at, 'Ei päivitystietoa')}
+											</span>
+										</div>
+									</div>
+									<div className='shipment-destination'>
+										<span className='mobile-field-label'>Määränpää</span>
+										<strong>{shipment.destination_name ?? 'Ei määritetty'}</strong>
+									</div>
+									<div className='shipment-eta'>
+										<span className='mobile-field-label'>ARVIOITU SAAPUMISAIKA</span>
+										<strong>{formatDateTime(shipment.eta, 'Ei arvioitua saapumisaikaa')}</strong>
+									</div>
+									<div className='shipment-status'>
+										<span className='mobile-field-label'>TILANNE</span>
+										<span
+											className={`status-badge status-badge--${shipmentStatusLabels[shipment.status] === 'Matkalla' ? 'in-transit' : shipmentStatusLabels[shipment.status] === 'Saapunut' ? 'arrived' : 'delayed'}`}
+										>
+											<span className='status-badge__dot' aria-hidden='true'></span>
+											{shipmentStatusLabels[shipment.status]}
+										</span>
+									</div>
+									<span className='shipment-row__open' aria-hidden='true'>
+										↗
+									</span>
+								</article>
+							);
+						})}
+						{visibleShipments.length === 0 && (
+							<p className='empty-state'>Lähetyksiä ei löytynyt. Kokeile toista hakua tai suodatinta.</p>
+						)}
+					</div>
+				</section>
+			</div>
+			{activeMap && !isAddPopupOpen && (
+				<ShipmentInfoPopup setActiveMap={setActiveMap} activeMap={activeMap} formatDateTime={formatDateTime} />
+			)}
+			{isAddPopupOpen && !activeMap && (
+				<AddShipmentPopup onClose={() => setIsAddPopupOpen(false)} onAdd={handleShipmentAdd} />
+			)}
+		</main>
+	);
 }

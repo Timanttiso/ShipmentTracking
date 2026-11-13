@@ -159,12 +159,7 @@ export default function ShipManagerPopup({
 					) : (
 						<h2 id='add-ship-title'>Muokkaa laivaa</h2>
 					)}
-					<button
-						className='popup-dialog__close'
-						onClick={onClose}
-						type='button'
-						aria-label='Sulje ikkuna'
-					>
+					<button className='popup-dialog__close' onClick={onClose} type='button' aria-label='Sulje ikkuna'>
 						×
 					</button>
 				</header>

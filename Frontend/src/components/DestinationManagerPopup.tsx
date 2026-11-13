@@ -198,24 +198,14 @@ export default function DestinationManagerPopup({
 			role='presentation'
 		>
 			<ToastMessage message={successMessage} onAfterToast={() => setSuccessMessage('')} />
-			<section
-				className='popup-dialog'
-				role='dialog'
-				aria-modal='true'
-				aria-labelledby='add-destination-title'
-			>
+			<section className='popup-dialog' role='dialog' aria-modal='true' aria-labelledby='add-destination-title'>
 				<header className='popup-dialog__header'>
 					{activeTab === 'Lisää' ? (
 						<h2 id='add-destination-title'>Lisää määränpää</h2>
 					) : (
 						<h2 id='add-destination-title'>Muokkaa määränpäätä</h2>
 					)}
-					<button
-						className='popup-dialog__close'
-						onClick={onClose}
-						type='button'
-						aria-label='Sulje ikkuna'
-					>
+					<button className='popup-dialog__close' onClick={onClose} type='button' aria-label='Sulje ikkuna'>
 						×
 					</button>
 				</header>
@@ -280,11 +270,7 @@ export default function DestinationManagerPopup({
 						</label>
 					</div>
 
-					<LocationPicker
-						center={mapCenter}
-						coordinates={coordinates}
-						onSelect={handleSelectLocation}
-					/>
+					<LocationPicker center={mapCenter} coordinates={coordinates} onSelect={handleSelectLocation} />
 
 					{error && <p className='error-message'>{error}</p>}
 
