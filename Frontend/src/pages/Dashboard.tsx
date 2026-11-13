@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, lazy } from 'react'
 import type Shipment from '../models/shipment'
 import { shipmentStatusLabels } from '../models/shipment'
 import ShipmentInfoPopup from '../components/ShipmentInfoPopup'
-import SortDropdown, { type SortDirection } from '../components/SortDropdown'
+import SortDropdown from '../components/SortDropdown'
 import ToastMessage from '../components/ToastMessage'
 import Icon from '../constants/Icons'
 import PageTabs from '../components/PageTabs'
@@ -36,10 +36,10 @@ export default function Dashboard() {
     const [shipments, setShipments] = useState<Shipment[]>([])
     const [search, setSearch] = useState('')
     const [activeFilter, setActiveFilter] = useState<(typeof filters)[number]>('Kaikki')
-    const [sortBy, setSortBy] = useState<SortOption>('name')
+    const [sortBy, setSortBy] = useState<SortOption>('ship_updated_at')
     const [activeMap, setActiveMap] = useState<Shipment | null>(null)
     const [isAddPopupOpen, setIsAddPopupOpen] = useState(false)
-    const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
+    const [isSortDirectionAsc, setIsSortDirectionAsc] = useState(false)
     const [error, setError] = useState('')
     const [successMessage, setSuccessMessage] = useState('')
 
@@ -67,7 +67,7 @@ export default function Dashboard() {
             comparison = aTime - bTime
         }
 
-        return sortDirection === 'asc' ? comparison : -comparison
+        return isSortDirectionAsc ? comparison : -comparison
     })
 
     const populateShipmentList = useCallback(async () => {
@@ -128,10 +128,8 @@ export default function Dashboard() {
                                 options={sortOptions}
                                 value={sortBy}
                                 onChange={setSortBy}
-                                direction={sortDirection}
-                                onDirectionChange={() =>
-                                    setSortDirection((direction) => direction === 'asc' ? 'desc' : 'asc')
-                                }
+                                isDirectionAscending={isSortDirectionAsc}
+                                onDirectionChange={() => setIsSortDirectionAsc((direction) => !direction)}
                             />
                             <label className='shipment-search'>
                                 <input

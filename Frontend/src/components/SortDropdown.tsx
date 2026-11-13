@@ -8,21 +8,19 @@ interface SortDropdownOption<Value extends string> {
     label: string
 }
 
-export type SortDirection = 'asc' | 'desc'
-
 interface SortDropdownProps<Value extends string> {
     options: readonly SortDropdownOption<Value>[]
     value: Value
     onChange: (value: Value) => void
-    direction: SortDirection
-    onDirectionChange: (direction: SortDirection) => void
+    isDirectionAscending: boolean
+    onDirectionChange: (isSortDirectionAsc: boolean) => void
 }
 
 export default function SortDropdown<Value extends string>({
     options,
     value,
     onChange,
-    direction,
+    isDirectionAscending,
     onDirectionChange
 }: SortDropdownProps<Value>): ReactElement {
     const [isOpen, setIsOpen] = useState(false)
@@ -91,13 +89,13 @@ export default function SortDropdown<Value extends string>({
                 )}
             </div>
             <button
-                aria-label={`Järjestys: ${direction === 'asc' ? 'nouseva' : 'laskeva'}. Vaihda ${direction === 'asc' ? 'laskevaan' : 'nousevaan'} järjestykseen`}
+                aria-label={`Järjestys: ${isDirectionAscending  ? 'nouseva' : 'laskeva'}. Vaihda ${isDirectionAscending ? 'laskevaan' : 'nousevaan'} järjestykseen`}
                 className='shipment-sort-direction'
-                onClick={() => onDirectionChange(direction === 'asc' ? 'desc' : 'asc')}
-                title={direction === 'asc' ? 'Nouseva järjestys' : 'Laskeva järjestys'}
+                onClick={() => onDirectionChange(isDirectionAscending)}
+                title={isDirectionAscending ? 'Nouseva järjestys' : 'Laskeva järjestys'}
                 type='button'
             >
-                <span aria-hidden='true'>{direction === 'asc' ? '↑' : '↓'}</span>
+                <span aria-hidden='true'>{isDirectionAscending ? '↑' : '↓'}</span>
             </button>
         </div>
     )
