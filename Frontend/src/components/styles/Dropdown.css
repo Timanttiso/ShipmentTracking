@@ -86,6 +86,19 @@
     text-align: left;
 }
 
+.dropdown__option-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+}
+
+.dropdown__option-meta {
+    font-size: 12px;
+    color: #596678;
+    line-height: 1.2;
+}
+
 .dropdown__menu--select .dropdown__add-action,
 .dropdown__menu--select .dropdown__option {
     display: flex;
@@ -103,12 +116,10 @@
     margin-bottom: 4px;
     border: 0;
     border-bottom: 1px solid #e9e5dc;
-    border-radius: 2px 2px 0 0;
     background: transparent;
     color: var(--dash-navy, #172b3a);
     cursor: pointer;
     font: inherit;
-    font-size: 13px;
     font-weight: 700;
 }
 

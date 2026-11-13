@@ -157,22 +157,23 @@ export default function AddShipmentPopup({ onClose, onAdd }: AddShipmentPopupPro
 							/>
 						</label>
 
-						<label className='popup-form__field'>
+						<div className='popup-form__field'>
 							<span>Laiva</span>
 							<Dropdown
-								getOptionLabel={(ship) => ship?.ship_nickname ?? null}
+								getOptionLabel={(s) => s?.ship_nickname ?? null}
+								getMmsiLabel={(s) => s?.mmsi ?? null}
 								label='Laiva'
 								options={ships}
 								selectedOption={selectedShip}
 								onChange={(option) => setSelectedShip(option)}
 								onAdd={() => setIsShipManagerOpen(true)}
 							/>
-						</label>
+						</div>
 
 						<div className='popup-form__field'>
 							<span>Määränpää</span>
 							<Dropdown
-								getOptionLabel={(destination) => destination?.destination_name ?? null}
+								getOptionLabel={(d) => d?.destination_name ?? null}
 								label='Määränpää'
 								options={destinations}
 								selectedOption={selectedDestination ?? defaultDestination}
