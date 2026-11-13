@@ -16,7 +16,7 @@ const filters = ['Kaikki', 'Matkalla', 'Saapunut', 'Viivästynyt'] as const
 const sortOptions = [
     { value: 'name', label: 'Nimi' },
     { value: 'eta', label: 'Saapumisaika' },
-    { value: 'updated_at', label: 'Päivitetty' },
+    { value: 'ship_updated_at', label: 'Päivitetty' },
 ] as const
 
 type SortOption = (typeof sortOptions)[number]['value']
@@ -62,8 +62,8 @@ export default function Dashboard() {
             }
             comparison = new Date(a.eta).getTime() - new Date(b.eta).getTime()
         } else {
-            const aTime = a.updated_at ? new Date(a.updated_at).getTime() : 0
-            const bTime = b.updated_at ? new Date(b.updated_at).getTime() : 0
+            const aTime = a.ship_updated_at ? new Date(a.ship_updated_at).getTime() : 0
+            const bTime = b.ship_updated_at ? new Date(b.ship_updated_at).getTime() : 0
             comparison = aTime - bTime
         }
 
@@ -182,7 +182,7 @@ export default function Dashboard() {
                                         <h2>{shipment.shipment_name}</h2>
                                         <div className='shipment-updated-group'>
                                             <span className='mobile-field-label'>Viimeksi päivitetty</span>
-                                            <span className='shipment-updated'>{formatDateTime(shipment.updated_at ?? shipment.created_at, 'Ei päivitystietoa')}</span>
+                                            <span className='shipment-updated'>{formatDateTime(shipment.ship_updated_at, 'Ei päivitystietoa')}</span>
                                         </div>
                                     </div>
                                     <div className='shipment-destination'>
@@ -210,14 +210,14 @@ export default function Dashboard() {
                     </div>
                 </section>
             </div>
-            {activeMap && (
+            {activeMap && !isAddPopupOpen &&(
                 <ShipmentInfoPopup
                     setActiveMap={setActiveMap}
                     activeMap={activeMap}
                     formatDateTime={formatDateTime}
                 />
             )}
-            {isAddPopupOpen && (
+            {isAddPopupOpen && !activeMap && (
                 <AddShipmentPopup onClose={() => setIsAddPopupOpen(false)} onAdd={handleShipmentAdd} />
             )}
         </main>

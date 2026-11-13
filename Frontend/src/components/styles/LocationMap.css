@@ -23,6 +23,23 @@
     font-size: 0.9rem;
 }
 
+.marker-pin {
+    stroke: white;
+    stroke-width: 2px;
+    stroke-linejoin: round;
+}
+
+.destination-marker { fill: #3f48c5; }
+.shipment-marker { fill: #527c67; }
+
+.marker-icon {
+    position: absolute;
+    top: 6px;
+    left: 7px;
+    width: 22px;
+    height: 22px;
+}
+
 @media (max-width: 600px) {
     .location-picker__map {
         height: 300px;

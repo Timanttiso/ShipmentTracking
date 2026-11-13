@@ -1,7 +1,7 @@
 import { MapContainer, Marker, TileLayer, useMapEvents, useMap } from 'react-leaflet'
 import { useEffect } from 'react'
 import 'leaflet/dist/leaflet.css'
-import './styles/LocationPicker.css'
+import './styles/LocationMap.css'
 
 interface LocationCoordinates {
     lat: number

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-type IconName = 'visibility' | 'visibilityOff' | 'search' | 'chevron' | 'settings' | 'exit' | 'checkmark' | 'x'
+type IconName = 'visibility' | 'visibilityOff' | 'search' | 'chevron' | 'settings' | 'exit' | 'checkmark' | 'x' | 'location'
 
 interface IconProps {
     icon: IconName
@@ -39,6 +39,12 @@ const iconPaths: Record<IconName, ReactNode> = {
     ),
     x: (
         <path d='M4.4 4.4L10 10l5.6-5.6 1.2 1.2L11.2 11.2l5.6 5.6-1.2 1.2L10 12.4 4.4 18l-1.2-1.2 5.6-5.6-5.6-5.6z' />
+    ),
+    location: (
+        <>
+            <path d='M20 10.2c0 5.2-8 11.3-8 11.3S4 15.4 4 10.2a8 8 0 1 1 16 0Z' fill='none' />
+            <circle cx='12' cy='10' r='2.5' fill='none' />
+        </>
     )
 }
 

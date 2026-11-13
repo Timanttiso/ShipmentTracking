@@ -1,20 +1,14 @@
 import { useEffect, type JSX, type Dispatch, type SetStateAction } from 'react'
 import type Shipment from '../models/shipment'
 import { shipmentStatusLabels } from '../models/shipment'
+import LocationDisplay from './LocationDisplay'
+import Icon from '../constants/Icons'
 import './styles/ShipmentInfoPopup.css'
 
 interface shipmentInfoPopupProps {
     setActiveMap: Dispatch<SetStateAction<Shipment | null>>
     activeMap: Shipment
     formatDateTime: (value: string | null, fallback: string) => string
-}
-
-const mapEmbedUrl = (shipment: Shipment, zoom = 6) => {
-    if (!shipment.lon || !shipment.lat) {
-        return `https://maps.google.com/maps?output=embed`
-    } else {
-        return `https://maps.google.com/maps?q=${shipment.lat},${shipment.lon}&z=${zoom}&output=embed`
-    }
 }
 
 export default function ShipmentInfoPopup({ setActiveMap, activeMap, formatDateTime }: shipmentInfoPopupProps): JSX.Element {
@@ -60,7 +54,7 @@ export default function ShipmentInfoPopup({ setActiveMap, activeMap, formatDateT
                 </header>
                 <dl className='map-dialog__details'>
                     <div><dt>Arvioitu saapumisaika</dt><dd>{formatDateTime(activeMap.eta, 'Ei arvioitua saapumisaikaa')}</dd></div>
-                    <div><dt>Viimeksi päivitetty</dt><dd>{formatDateTime(activeMap.updated_at ?? activeMap.created_at, 'Ei päivitystietoa')}</dd></div>
+                    <div><dt>Viimeksi päivitetty</dt><dd>{formatDateTime(activeMap.ship_updated_at, 'Ei päivitystietoa')}</dd></div>
                     <div><dt>Määränpää</dt><dd>{activeMap.destination_name}</dd></div>
                     <div><dt>MMSI</dt><dd>{activeMap.mmsi}</dd></div>
                     <div>
@@ -73,11 +67,26 @@ export default function ShipmentInfoPopup({ setActiveMap, activeMap, formatDateT
                         </dd>
                     </div>
                 </dl>
-                <iframe
-                    src={mapEmbedUrl(activeMap, 6)}
-                    title={`Kartta: ${activeMap.shipment_name}`}
-                    allowFullScreen
-                />
+                {activeMap.lat !== null && activeMap.lon !== null ? (
+                    <LocationDisplay
+                        destinationCoordinates={{ lat: activeMap.destination_lat, lng: activeMap.destination_lon }}
+                        shipCoordinates={{ lat: activeMap.lat, lng: activeMap.lon }}
+                    />
+                ) : (
+                    <div className='map-empty-state' role='status'>
+                        <div className='map-empty-state__icon' aria-hidden='true'>
+                            <Icon icon='location' size={30} viewbox='0 0 24 24' color='none' stroke='#527c67' />
+                        </div>
+                        <div className='map-empty-state__copy'>
+                            <h3>Sijainti ei ole vielä saatavilla</h3>
+                            <p>Lähetystäsi kuljettavan laivan sijainti näytetään tässä, kun se on havaittu.</p>
+                        </div>
+                        <span className='map-empty-state__status'>
+                            <span aria-hidden='true'></span>
+                            Odottaa sijaintitietoa
+                        </span>
+                    </div>
+                )}
             </section>
         </div>
     )

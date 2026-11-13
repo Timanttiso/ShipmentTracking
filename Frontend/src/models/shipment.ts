@@ -9,20 +9,21 @@ export const shipmentStatusLabels: Record<ShipmentStatus, string> = {
 export default interface Shipment {
 	id: number;
 	shipment_name: string;
-	ship_id: number;
 	eta: string | null;
 	status: ShipmentStatus;
-	user_id: number;
+	ship_name: string | null;
+	ship_updated_at: string | null;
+	mmsi: string;
+	lon: number | null;
+	lat: number | null;
 	created_at: string | null;
 	updated_at: string | null;
 	destination_id: number | null;
 	destination_name: string;
 	destination_lon: number;
 	destination_lat: number;
-	ship_name: string | null;
-	mmsi: string;
-	lon: number | null;
-	lat: number | null;
+	ship_id: number;
+	user_id: number;
 }
 
 export interface CreatedShipment {
@@ -30,9 +31,9 @@ export interface CreatedShipment {
 	shipment_name: string;
 	eta: string | null;
 	status: ShipmentStatus;
-	user_id: number;
 	created_at: string | null;
 	updated_at: string | null;
 	destination_id: number | null;
 	ship_id: number;
+	user_id: number;
 }
