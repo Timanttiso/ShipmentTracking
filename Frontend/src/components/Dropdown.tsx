@@ -9,6 +9,7 @@ interface DropdownProps<T extends { id: number }> {
 	selectedOption: T | null;
 	onChange: (option: T) => void;
 	onAdd: () => void;
+	dropdownDisabled?: boolean
 }
 
 export default function Dropdown<T extends { id: number }>({
@@ -19,6 +20,7 @@ export default function Dropdown<T extends { id: number }>({
 	selectedOption,
 	onChange,
 	onAdd,
+	dropdownDisabled = false
 }: DropdownProps<T>): ReactElement {
 	const [isOpen, setIsOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
@@ -61,6 +63,7 @@ export default function Dropdown<T extends { id: number }>({
 				onClick={() => setIsOpen((open) => !open)}
 				ref={triggerRef}
 				type='button'
+				disabled={dropdownDisabled}
 			>
 				<span className='dropdown__value'>{getOptionLabel(selectedOption) ?? `Valitse ${label}`}</span>
 				<span className='dropdown__chevron' aria-hidden='true' />

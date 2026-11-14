@@ -138,6 +138,8 @@ export default function ShipManagerPopup({
 		setShipToEdit(null);
 	};
 
+	const hasNoShipToEdit = activeTab === 'Muokkaa' && !shipToEdit
+
 	return (
 		<div
 			className='popup-backdrop popup-backdrop--compact'
@@ -185,7 +187,7 @@ export default function ShipManagerPopup({
 								<span>Valitse laiva</span>
 								<select
 									className='manager-popup__select'
-									name='selected_destination'
+									name='selected_ship'
 									value={shipToEdit?.id ?? ''}
 									onChange={handleShipSelect}
 									required
@@ -219,6 +221,7 @@ export default function ShipManagerPopup({
 										: (e) => setShipToEditName(e.target.value)
 								}
 								placeholder='Esim. Lentävä Hollantilainen'
+								disabled={hasNoShipToEdit}
 								required
 								maxLength={100}
 							/>
@@ -240,6 +243,7 @@ export default function ShipManagerPopup({
 										: (e) => setShipToEditMmsi(e.target.value)
 								}
 								placeholder='Esim. 123456789'
+								disabled={hasNoShipToEdit}
 								required
 								minLength={9}
 								maxLength={9}

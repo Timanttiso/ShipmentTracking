@@ -9,8 +9,7 @@
 .map-dialog__details {
     display: flex;
     gap: 13px 20px;
-    margin: 0;
-    padding: 0 2px 16px;
+    margin: 0 2px 16px;
 }
 
 .map-dialog__details > div {
@@ -124,6 +123,37 @@
     .map-dialog__details {
         padding-bottom: 5px;
     }
+}
+
+
+.shipment-info__edit-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid var(--dash-navy, #172b3a);
+    background: var(--dash-navy, #172b3a);
+    color: #fff;
+}
+
+.shipment-info__edit-icon {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.shipment-info__edit-button:hover:not(:disabled) {
+    border-color: #102231;
+    background: #102231;
+    box-shadow: 0 2px 6px rgba(17, 32, 43, .18);
+}
+
+.shipment-info__edit-button:focus-visible {
+    outline: 2px solid var(--dash-navy, #172b3a);
+    outline-offset: 3px;
 }
 
 @media (max-width: 640px) {

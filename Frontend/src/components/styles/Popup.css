@@ -99,6 +99,13 @@
     font-size: 14px;
 }
 
+.popup-form__field input:disabled {
+    border-color: #dedfdc;
+    background: #f2f1ed;
+    color: #969b9a;
+    cursor: default;
+}
+
 .popup-form__field input::placeholder {
     color: #a0a7a5;
 }

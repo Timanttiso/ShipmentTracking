@@ -264,6 +264,7 @@ export default function DestinationManagerPopup({
 										: (e) => setDestinationToEditName(e.target.value)
 								}
 								placeholder='Esim. Kokkolan kantasatama'
+								disabled={activeTab === 'Muokkaa' && !destinationToEdit}
 								required
 								maxLength={120}
 							/>

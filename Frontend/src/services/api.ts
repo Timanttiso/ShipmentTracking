@@ -4,21 +4,53 @@ import type { CreatedShipment } from '../models/shipment';
 import type Destination from '../models/destination';
 import type Ship from '../models/ship';
 
-interface AddShipmentRequest {
+interface ShipmentRequest {
 	shipment_name: string;
 	ship_id: number;
 	eta: string | null;
 	destination_id: number | null;
 }
 
+interface UpdatedShipment {
+	id: number;
+	shipment_name: string;
+	eta: string;
+	status: number;
+	user_id: number;
+	created_at: string;
+	updated_at: string;
+	destination_id: number;
+	ship_id: number;
+}
+
 export const fetchShipments = (): Promise<Shipment[]> => {
 	return requestHelper<Shipment[]>('/api/shipments', true);
 };
 
-export const addShipment = (shipment: AddShipmentRequest): Promise<[CreatedShipment]> => {
+// fetchShipment is used only to fetch an updated shipment. Could be avoided,
+// if the udpdateShipment route returned the shipment
+// in the same format as the shipments route.
+export const fetchShipment = (id: number): Promise<Shipment> => {
+	return requestHelper<Shipment>(`/api/shipments/shipment/${id}`, true);
+};
+
+export const addShipment = (shipment: ShipmentRequest): Promise<[CreatedShipment]> => {
 	return requestHelper<[CreatedShipment]>('/api/shipments/add-shipment', true, {
 		method: 'POST',
 		body: JSON.stringify(shipment),
+	});
+};
+
+export const updateShipment = (id: number, shipment: ShipmentRequest): Promise<[UpdatedShipment]> => {
+	return requestHelper<[UpdatedShipment]>(`/api/shipments/shipment/${id}`, true, {
+		method: 'PATCH',
+		body: JSON.stringify(shipment),
+	});
+};
+
+export const deleteShipment = (id: number): Promise<void> => {
+	return requestHelper<void>(`/api/shipments/shipment/${id}`, true, {
+		method: 'DELETE',
 	});
 };
 

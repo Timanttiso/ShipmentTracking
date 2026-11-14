@@ -85,6 +85,10 @@
     flex-wrap: wrap;
 }
 
+.eta-input:hover:not(:disabled) {
+    cursor: pointer;
+}
+
 @media (max-width: 640px) {
     .manager-popup-inputs {
         flex-direction: column;

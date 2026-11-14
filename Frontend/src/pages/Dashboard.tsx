@@ -10,7 +10,7 @@ import { fetchShipments } from '../services/api';
 import '../components/styles/Popup.css';
 import './styles/Dashboard.css';
 
-const AddShipmentPopup = lazy(() => import('../components/AddShipmentPopup'));
+const ShipmentManagerPopup = lazy(() => import('../components/ShipmentManagerPopup'));
 
 const filters = ['Kaikki', 'Matkalla', 'Saapunut', 'Viivästynyt'] as const;
 const sortOptions = [
@@ -38,7 +38,7 @@ export default function Dashboard() {
 	const [activeFilter, setActiveFilter] = useState<(typeof filters)[number]>('Kaikki');
 	const [sortBy, setSortBy] = useState<SortOption>('ship_updated_at');
 	const [activeMap, setActiveMap] = useState<Shipment | null>(null);
-	const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
+	const [isShipmentManagerPopupOpen, setIsShipmentManagerPopupOpen] = useState(false);
 	const [isSortDirectionAsc, setIsSortDirectionAsc] = useState(false);
 	const [error, setError] = useState('');
 	const [successMessage, setSuccessMessage] = useState('');
@@ -84,9 +84,15 @@ export default function Dashboard() {
 	}, []);
 
 	const handleShipmentAdd = async () => {
-		setIsAddPopupOpen(false);
+		setIsShipmentManagerPopupOpen(false);
 		await populateShipmentList();
 		setSuccessMessage('Lähetys lisätty.');
+	};
+
+	const handleShipmentUpdate = async () => {
+		setIsShipmentManagerPopupOpen(false);
+		await populateShipmentList();
+		setSuccessMessage('Lähetys Päivitetty.');
 	};
 
 	useEffect(() => {
@@ -100,7 +106,7 @@ export default function Dashboard() {
 				<PageTabs />
 				<header className='dashboard-heading' aria-labelledby='page-title'>
 					<h1>Lähetykset</h1>
-					<button className='add-shipment-button' onClick={() => setIsAddPopupOpen(true)}>
+					<button className='add-shipment-button' onClick={() => setIsShipmentManagerPopupOpen(true)}>
 						Lisää Lähetys
 					</button>
 				</header>
@@ -219,11 +225,25 @@ export default function Dashboard() {
 					</div>
 				</section>
 			</div>
-			{activeMap && !isAddPopupOpen && (
-				<ShipmentInfoPopup setActiveMap={setActiveMap} activeMap={activeMap} formatDateTime={formatDateTime} />
+			{activeMap && !isShipmentManagerPopupOpen && (
+				<ShipmentInfoPopup
+					setActiveMap={setActiveMap}
+					activeMap={activeMap}
+					formatDateTime={formatDateTime}
+					setSuccessMessage={setSuccessMessage}
+					populateShipments={() => populateShipmentList()}
+
+					shipments={shipments}
+					onAdd={handleShipmentAdd}
+				/>
 			)}
-			{isAddPopupOpen && !activeMap && (
-				<AddShipmentPopup onClose={() => setIsAddPopupOpen(false)} onAdd={handleShipmentAdd} />
+			{isShipmentManagerPopupOpen && !activeMap && (
+				<ShipmentManagerPopup
+					shipments={shipments}
+					onClose={() => setIsShipmentManagerPopupOpen(false)}
+					onAdd={handleShipmentAdd}
+					onUpdate={handleShipmentUpdate}
+				/>
 			)}
 		</main>
 	);

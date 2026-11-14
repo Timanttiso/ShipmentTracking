@@ -7,13 +7,20 @@
     text-align: left;
 }
 
+.dropdown__trigger:disabled {
+    border-color: #dedfdc;
+    background: #f2f1ed;
+    color: #969b9a;
+    cursor: default;
+}
+
 .dropdown__trigger:focus-visible,
 .dropdown__option:focus-visible {
     outline: 2px solid var(--dash-accent);
     outline-offset: 2px;
 }
 
-.dropdown__trigger:hover {
+.dropdown__trigger:hover:not(:disabled) {
     border-color: #c4c9c5;
 }
 
