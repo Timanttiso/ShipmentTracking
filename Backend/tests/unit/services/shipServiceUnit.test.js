@@ -236,11 +236,167 @@ describe('Ship service unit tests', () => {
         expect(Ship.GetById).toHaveBeenCalledWith(2)
 
         expect(User_Ship.GetUserShipByShipId).toHaveBeenCalledTimes(2)
+        expect(User_Ship.GetUserShipByShipId).toHaveBeenNthCalledWith(1, 8, 2)
+        expect(User_Ship.GetUserShipByShipId).toHaveBeenNthCalledWith(2, 8, 2)
 
         expect(User_Ship.UpdateShipNickname).toHaveBeenCalledOnce()
         expect(User_Ship.UpdateShipNickname).toHaveBeenCalledWith(8, 2, input.ship_nickname)
 
         expect(requestSubscriptionReload).not.toHaveBeenCalledOnce()
         expect(User_Ship.UpdateConnection).not.toHaveBeenCalledOnce()
+    }),
+
+    test('Update ship with mmsi without an existing ship', async () => {
+        const input = {
+            ship_nickname: null,
+            mmsi: '210771000'
+        }
+
+        const output = {
+            id: 3,
+            ship_name: null,
+            mmsi: '210771000',
+            lon: null,
+            lat: null,
+            updated_at: null,
+            ship_nickname: 'UnitTestShip2'
+        }
+
+        const existingShip = {
+            id: 2,
+            ship_name: null,
+            mmsi: '230981710',
+            lon: null,
+            lat: null,
+            updated_at: null
+        }
+
+        const addedShip = {
+            id: 3,
+            ship_name: null,
+            mmsi: '210771000',
+            lon: null,
+            lat: null,
+            updated_at: null
+        }
+
+        const existingFullShip = {
+            id: 2,
+            ship_name: null,
+            mmsi: '230981710',
+            lon: null,
+            lat: null,
+            updated_at: null,
+            ship_nickname: 'UnitTestShip2'
+        }
+
+        Ship.GetById.mockResolvedValue(existingShip)
+        Ship.Add.mockResolvedValue(addedShip)
+        User_Ship.GetUserShipByShipId
+            .mockResolvedValueOnce(existingFullShip)
+            .mockResolvedValueOnce(null)
+            .mockResolvedValueOnce(output)
+        Ship.GetByMMSI.mockResolvedValue(null)
+
+        const result = await ShipService.UpdateShip(8, 2, input)
+
+        expect(result).toEqual(output)
+
+        expect(Ship.GetById).toHaveBeenCalledOnce()
+        expect(Ship.GetById).toHaveBeenCalledWith(2)
+
+        expect(User_Ship.GetUserShipByShipId).toHaveBeenCalledTimes(3)
+        expect(User_Ship.GetUserShipByShipId).toHaveBeenNthCalledWith(1, 8, 2)
+        expect(User_Ship.GetUserShipByShipId).toHaveBeenNthCalledWith(2, 8, 3)
+        expect(User_Ship.GetUserShipByShipId).toHaveBeenLastCalledWith(8, 3)
+
+        expect(User_Ship.UpdateShipNickname).not.toHaveBeenCalledOnce()
+
+        expect(Ship.GetByMMSI).toHaveBeenCalledOnce()
+        expect(Ship.GetByMMSI).toHaveBeenCalledWith('210771000')
+
+        expect(Ship.Add).toHaveBeenCalledOnce()
+        expect(Ship.Add).toHaveBeenCalledWith('210771000')
+
+        expect(User_Ship.UpdateConnection).toHaveBeenCalledOnce()
+        expect(User_Ship.UpdateConnection).toHaveBeenCalledWith(8, 3, 2)
+
+        expect(requestSubscriptionReload).toHaveBeenCalledOnce()
+    }),
+
+    test('Update a ship mmsi with an existing ship', async () => {
+        const input = {
+            ship_nickname: null,
+            mmsi: '210771000'
+        }
+
+        const output = {
+            id: 3,
+            ship_name: null,
+            mmsi: '210771000',
+            lon: null,
+            lat: null,
+            updated_at: null,
+            ship_nickname: 'UnitTestShip2'
+        }
+
+        const existingShip = {
+            id: 2,
+            ship_name: null,
+            mmsi: '230981710',
+            lon: null,
+            lat: null,
+            updated_at: null
+        }
+
+        const existingShip2 = {
+            id: 3,
+            ship_name: null,
+            mmsi: '210771000',
+            lon: null,
+            lat: null,
+            updated_at: null
+        }
+
+        const existingFullShip = {
+            id: 2,
+            ship_name: null,
+            mmsi: '230981710',
+            lon: null,
+            lat: null,
+            updated_at: null,
+            ship_nickname: 'UnitTestShip2'
+        }
+
+        Ship.GetById.mockResolvedValue(existingShip)
+        User_Ship.GetUserShipByShipId
+            .mockResolvedValueOnce(existingFullShip)
+            .mockResolvedValueOnce(null)
+            .mockResolvedValueOnce(output)
+        Ship.GetByMMSI.mockResolvedValue(existingShip2)
+
+        const result = await ShipService.UpdateShip(8, 2, input)
+
+        expect(result).toEqual(output)
+
+        expect(Ship.GetById).toHaveBeenCalledOnce()
+        expect(Ship.GetById).toHaveBeenCalledWith(2)
+
+        expect(User_Ship.GetUserShipByShipId).toHaveBeenCalledTimes(3)
+        expect(User_Ship.GetUserShipByShipId).toHaveBeenNthCalledWith(1, 8, 2)
+        expect(User_Ship.GetUserShipByShipId).toHaveBeenNthCalledWith(2, 8, 3)
+        expect(User_Ship.GetUserShipByShipId).toHaveBeenLastCalledWith(8, 3)
+
+        expect(User_Ship.UpdateShipNickname).not.toHaveBeenCalledOnce()
+
+        expect(Ship.GetByMMSI).toHaveBeenCalledOnce()
+        expect(Ship.GetByMMSI).toHaveBeenCalledWith('210771000')
+
+        expect(Ship.Add).not.toHaveBeenCalledOnce()
+
+        expect(User_Ship.UpdateConnection).toHaveBeenCalledOnce()
+        expect(User_Ship.UpdateConnection).toHaveBeenCalledWith(8, 3, 2)
+
+        expect(requestSubscriptionReload).toHaveBeenCalledOnce()
     })
 })
