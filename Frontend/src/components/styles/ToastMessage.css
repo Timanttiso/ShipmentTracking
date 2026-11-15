@@ -1,6 +1,6 @@
 .toast {
     position: fixed;
-    z-index: 110;
+    z-index: 510;
     top: 84px;
     right: clamp(16px, 4vw, 40px);
     display: flex;

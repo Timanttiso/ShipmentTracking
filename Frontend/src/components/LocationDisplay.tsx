@@ -40,19 +40,17 @@ const destinationIcon = divIcon({
 
 export default function LocationDisplay({ shipCoordinates, destinationCoordinates }: LocationDisplayProps) {
 	return (
-		<div className='location-picker'>
-			<MapContainer center={[shipCoordinates.lat, shipCoordinates.lng]} zoom={6} className='location-picker__map'>
-				<TileLayer
-					attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-					url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-				/>
-				<Marker position={[shipCoordinates.lat, shipCoordinates.lng]} icon={shipmentIcon}>
-					<Tooltip direction='bottom'>Lähetystäsi kuljettava laiva</Tooltip>
-				</Marker>
-				<Marker position={[destinationCoordinates.lat, destinationCoordinates.lng]} icon={destinationIcon}>
-					<Tooltip direction='bottom'>Määränpää satama</Tooltip>
-				</Marker>
-			</MapContainer>
-		</div>
+		<MapContainer center={[shipCoordinates.lat, shipCoordinates.lng]} zoom={6} className='location-map'>
+			<TileLayer
+				attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+				url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+			/>
+			<Marker position={[shipCoordinates.lat, shipCoordinates.lng]} icon={shipmentIcon}>
+				<Tooltip direction='bottom'>Lähetystäsi kuljettava laiva</Tooltip>
+			</Marker>
+			<Marker position={[destinationCoordinates.lat, destinationCoordinates.lng]} icon={destinationIcon}>
+				<Tooltip direction='bottom'>Määränpää satama</Tooltip>
+			</Marker>
+		</MapContainer>
 	);
 }

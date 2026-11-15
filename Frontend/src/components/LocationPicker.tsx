@@ -44,7 +44,7 @@ export default function LocationPicker({ center, coordinates, onSelect }: Locati
 	};
 
 	return (
-		<div className='location-picker'>
+		<>
 			<p className='location-picker__instructions'>
 				Valitse määränpään sijainti klikkaamalla karttaa. Määränpään tulisi olla sinua lähin satama, johon
 				oletat lähetyksesi saapuvan. Tämän avulla merkitään milloin lähetyksesi on saapunut satamaan.
@@ -52,7 +52,7 @@ export default function LocationPicker({ center, coordinates, onSelect }: Locati
 			<MapContainer
 				center={[coordinates.lat, coordinates.lng]}
 				zoom={12}
-				className='location-picker__map'
+				className='location-map'
 				aria-label='Valitse määränpään sijainti kartalta'
 			>
 				<TileLayer
@@ -63,6 +63,6 @@ export default function LocationPicker({ center, coordinates, onSelect }: Locati
 				<MapClickHandler onSelect={handleSelect} />
 				<Marker position={[coordinates.lat, coordinates.lng]} />
 			</MapContainer>
-		</div>
+		</>
 	);
 }
