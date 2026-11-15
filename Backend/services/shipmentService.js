@@ -59,8 +59,11 @@ const ShipmentService = {
                 throw new ApiError('Destination not found in UpdateShipmentInformation() for user', 404, 'Päämäärää ei löydetty')
             }
         }
+        await Shipment.updateShipmentInformation(id, user_id, {shipment_name, eta, destination_id, ship_id})
 
-        return Shipment.updateShipmentInformation(id, user_id, {shipment_name, eta, destination_id, ship_id})
+        const updatedShipment = await Shipment.getById(id, user_id)
+        
+        return updatedShipment
     },
 
     async UpdateShipmentStatus(id, user_id, { status }){

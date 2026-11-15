@@ -198,11 +198,15 @@ describe('Shipment integration tests', async () => {
             .expect('Content-Type', /application\/json/)
             .expect(200)
 
-        expect(response.body[0].shipment_name).toBe(shipment2Edited.shipment_name)
-        expect(response.body[0].eta).toBe(shipment2Edited.eta)
-        expect(response.body[0].destination_id).toBe(shipment2Edited.destination_id)
-        expect(response.body[0].ship_id).toBe(shipment2Edited.ship_id)
-        expect(response.body[0].user_id).toBe(user.id)
+        expect(response.body.shipment_name).toBe(shipment2Edited.shipment_name)
+        expect(response.body.eta).toBe(shipment2Edited.eta)
+        expect(response.body.destination_id).toBe(shipment2Edited.destination_id)
+        expect(response.body.ship_id).toBe(shipment2Edited.ship_id)
+        expect(response.body.user_id).toBe(user.id)
+        expect(response.body.destination_name).toBe(destinationInDb2.destination_name)
+        expect(response.body.destination_lon).toBe(destinationInDb2.lon)
+        expect(response.body.destination_lat).toBe(destinationInDb2.lat)
+        expect(response.body.mmsi).toBe(shipInDb.mmsi)
     }),
 
     test('Delete a shipment', async () => {
