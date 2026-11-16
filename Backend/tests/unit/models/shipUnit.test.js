@@ -114,5 +114,16 @@ describe('Ship model unit tests', () => {
         const result = await Ship.getMMSIs()
 
         expect(result).toEqual(output)
+    }),
+
+    test('Delete depricated ships', async () => {
+        const ship = await Ship.Add('210771000')
+        await Ship.Add('305665000')
+
+        await db('user_ships').insert({ user_id: user.id, ship_id: ship.id, ship_nickname: 'UnitTestShip1' })
+
+        const result = await Ship.DeleteDeprecated()
+
+        expect(result).toBe(1)
     })
 })
