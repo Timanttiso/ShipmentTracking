@@ -2,13 +2,14 @@ import { describe, test, expect, beforeEach, afterAll } from "vitest";
 import db from "../../../db/db.js";
 import User_Ship from '../../../models/user_ship.js'
 
-let user, ship, ship2, link1, link2
+let user, ship, ship2, ship3, link1, link2
 
 beforeEach(async () => {
     await db.raw('TRUNCATE users, destinations, shipments, ships, user_ships RESTART IDENTITY CASCADE');
     [user] = await db('users').insert({ username: 'UnitTestUser', password_hash: 'TestPass', email:'UnitTestUser@Test.com' }).returning('*');
     [ship] = await db('ships').insert({ mmsi: '210771000' }).returning('*');
     [ship2] = await db('ships').insert({ mmsi: '305665000' }).returning('*');
+    [ship3] = await db('ships').insert({ mmsi: '230981710' }).returning('*');
     [link1] = await db('user_ships').insert({ user_id: user.id, ship_id: ship.id, ship_nickname: 'UnitTestShip1'}).returning('*');
     [link2] = await db('user_ships').insert({ user_id: user.id, ship_id: ship2.id, ship_nickname: 'UnitTestShip2'}).returning('*')
 })
@@ -92,5 +93,35 @@ describe('User ship model unit tests', () => {
         const updatedShipLink = await User_Ship.GetUserShipByShipId(user.id, ship.id)
 
         expect(updatedShipLink).toEqual(output)
+    }),
+
+    test('Update ship connection with mmsi', async () => {
+        const output = {
+            ship_nickname: 'UnitTestShip1',
+            id: ship3.id,
+            ship_name: null,
+            mmsi: ship3.mmsi,
+            lon: null,
+            lat: null,
+            updated_at: null
+        }
+
+        await User_Ship.UpdateConnection(user.id, ship3.id, ship.id)
+
+        const updatedShipLink = await User_Ship.GetUserShipByShipId(user.id, ship3.id)
+
+        expect(updatedShipLink).toEqual(output)
+    }),
+
+    test('Unfollow a ship', async () => {
+        let shipLink = await User_Ship.GetUserShipByShipId(user.id, ship.id)
+
+        expect(shipLink.id).toBeDefined()
+
+        await User_Ship.UnfollowShip(user.id, ship.id)
+
+        shipLink = await User_Ship.GetUserShipByShipId(user.id, ship.id)
+        
+        expect(shipLink).toBeUndefined()
     })
 })
