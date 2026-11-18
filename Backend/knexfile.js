@@ -12,6 +12,9 @@ const development = {
   migrations: {
     directory: './db/migrations',
     tableName: 'knex_migrations'
+  },
+  seeds:{
+    directory: './db/seeds'
   }
 };
 
@@ -24,6 +27,9 @@ const production = {
   migrations: {
     directory: './db/migrations',
     tableName: 'knex_migrations'
+  },
+  seeds:{
+    directory: './db/seeds'
   }
 }
 

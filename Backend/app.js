@@ -27,5 +27,6 @@ app.use('/api/health', healthRouter)
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 
+app.set('trust proxy', 1)
 
 export default app
