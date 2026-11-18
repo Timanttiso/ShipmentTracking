@@ -6,6 +6,7 @@ import shipmentsRouter from './controllers/shipmentsController.js'
 import usersRouter from './controllers/usersController.js'
 import DestinationRouter from './controllers/destinationController.js'
 import shipsRouter from './controllers/shipsController.js'
+import healthRouter from './controllers/healthController.js'
 
 const app = express()
 
@@ -21,6 +22,7 @@ app.use('/api/shipments', shipmentsRouter)
 app.use('/api/destinations', DestinationRouter)
 app.use('/api/ships', shipsRouter)
 app.use('/api/auth', usersRouter)
+app.use('/api/health', healthRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

@@ -15,6 +15,18 @@ const development = {
   }
 };
 
+const production = {
+  client: 'pg',
+  connection: {
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+  },
+  migrations: {
+    directory: './db/migrations',
+    tableName: 'knex_migrations'
+  }
+}
+
 const test = {
   client: 'pg',
   connection:{
@@ -24,9 +36,10 @@ const test = {
     password: process.env.DB_PASSWORD,
     port: process.env.DB_PORT ?? 5432
   }
-}
+};
 
 export default {
   development,
+  production,
   test
 };
