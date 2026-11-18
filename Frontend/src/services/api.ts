@@ -11,27 +11,8 @@ interface ShipmentRequest {
 	destination_id: number | null;
 }
 
-interface UpdatedShipment {
-	id: number;
-	shipment_name: string;
-	eta: string;
-	status: number;
-	user_id: number;
-	created_at: string;
-	updated_at: string;
-	destination_id: number;
-	ship_id: number;
-}
-
 export const fetchShipments = (): Promise<Shipment[]> => {
 	return requestHelper<Shipment[]>('/api/shipments', true);
-};
-
-// fetchShipment is used only to fetch an updated shipment. Could be avoided,
-// if the udpdateShipment route returned the shipment
-// in the same format as the shipments route.
-export const fetchShipment = (id: number): Promise<Shipment> => {
-	return requestHelper<Shipment>(`/api/shipments/shipment/${id}`, true);
 };
 
 export const addShipment = (shipment: ShipmentRequest): Promise<[CreatedShipment]> => {
@@ -41,8 +22,8 @@ export const addShipment = (shipment: ShipmentRequest): Promise<[CreatedShipment
 	});
 };
 
-export const updateShipment = (id: number, shipment: ShipmentRequest): Promise<[UpdatedShipment]> => {
-	return requestHelper<[UpdatedShipment]>(`/api/shipments/shipment/${id}`, true, {
+export const updateShipment = (id: number, shipment: ShipmentRequest): Promise<Shipment> => {
+	return requestHelper<Shipment>(`/api/shipments/shipment/${id}`, true, {
 		method: 'PATCH',
 		body: JSON.stringify(shipment),
 	});
