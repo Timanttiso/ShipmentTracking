@@ -13,7 +13,8 @@ const app = express()
 if(process.env.NODE_ENV != 'test'){
     logger.info('Connecting...')
 }
-
+// Postinstall script, whcih can be put back after render demo
+//"postinstall": "npm run db:create && npx knex migrate:latest",
 
 app.use(cookieParser())
 app.use(express.json())
