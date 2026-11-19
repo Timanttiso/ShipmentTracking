@@ -6,7 +6,11 @@ vi.doMock('../../../models/shipment.js', async (importOriginal) => {
     return {
         default: {
             ...actual.default,
-            add: vi.fn()
+            add: vi.fn(),
+            getAllForUser: vi.fn(),
+            getAllForUserByStatus: vi.fn(),
+            getById: vi.fn(),
+            updateShipmentInformation: vi.fn()
         }
     }
 })
@@ -128,5 +132,215 @@ describe('Shipment service unit tests', () => {
             destination_id: input.destination_id,
             ship_id: input.ship_id
         })
+    }),
+
+    test('Get all shipments for the user', async () => {
+        const eta = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+
+        const output = [
+            {
+                id: 1,
+                shipment_name: 'UnitTestShipment1',
+                eta: eta,
+                status: 1,
+                user_id: 8,
+                created_at: Date.now(),
+                updated_at: null,
+                destination_id: 1,
+                ship_id: 1,
+                destination_name: 'UnitTestDestination1',
+                destination_lon: 20.00,
+                destination_lat: 40.00,
+                ship_name: 'UnitTestShip1',
+                mmsi: '230000001',
+                lon: 10.00,
+                lat: 40.00,
+                ship_updated_at: Date.now()
+            },
+            {
+                id: 3,
+                shipment_name: 'UnitTestShipment3',
+                eta: eta,
+                status: 1,
+                user_id: 8,
+                created_at: Date.now(),
+                updated_at: null,
+                destination_id: 2,
+                ship_id: 1,
+                destination_name: 'UnitTestDestination2',
+                destination_lon: 20.00,
+                destination_lat: 40.00,
+                ship_name: 'UnitTestShip1',
+                mmsi: '230000001',
+                lon: 10.00,
+                lat: 40.00,
+                ship_updated_at: Date.now()
+            }
+        ]
+
+        Shipment.getAllForUser.mockResolvedValue(output)
+
+        const result = await ShipmentService.GetAllShipmentsForUser(8)
+
+        expect(result).toEqual(output)
+
+        expect(Shipment.getAllForUser).toHaveBeenCalledOnce()
+        expect(Shipment.getAllForUser).toHaveBeenCalledWith(8)
+    }),
+
+    test('Get all shipments for the user with the status 2', async () => {
+        const eta = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+
+        const output = [{ 
+            id: 2,
+            shipment_name: 'UnitTestShipment2',
+            eta: eta,
+            status: 2,
+            user_id: 8,
+            created_at: Date.now(),
+            updated_at: null,
+            destination_id: 3,
+            ship_id: 2,
+            destination_name: 'UnitTestDestination3',
+            destination_lon: 50.00,
+            destination_lat: 40.00,
+            ship_name: 'UnitTestShip2',
+            mmsi: '230000002',
+            lon: 25.00,
+            lat: 40.00,
+            ship_updated_at: Date.now()
+        }]
+
+        Shipment.getAllForUserByStatus.mockResolvedValue(output)
+
+        const result = await ShipmentService.GetAllShipmentsForUserByStatus(8, 2)
+
+        expect(result).toEqual(output)
+
+        expect(Shipment.getAllForUserByStatus).toHaveBeenCalledOnce()
+        expect(Shipment.getAllForUserByStatus).toHaveBeenCalledWith(8, 2)
+    }),
+
+    test('Get a shipment based on id', async () => {
+        const eta = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+
+        const output = { 
+            id: 2,
+            shipment_name: 'UnitTestShipment2',
+            eta: eta,
+            status: 2,
+            user_id: 8,
+            created_at: Date.now(),
+            updated_at: null,
+            destination_id: 3,
+            ship_id: 2,
+            destination_name: 'UnitTestDestination3',
+            destination_lon: 50.00,
+            destination_lat: 40.00,
+            ship_name: 'UnitTestShip2',
+            mmsi: '230000002',
+            lon: 25.00,
+            lat: 40.00,
+            ship_updated_at: Date.now()
+        }
+
+        Shipment.getById.mockResolvedValue(output)
+
+        const result = await ShipmentService.GetShipmentById('2', 8)
+
+        expect(result).toEqual(output)
+
+        expect(Shipment.getById).toHaveBeenCalledOnce()
+        expect(Shipment.getById).toHaveBeenCalledWith('2', 8)
+    }),
+
+    test('Update shipment information', async () => {
+        const eta = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+
+        const input = {
+            shipment_name: 'UnitTestShipment1Edited',
+            destination_id: 2,
+            ship_id: 2
+        }
+
+        const existingShipment = {
+            id: 1,
+            shipment_name: 'UnitTestShipment1',
+            eta: eta,
+            status: 1,
+            user_id: 8,
+            created_at: Date.now(),
+            updated_at: null,
+            destination_id: 1,
+            ship_id: 1,
+            destination_name: 'UnitTestDestination1',
+            destination_lon: 20.00,
+            destination_lat: 40.00,
+            ship_name: 'UnitTestShip1',
+            mmsi: '230000001',
+            lon: 10.00,
+            lat: 40.00,
+            ship_updated_at: Date.now()
+        }
+
+        const updatedShipment = {
+            id: 1,
+            shipment_name: 'UnitTestShipment1Edited',
+            eta: eta,
+            status: 1,
+            user_id: 8,
+            created_at: Date.now(),
+            updated_at: null,
+            destination_id: 2,
+            ship_id: 2,
+            destination_name: 'UnitTestDestination2',
+            destination_lon: 25.00,
+            destination_lat: 42.00,
+            ship_name: 'UnitTestShip2',
+            mmsi: '230000002',
+            lon: 20.00,
+            lat: 40.00,
+            ship_updated_at: Date.now()
+        }
+
+        const updatedShipmentNonFull = {
+            id: 1,
+            shipment_name: 'UnitTestShipment1Edited',
+            eta: eta,
+            status: 1,
+            user_id: 8,
+            created_at: Date.now(),
+            updated_at: null,
+            destination_id: 1,
+            ship_id: 1
+        }
+
+        const destination = {
+            id: 2,
+            destination_name: 'UnitTestDestination2',
+            lon: 25.00,
+            lat: 42.00,
+            user_id: 8
+        }
+
+        Shipment.getById
+            .mockResolvedValueOnce(existingShipment)
+            .mockResolvedValueOnce(updatedShipment)
+
+        Destination.getById.mockResolvedValue(destination)
+        Shipment.updateShipmentInformation.mockResolvedValue(updatedShipmentNonFull)
+
+        const result = await ShipmentService.UpdateShipmentInformation('1', 8, input)
+
+        expect(result).toEqual(updatedShipment)
+
+        expect(Shipment.getById).toHaveBeenCalledTimes(2)
+        expect(Shipment.getById).toHaveBeenCalledWith('1', 8)
+
+        expect(Destination.getById).toHaveBeenCalledOnce()
+        expect(Destination.getById).toHaveBeenCalledWith(2, 8)
+
+        expect(Shipment.updateShipmentInformation).toHaveBeenCalledOnce()
+        expect(Shipment.updateShipmentInformation).toHaveBeenCalledWith('1', 8, input)
     })
 })
