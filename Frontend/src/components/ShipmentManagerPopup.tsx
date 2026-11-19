@@ -2,7 +2,7 @@ import { useEffect, useState, type JSX } from 'react';
 import type Destination from '../models/destination';
 import type Ship from '../models/ship';
 import type Shipment from '../models/shipment';
-import { addShipment, fetchShipment, updateShipment } from '../services/api';
+import { addShipment, updateShipment } from '../services/api';
 import Dropdown from './Dropdown';
 import DestinationManagerPopup from './DestinationManagerPopup';
 import ShipManagerPopup from './ShipManagerPopup';
@@ -165,8 +165,7 @@ export default function ShipmentManagerPopup({
 			}
 
 			try {
-				await updateShipment(shipmentToEdit.id, newShipment);
-				const updatedShipment = await fetchShipment(shipmentToEdit.id);
+				const updatedShipment = await updateShipment(shipmentToEdit.id, newShipment);
 				onUpdate(updatedShipment);
 			} catch (error: unknown) {
 				const message = error instanceof Error ? error.message : 'Yhteysvirhe';
