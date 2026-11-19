@@ -21,6 +21,13 @@
     stroke-linejoin: round;
 }
 
+.default-marker-pin {
+    color: white;
+    stroke: #527c67;
+    stroke-width: 2px;
+    stroke-linejoin: round;
+}
+
 .destination-marker { fill: #3f48c5; }
 .shipment-marker { fill: #527c67; }
 
