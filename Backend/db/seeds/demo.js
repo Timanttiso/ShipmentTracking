@@ -1,5 +1,9 @@
 import bcrypt from 'bcrypt'
 
+if(process.env.NODE_ENV === 'production' && process.env.ALLOW_DEMO_SEED !== 'true'){
+    throw new Error('Refusing to run demo seed without ALLOW_DEMO_SEED = true')
+}
+
 const DEMO_USERNAME = 'DemoUser'
 const DEMO_EMAIL = 'DemoUser@demo.com'
 
