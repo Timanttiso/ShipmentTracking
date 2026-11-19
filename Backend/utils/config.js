@@ -17,7 +17,7 @@ try {
     const entries = Object.entries(envVariables)
     const values = Object.values(envVariables)
 
-    if (values.includes(undefined) || values.includes('') && process.env.NODE_ENV != 'production') {
+    if ((values.includes(undefined) || values.includes('')) && process.env.NODE_ENV != 'production') {
         logger.error(`Missing env variables`)
         throw new Error(`>>> Missing env variables:${entries.reduce((res, e) => {
             if (!e[1]) {
