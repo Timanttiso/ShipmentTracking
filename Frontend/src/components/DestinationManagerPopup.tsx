@@ -150,7 +150,11 @@ export default function DestinationManagerPopup({
 		try {
 			await deleteDestination(destinationToEdit.id);
 			await populateDestinations();
-			if (setSelectedDestination && selectedDestination?.id === destinationToEdit.id) setSelectedDestination(null);
+
+			if (setSelectedDestination && selectedDestination?.id === destinationToEdit.id) {
+				setSelectedDestination(null);
+			}
+
 			handleOnSuccess();
 			setSuccessMessage('Määränpää poistettu.');
 		} catch (error: unknown) {
@@ -198,7 +202,12 @@ export default function DestinationManagerPopup({
 			role='presentation'
 		>
 			<ToastMessage message={successMessage} onAfterToast={() => setSuccessMessage('')} />
-			<section className='popup-dialog' role='dialog' aria-modal='true' aria-labelledby='add-destination-title'>
+			<section
+				className='popup-dialog destination-manager-dialog'
+				role='dialog'
+				aria-modal='true'
+				aria-labelledby='add-destination-title'
+			>
 				<header className='popup-dialog__header'>
 					{activeTab === 'Lisää' ? (
 						<h2 id='add-destination-title'>Lisää määränpää</h2>
@@ -223,7 +232,7 @@ export default function DestinationManagerPopup({
 						</button>
 					))}
 				</div>
-				<form onSubmit={handleSubmit}>
+				<form onSubmit={handleSubmit} className='destination-manager__form'>
 					<div className='manager-popup-inputs'>
 						{activeTab === 'Muokkaa' && (
 							<label className='popup-form__field'>

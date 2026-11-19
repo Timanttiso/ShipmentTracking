@@ -1,3 +1,16 @@
+.destination-manager-dialog {
+    display: grid;
+    grid-template-rows: auto auto minmax(min-content, 1fr);
+    min-height: min(760px, 88vh);
+    min-width: 184px;
+    padding: 17px;
+}
+
+.destination-manager__form {
+    display: grid;
+    grid-template-rows: auto auto minmax(150px, 1fr) auto auto;
+}
+
 .destination-manager__default-button {
     border: 1px solid #c9ad72;
     background: #f5ebda;
@@ -21,4 +34,12 @@
     background: #f2f1ed;
     color: #969b9a;
     cursor: default;
+}
+
+@media (max-width: 640px) {
+    .destination-manager-dialog {
+        min-height: 90vh;
+        min-width: 172px;
+        padding: 11px;
+    }
 }

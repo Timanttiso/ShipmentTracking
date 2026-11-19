@@ -5,8 +5,12 @@
 }
 
 .location-map {
+    aspect-ratio: auto;
     width: 100%;
-    height: 400px;
+    height: min(100%, 60vh);
+    min-width: 150px;
+    min-height: 150px;
+    max-height: 500px;
     border-radius: 0.75rem;
     z-index: 0;
 }
@@ -26,16 +30,4 @@
     left: 7px;
     width: 22px;
     height: 22px;
-}
-
-@media (max-width: 600px) {
-    .location-map-container {
-        margin-top: 7px;
-    }
-}
-
-@media (max-height: 600px) {
-    .location-map-container {
-        margin-top: 7px;
-    }
 }
