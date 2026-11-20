@@ -17,7 +17,12 @@ After cloning the repository to your local device you must run the following com
 ```
 npm install
 ```
-This will download all the needed modules to run the backend API. This command also runs an automated script that will create the database, which the API uses. The script also will create a .env file, which you need. The .env file is a private file that contains enviromental variables that the API uses, it contains secret information and you should not share with anyone. The .env file will look similar to this.
+This will download all the needed modules to run the backend API. After this you must run the following command.
+```
+npm run db:create
+```
+
+This command runs a script that will create the database, which the API uses. The script also will create a .env file, which you need. The .env file is a private file that contains enviromental variables that the API uses, it contains secret information and you should not share with anyone. The .env file will look similar to this.
 
 ```
 PORT=3001
@@ -34,6 +39,12 @@ npm run dev
 ```
 This will run the API in the development environment. This will also start up the MQTT listener service.
 
+To run the API in production mode use
+
+```
+npm start
+```
+The API contains a health endpoint, which means that you can check the availability of the API by calling the health endpoint. This endpoint is located at */api/health/ready*. You can use this to check that your backend is able to receive requests and is connected to the database.
 ### Frontend
 
 After cloning the repository to your local device and setting up the backend you must run the same install command again in the frontend folder of the project.
@@ -124,6 +135,9 @@ The terminal will display where the frontend started running and you can open th
 |GET     |  /api/ships/:id                      |Retrieves information of one ship                               |
 |POST    |  /api/ships/add-ship                 |Adds a ship to the follow list of the user and adds the ship if it does not exist |
 |DELETE  |  /api/ships/unfollow/:id             |Deletes the link between the user and the chosen ship           |
+||||
+|GET     |  /api/health/live                    |From here you can check that the api can recieve requests       |
+|GET     |  /api/health/ready                   |From here you can check that the database is working            |
 
 
 ### Backend project structure
@@ -138,6 +152,7 @@ backend/
 ├── .env                                            # Secret environmental variable file
 ├── controllers/                                    # Controllers expose endpoints for clients to call
 │   ├── destinationsController.js
+│   ├── healthController.js
 │   ├── shipmentsController.js
 │   ├── shipsController.js
 │   ├── usersController.js
@@ -145,6 +160,8 @@ backend/
 ├── db/
 │   ├── migrations/                                 # Migrations setup the database structure and apply changes to it
 │   │   └── ...
+│   ├── seeds/                                      # Seeds populate the database with predefined data
+│   │   └── demo.js                                 # A seed to populate database with presentation ready data
 │   └── db.js                                       # Contains the primary database instance used in the models
 ├── models/                                         # Models interact with the database
 │   ├── destination.js
@@ -184,13 +201,18 @@ backend/
 │   ├── unit/                                       # A folder containing all unit tests by type
 │   │   ├── controllers/                            # Controller unit tests
 │   │   │   ├── destinationsControllerUnit.test.js
+│   │   │   ├── healthControllerUnit.test.js
+│   │   │   ├── shipmentsControllerUnit.test.js
 │   │   │   ├── shipsControllerUnit.test.js
 │   │   │   └── usersControllerUnit.test.js
 │   │   ├── models/                                 # Model unit tests
 │   │   │   ├── destinationUnit.test.js
+│   │   │   ├── shipUnit.test.js
+│   │   │   ├── user_shipUnit.test.js
 │   │   │   └── usersUnit.test.js
 │   │   └── services/                               # Service unit tests
 │   │       ├── destinationServiceUnit.test.js
+│   │       ├── shipmentsServiceUnit.test.js
 │   │       ├── shipServiceUnit.test.js
 │   │       └── userServiceUnit.test.js
 │   └── README.md
@@ -219,6 +241,14 @@ npm run test:integration    # Runs all integration test suites
 ```
 
 Integration tests test a whole part of the system by calling an endpoint and checking that it returns the correct values. Unit tests on the other hand test specific parts of the code, such as specific controller, service or model actions. Most of the unit tests mock the services or models they need to use to isolate the tested part. Model unit tests use the temporary unit test database.
+
+### Backend seeds
+
+The backend contains seed file that allows you to populate the database with predefined values. The seed file is called demo.js and can be found under the seeds folder in the db folder. In the development environment you can run the file with the following command.
+```
+DEMO_PASSWORD='TestPass' npx knex seed:run --specific=demo.js
+```
+Replace the "TestPass" with your own password if you wish. It will give the given password to the created demo account. In the production environment there is an extra check that the user actually wants to run the specific seed. To confirm that you want to run it in the production environment you will need to specify **ALLOW_DEMO_SEED=true** in your .env file.
 
 ### Backend CI pipeline
 
