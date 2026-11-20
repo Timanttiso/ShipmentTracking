@@ -10,7 +10,9 @@ vi.doMock('../../../models/shipment.js', async (importOriginal) => {
             getAllForUser: vi.fn(),
             getAllForUserByStatus: vi.fn(),
             getById: vi.fn(),
-            updateShipmentInformation: vi.fn()
+            updateShipmentInformation: vi.fn(),
+            updateShipmentStatus: vi.fn(),
+            removeShipment: vi.fn()
         }
     }
 })
@@ -311,8 +313,8 @@ describe('Shipment service unit tests', () => {
             user_id: 8,
             created_at: Date.now(),
             updated_at: null,
-            destination_id: 1,
-            ship_id: 1
+            destination_id: 2,
+            ship_id: 2
         }
 
         const destination = {
@@ -342,5 +344,163 @@ describe('Shipment service unit tests', () => {
 
         expect(Shipment.updateShipmentInformation).toHaveBeenCalledOnce()
         expect(Shipment.updateShipmentInformation).toHaveBeenCalledWith('1', 8, input)
+    }),
+
+    test('Update only shipment name', async () => {
+        const eta = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+
+        const input = {
+            shipment_name: 'UnitTestShipment1Edited'
+        }
+
+        const existingShipment = {
+            id: 1,
+            shipment_name: 'UnitTestShipment1',
+            eta: eta,
+            status: 1,
+            user_id: 8,
+            created_at: Date.now(),
+            updated_at: null,
+            destination_id: 1,
+            ship_id: 1,
+            destination_name: 'UnitTestDestination1',
+            destination_lon: 20.00,
+            destination_lat: 40.00,
+            ship_name: 'UnitTestShip1',
+            mmsi: '230000001',
+            lon: 10.00,
+            lat: 40.00,
+            ship_updated_at: Date.now()
+        }
+
+        const updatedShipment = {
+            id: 1,
+            shipment_name: 'UnitTestShipment1Edited',
+            eta: eta,
+            status: 1,
+            user_id: 8,
+            created_at: Date.now(),
+            updated_at: null,
+            destination_id: 1,
+            ship_id: 1,
+            destination_name: 'UnitTestDestination1',
+            destination_lon: 20.00,
+            destination_lat: 40.00,
+            ship_name: 'UnitTestShip1',
+            mmsi: '230000001',
+            lon: 10.00,
+            lat: 40.00,
+            ship_updated_at: Date.now()
+        }
+
+        const updatedShipmentNonFull = {
+            id: 1,
+            shipment_name: 'UnitTestShipment1Edited',
+            eta: eta,
+            status: 1,
+            user_id: 8,
+            created_at: Date.now(),
+            updated_at: null,
+            destination_id: 1,
+            ship_id: 1
+        }
+
+        Shipment.getById
+            .mockResolvedValueOnce(existingShipment)
+            .mockResolvedValueOnce(updatedShipment)
+
+        Shipment.updateShipmentInformation.mockResolvedValue(updatedShipmentNonFull)
+
+        const result = await ShipmentService.UpdateShipmentInformation('1', 8, input)
+
+        expect(result).toEqual(updatedShipment)
+
+        expect(Shipment.getById).toHaveBeenCalledTimes(2)
+        expect(Shipment.getById).toHaveBeenCalledWith('1', 8)
+
+        expect(Destination.getById).not.toHaveBeenCalledOnce()
+
+        expect(Shipment.updateShipmentInformation).toHaveBeenCalledOnce()
+        expect(Shipment.updateShipmentInformation).toHaveBeenCalledWith('1', 8, input)
+    }),
+
+    test('Update shipment status to late (3)', async () => {
+        const eta = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+
+        const existingShipment = {
+            id: 1,
+            shipment_name: 'UnitTestShipment1',
+            eta: eta,
+            status: 1,
+            user_id: 8,
+            created_at: Date.now(),
+            updated_at: null,
+            destination_id: 1,
+            ship_id: 1,
+            destination_name: 'UnitTestDestination1',
+            destination_lon: 20.00,
+            destination_lat: 40.00,
+            ship_name: 'UnitTestShip1',
+            mmsi: '230000001',
+            lon: 10.00,
+            lat: 40.00,
+            ship_updated_at: Date.now()
+        }
+
+        const updatedShipmentWithLateStatus = {
+            id: 1,
+            shipment_name: 'UnitTestShipment1',
+            eta: eta,
+            status: 3,
+            user_id: 8,
+            created_at: Date.now(),
+            updated_at: null,
+            destination_id: 1,
+            ship_id: 1
+        }
+
+        Shipment.getById.mockResolvedValue(existingShipment)
+        Shipment.updateShipmentStatus.mockResolvedValue(updatedShipmentWithLateStatus)
+
+        const result = await ShipmentService.UpdateShipmentStatus('1', 8, { status: 3 })
+
+        expect(result).toEqual(updatedShipmentWithLateStatus)
+
+        expect(Shipment.getById).toHaveBeenCalledOnce()
+        expect(Shipment.getById).toHaveBeenCalledWith('1', 8)
+
+        expect(Shipment.updateShipmentStatus).toHaveBeenCalledOnce()
+        expect(Shipment.updateShipmentStatus).toHaveBeenCalledWith('1', 8, { status: 3 })
+    }),
+
+    test('Remove shipment', async () => {
+        const eta = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+
+        const existingShipment = {
+            id: 1,
+            shipment_name: 'UnitTestShipment1',
+            eta: eta,
+            status: 1,
+            user_id: 8,
+            created_at: Date.now(),
+            updated_at: null,
+            destination_id: 1,
+            ship_id: 1,
+            destination_name: 'UnitTestDestination1',
+            destination_lon: 20.00,
+            destination_lat: 40.00,
+            ship_name: 'UnitTestShip1',
+            mmsi: '230000001',
+            lon: 10.00,
+            lat: 40.00,
+            ship_updated_at: Date.now()
+        }
+
+        Shipment.getById.mockResolvedValue(existingShipment)
+
+        await ShipmentService.RemoveShipment('1', 8)
+
+        expect(Shipment.removeShipment).toHaveBeenCalledOnce()
+        expect(Shipment.removeShipment).toHaveBeenCalledWith('1')
     })
 })
