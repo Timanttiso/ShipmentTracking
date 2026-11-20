@@ -11,7 +11,7 @@ healthRouter.get('/ready', async (request, response) => {
     try{
         await Promise.race([
             db.raw('SELECT 1'),
-            new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 2000))
+            new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 4000))
         ])
         response.status(200).json({ status: 'Ok', database: 'up' })
     }
