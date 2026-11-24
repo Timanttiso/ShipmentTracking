@@ -1,8 +1,24 @@
 import express from 'express'
 import DestinationService from '../services/destinationService.js'
 import auth from '../utils/auth.js'
+import { z } from 'zod'
+import { validate } from '../utils/validate.js'
 
 const DestinationRouter = express.Router()
+
+const destinationSchema = z.object({
+    destination_name: z
+        .string({ error: 'Määränpään nimi vaaditaan' })
+        .min(3, { error: 'Määränpään nimen täytyy olla vähintään 3 merkkiä' })
+        .max(100, { error: 'Määränpään nimi ei saa olla yli 100 merkkiä' }),
+    lon: z
+        .number({ error: 'Määränpään pituusaste vaaditaan' }),
+    lat: z
+        .number({ error: 'Määränpään leveysaste vaaditaan' })
+})
+
+const updateDestinationSchema = destinationSchema
+    .partial()
 
 //#region GET endpoints
 // Gets all of destinations linked to the currently logged in user
@@ -34,7 +50,7 @@ DestinationRouter.get('/destination/:id', auth.authenticationRequired, async (re
 
 //#region POST endpoints
 // Adds a destination for the current user
-DestinationRouter.post('/add-destination', auth.authenticationRequired, async (request, response, next) => {
+DestinationRouter.post('/add-destination', auth.authenticationRequired, validate(destinationSchema), async (request, response, next) => {
     try{
         const { destination_name, lon, lat } = request.body
 
@@ -50,7 +66,7 @@ DestinationRouter.post('/add-destination', auth.authenticationRequired, async (r
 
 //#region PATCH endpoints
 // Updates a specific destination
-DestinationRouter.patch('/destination/:id', auth.authenticationRequired, async (request, response, next) => {
+DestinationRouter.patch('/destination/:id', auth.authenticationRequired, validate(updateDestinationSchema), async (request, response, next) => {
     try{
         const { id } = request.params
         const { destination_name, lon, lat } = request.body

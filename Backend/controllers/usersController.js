@@ -6,9 +6,56 @@ import auth from '../utils/auth.js'
 import { generateAccessToken, hashToken, createRefreshToken, refreshCookieOptions } from '../utils/tokens.js';
 import { loginLimiter } from '../utils/LoginLimiter.js';
 import 'dotenv/config'
+import { email, z } from 'zod'
+import { validate } from '../utils/validate.js'
 
 const usersRouter = express.Router()
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+const registerScehma = z.object({
+    username: z
+        .string({ error: 'Käyttäjänimi vaaditaan' })
+        .min(3, { error: 'Käyttäjänimen tulee olla vähintään 3 merkkiä pitkä' })
+        .max(50, { error: 'Käyttäjänimi voi olla enintään 50 merkkiä pitkä' }),
+    password: z
+        .string({ error: 'Salasana vaaditaan' })
+        .regex(passwordRegex, { error: 'Salasanan täytyy täyttää seuraavat vaatimukset: 1 isokirjain, 1 pienikirjain, 1 numero, 1 erikoiskirjain ja vähintään kahdeksan kirjainta pitkä.' }),
+    email: z
+        .email({ error: 'Virheellinen tai puuttuva sähköposti'})
+        .max(100, { error: 'Sähköposti voi olla enintään 100 merkkiä pitkä' })
+})
+
+const loginSchema = z.object({
+    username: z
+        .string({ error: 'Käyttäjänimi tai sähköposti vaaditaan' }),
+    password: z
+        .string({ error: 'Salasana vaaditaan' })
+})
+
+const settingsSchema = z.object({
+    username: z
+        .string({ error: 'Virheellinen käyttäjänimi' })
+        .min(3, { error: 'Käyttäjänimen tulee olla vähintään 3 merkkiä pitkä' })
+        .max(50, { error: 'Käyttäjänimi voi olla enintään 50 merkkiä pitkä' })
+        .optional(),
+    email: z
+        .email({ error: 'Virheellinen sähköposti' })
+        .max(100, { error: 'Sähköposti voi olla enintään 100 merkkiä pitkä' })
+        .optional(),
+    default_destination_id: z
+        .number({ error: 'Virheellinen oletus päämäärä' })
+        .positive({ error: 'Virheellinen oletus päämäärä' })
+        .optional()
+        .nullable()
+})
+
+const passwordChangeSchema = z.object({
+    old_password: z
+        .string({ error: 'Vanha salasana vaaditaan' }),
+    new_password: z
+        .string({ error: 'Uusi salasana vaaditaan' })
+        .regex(passwordRegex, { error: 'Salasanan täytyy täyttää seuraavat vaatimukset: 1 isokirjain, 1 pienikirjain, 1 numero, 1 erikoiskirjain ja vähintään kahdeksan kirjainta pitkä.' }),
+})
 
 //#region GET endpoints
 // Gets the information of the currently logged in user
@@ -42,7 +89,7 @@ usersRouter.get('/me', auth.authenticationRequired, async (request, response, ne
 
 //#region POST endpoints
 // Registers a new user
-usersRouter.post('/register', auth.authenticationNotRequired, async (request, response, next) => {
+usersRouter.post('/register', auth.authenticationNotRequired, validate(registerScehma), async (request, response, next) => {
     try {
         const { username, password, email} = request.body
 
@@ -64,7 +111,7 @@ usersRouter.post('/register', auth.authenticationNotRequired, async (request, re
 })
 
 // Checks user's password and name and returns a JSON web token and a refresh token if password and name match
-usersRouter.post('/login', loginLimiter, auth.authenticationNotRequired, async (request, response, next) => {
+usersRouter.post('/login', loginLimiter, auth.authenticationNotRequired, validate(loginSchema), async (request, response, next) => {
     try{
         const {username, password} = request.body
         const user = await UserService.checkCredentials({ username, password })
@@ -151,7 +198,7 @@ usersRouter.post('/logout', async(request, response, next) => {
 
 //#region PATCH endpoints
 // Updates the user's settings such as the username, email and default Id
-usersRouter.patch('/settings', auth.authenticationRequired, async (request, response, next) => {
+usersRouter.patch('/settings', auth.authenticationRequired, validate(settingsSchema), async (request, response, next) => {
     try{
         const { username, email, default_destination_id } = request.body
         
@@ -165,7 +212,7 @@ usersRouter.patch('/settings', auth.authenticationRequired, async (request, resp
 })
 
 // Allows the user to update their password. Requires the old and new password to be provided
-usersRouter.patch('/settings/change-password', auth.authenticationRequired, async (request, response, next) => {
+usersRouter.patch('/settings/change-password', auth.authenticationRequired, validate(passwordChangeSchema), async (request, response, next) => {
     try{
         const { old_password, new_password } = request.body
         
