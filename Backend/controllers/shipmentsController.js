@@ -1,8 +1,33 @@
 import express from 'express'
 import ShipmentService from '../services/shipmentService.js'
 import auth from '../utils/auth.js'
+import { z } from 'zod'
+import { validate } from '../utils/validate.js'
 
 const shipmentsRouter = express.Router()
+
+const shipmentSchema = z.object({
+    shipment_name: z
+        .string({ error: 'Kuljetuksen nimi vaaditaan' })
+        .max(200, 'Kuljetuksen nimi ei saa olla yli 200 merkkiä'),
+    eta: z.iso
+        .datetime({ error: 'Odotettu saapumis aika vaaditaan'}),
+    destination_id: z
+        .number({ error: 'Kuljetuksen päämäärä vaaditaan' })
+        .positive({ error: 'Virheellinen päämäärä' }),
+    ship_id: z
+        .number({ error: 'Alus vaaditaan' })
+        .positive({ error: 'Virheellinen alus' })
+})
+
+const shipmentUpdateSchema = shipmentSchema
+    .partial()
+
+const shipmentStatusUpdateSchema = z.object({
+    status: z
+        .number({ error: 'Päivitetty tila vaaditaan' })
+        .positive({ error: 'Virheellinen tila' })
+})
 
 //#region GET endpoints
 // Gets all shipments for the current user. This also includes the destination and ship information linked to the shipments
@@ -51,7 +76,7 @@ shipmentsRouter.get('/shipment/:id', auth.authenticationRequired, async(request,
 
 //#region POST endpoints
 // Adds a new shipment for the current user
-shipmentsRouter.post('/add-shipment',auth.authenticationRequired, async (request, response, next) => {
+shipmentsRouter.post('/add-shipment',auth.authenticationRequired, validate(shipmentSchema), async (request, response, next) => {
     try{
         const { shipment_name, eta, destination_id, ship_id } = request.body
         
@@ -74,7 +99,7 @@ shipmentsRouter.post('/add-shipment',auth.authenticationRequired, async (request
 
 //#region PATCH endpoints
 // Updates a specific shipment with the given id in the route
-shipmentsRouter.patch('/shipment/:id', auth.authenticationRequired, async(request, response, next) => {
+shipmentsRouter.patch('/shipment/:id', auth.authenticationRequired, validate(shipmentUpdateSchema), async(request, response, next) => {
     try{
         const { id } = request.params
 
@@ -99,7 +124,7 @@ shipmentsRouter.patch('/shipment/:id', auth.authenticationRequired, async(reques
 
 // Not 100% sure if required, since this could also be done in the MQTT listener service
 // Updates the status of the shipment
-shipmentsRouter.patch('/shipment/status/:id', auth.authenticationRequired, async(request, response, next) => {
+shipmentsRouter.patch('/shipment/status/:id', auth.authenticationRequired, validate(shipmentStatusUpdateSchema), async(request, response, next) => {
     try{
         const { id } = request.params
 

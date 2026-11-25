@@ -1,8 +1,22 @@
 import express from 'express'
 import ShipService from '../services/shipService.js'
 import auth from '../utils/auth.js'
+import { z } from 'zod'
+import { validate } from '../utils/validate.js'
 
 const shipsRouter = express.Router()
+
+const shipSchema = z.object({
+    ship_nickname: z
+        .string({ error: 'Aluksen lempinimi vaaditaan' })
+        .max(150, { error: 'Aluksen lempinimi ei saa olla yli 150 merkkiä'}),
+    mmsi: z
+        .string({ error: 'Aluksen mmsi vaaditaan' })
+        .min(9, { error: 'Laivan mmsin tulee olla vähintään 9 merkkiä pitkä'})
+})
+
+const updateShipSchema = shipSchema
+    .partial()
 
 //#region GET endpoints
 // Gets all ships that the current user has a link to in the user_ships table
@@ -35,7 +49,7 @@ shipsRouter.get('/ship/:id', auth.authenticationRequired, async (request, respon
 //#region POST endpoints
 // Adds a ship connection for the current user based on the given MMSI. If the ship does not exist in the database it will also be added.
 // Returns the connection information along with the ship infromation like in the GET endpoint
-shipsRouter.post('/add-ship', auth.authenticationRequired, async (request, response, next)  => {
+shipsRouter.post('/add-ship', auth.authenticationRequired, validate(shipSchema), async (request, response, next)  => {
     try{
         const { ship_nickname, mmsi } = request.body
 
@@ -52,7 +66,7 @@ shipsRouter.post('/add-ship', auth.authenticationRequired, async (request, respo
 //#region PATCH endpoints
 // Updates the ship user link nickname if it is given. Also updates the followed ship's MMSI if it is given. The connection will swap to the other ship's id with that MMSI. 
 // If the ship with that MMSI does not exist in the database it is created.
-shipsRouter.patch('/ship/:id', auth.authenticationRequired, async(request, response, next) => {
+shipsRouter.patch('/ship/:id', auth.authenticationRequired, validate(updateShipSchema), async(request, response, next) => {
     try{
         // Actual ship id, not the connection, though if this is too hard to use in the frontend it needs to be swapped to something more fitting
         // The ship id changes when updating this so updating the same connection feels a bit odd in postman, something to take into account

@@ -108,8 +108,7 @@ describe('Ship integration tests', async () => {
         const shipInDb = await db('ships').select('*').where({ mmsi: '210771000'}).first()
 
         const input = {
-            ship_nickname: 'IntegrationTestShip2Edited',
-            mmsi: null
+            ship_nickname: 'IntegrationTestShip2Edited'
         }
 
         const response = await api
@@ -129,7 +128,6 @@ describe('Ship integration tests', async () => {
         const shipLinkBefore = await db('user_ships').select('*').where({ user_id: user.id})
 
         const input = {
-            ship_nickname: null,
             mmsi: '230981710'
         }
 
@@ -156,7 +154,6 @@ describe('Ship integration tests', async () => {
         const shipLinkBefore = await db('user_ships').select('*').where({ user_id: user.id})
 
         const input = {
-            ship_nickname: null,
             mmsi: '210771000'
         }
 
