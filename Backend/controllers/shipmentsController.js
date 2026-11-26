@@ -72,6 +72,18 @@ shipmentsRouter.get('/shipment/:id', auth.authenticationRequired, async(request,
         next(error)
     }
 })
+
+// Gets the distance between ships and destinations for all shipments (not user specific atm)
+shipmentsRouter.get('/distance', auth.authenticationRequired, async (request, response, next) => {
+    try{
+        const arrivingShipments = await ShipmentService.getDistanceFromShipToDestination()
+
+        response.status(200).json(arrivingShipments)
+    }
+    catch(error){
+        next(error)
+    }
+})
 //#endregion
 
 //#region POST endpoints

@@ -84,6 +84,10 @@ const ShipmentService = {
         }
 
         return await Shipment.removeShipment(id)
+    },
+
+    async getDistanceFromShipToDestination(){
+        return await Shipment.getDistanceFromShipToDestination()
     }
 }
 
